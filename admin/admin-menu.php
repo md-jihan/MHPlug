@@ -39,26 +39,26 @@ class MH_Admin_Menu {
     public function add_menu_inline_styles() {
         ?>
 <style id="mh-plug-menu-styles">
-    /* Default (Inactive) State Icon */
-    #adminmenu #toplevel_page_mh-plug-settings .wp-menu-image {
-        background-image: url('<?php echo esc_url(MH_PLUG_URL . 'admin/assets/images/MH-icon.png'); ?>') !important;
-        background-repeat: no-repeat !important;
-        background-position: center center !important;
-        background-size: 20px auto !important;
-    }
+/* Default (Inactive) State Icon */
+#adminmenu #toplevel_page_mh-plug-settings .wp-menu-image {
+    background-image: url('<?php echo esc_url(MH_PLUG_URL . 'admin/assets/images/MH-icon.png'); ?>') !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: 20px auto !important;
+}
 
-    /* Hide placeholder Dashicon */
-    #adminmenu #toplevel_page_mh-plug-settings .wp-menu-image::before {
-        content: '' !important;
-    }
+/* Hide placeholder Dashicon */
+#adminmenu #toplevel_page_mh-plug-settings .wp-menu-image::before {
+    content: '' !important;
+}
 
-    /* Active & Hover State Background */
-    #adminmenu li#toplevel_page_mh-plug-settings:hover a,
-    #adminmenu li.current#toplevel_page_mh-plug-settings a,
-    #adminmenu li.wp-has-current-submenu#toplevel_page_mh-plug-settings a {
-        background: #004265 !important;
-        color: #fff !important;
-    }
+/* Active & Hover State Background */
+#adminmenu li#toplevel_page_mh-plug-settings:hover a,
+#adminmenu li.current#toplevel_page_mh-plug-settings a,
+#adminmenu li.wp-has-current-submenu#toplevel_page_mh-plug-settings a {
+    background: #004265 !important;
+    color: #fff !important;
+}
 </style>
 <?php
     }

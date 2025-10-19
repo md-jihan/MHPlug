@@ -9,6 +9,7 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Text_Shadow;
+use Elementor\Group_Control_Background; // <-- ADD THIS LINE
 use Elementor\Repeater;
 
 /**
@@ -154,23 +155,12 @@ class MH_Heading_Widget extends Widget_Base {
 
         $this->end_controls_section();
 
-        // --- Style Tab: Underline ---
+        // --- Style Tab: Underline (Completely Reworked) ---
+        
+// --- Style Tab: Underline (Corrected Logic) ---
         $this->start_controls_section(
             'section_underline_style',
             [ 'label' => esc_html__('Underline', 'mh-plug'), 'tab' => Controls_Manager::TAB_STYLE ]
-        );
-
-        $this->add_control(
-            'underline_apply_to',
-            [
-                'label' => esc_html__('Apply Underline To', 'mh-plug'),
-                'type' => Controls_Manager::SELECT,
-                'options' => [
-                    'all' => esc_html__('All Parts', 'mh-plug'),
-                    'last' => esc_html__('Last Part Only', 'mh-plug'),
-                ],
-                'default' => 'all',
-            ]
         );
 
         $this->add_control(
@@ -178,126 +168,152 @@ class MH_Heading_Widget extends Widget_Base {
             [
                 'label' => esc_html__('Style', 'mh-plug'),
                 'type' => Controls_Manager::SELECT,
-                'options' => [ 'none' => esc_html__('None', 'mh-plug'), 'solid' => esc_html__('Solid', 'mh-plug'), 'dotted' => esc_html__('Dotted', 'mh-plug'), 'dashed' => esc_html__('Dashed', 'mh-plug'), 'wavy' => esc_html__('Wavy', 'mh-plug'), 'custom' => esc_html__('Custom Wavy', 'mh-plug') ],
+                'options' => [ 
+                    'none' => esc_html__('None', 'mh-plug'), 
+                    'solid' => esc_html__('Solid', 'mh-plug'), 
+                    'dotted' => esc_html__('Dotted', 'mh-plug'), 
+                    'dashed' => esc_html__('Dashed', 'mh-plug'), 
+                    'double' => esc_html__('Double', 'mh-plug'), 
+                    'wavy' => esc_html__('Wavy (SVG)', 'mh-plug'), 
+                    'jagged' => esc_html__('Jagged (SVG)', 'mh-plug'),
+                ],
                 'default' => 'none',
             ]
         );
+        
+        // Use a Group Control for Background for SVG-based styles that use a background image.
+        $this->add_group_control(
+            Group_Control_Background::get_type(),
+            [
+                'name' => 'underline_background',
+                'label' => esc_html__( 'Color', 'mh-plug' ),
+                'types' => [ 'classic', 'gradient' ],
+                'selector' => '{{WRAPPER}} .mh-underline-wrapper.mh-underline--solid::after', // Only for solid style now
+                'condition' => [ 'underline_style' => 'solid' ],
+            ]
+        );
 
+        // A single color picker for ALL other styles (dotted, dashed, double, wavy, jagged).
         $this->add_control(
-            'underline_color',
+            'underline_simple_color',
             [
                 'label' => esc_html__('Color', 'mh-plug'),
                 'type' => Controls_Manager::COLOR,
-                'condition' => [ 'underline_style!' => 'none' ],
-                'selectors' => [
-                    '{{WRAPPER}} .mh-underline' => 'text-decoration-color: {{VALUE}};',
-                    // This is for the custom wavy SVG
-                    '{{WRAPPER}} .mh-underline-custom::after' => '--underline-color: {{VALUE}}',
-                ],
+                'default' => '#000000',
+                'condition' => [ 'underline_style' => ['dotted', 'dashed', 'double', 'wavy', 'jagged'] ],
             ]
         );
 
-        $this->add_responsive_control(
-            'underline_size',
-            [
-                'label' => esc_html__('Thickness', 'mh-plug'),
-                'type' => Controls_Manager::SLIDER,
-                'size_units' => ['px'],
-                'range' => ['px' => ['min' => 1, 'max' => 20]],
-                'default' => ['unit' => 'px', 'size' => 3],
-                'condition' => [ 'underline_style!' => 'none' ],
-                'selectors' => [
-                    '{{WRAPPER}} .mh-underline' => 'text-decoration-thickness: {{SIZE}}{{UNIT}};',
-                     // This is for the custom wavy SVG
-                    '{{WRAPPER}} .mh-underline-custom::after' => 'height: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
-
+        $this->add_responsive_control( 'underline_width', [ 'label' => esc_html__('Width', 'mh-plug'), 'type' => Controls_Manager::SLIDER, 'size_units' => ['%', 'px'], 'range' => ['%' => ['min' => 0, 'max' => 200], 'px' => ['min' => 0, 'max' => 1000]], 'default' => ['unit' => '%', 'size' => 100], 'condition' => [ 'underline_style!' => 'none' ], 'selectors' => [ '{{WRAPPER}} .mh-underline-wrapper::after' => 'width: {{SIZE}}{{UNIT}};' ] ] );
+        $this->add_responsive_control( 'underline_height', [ 'label' => esc_html__('Height (Thickness)', 'mh-plug'), 'type' => Controls_Manager::SLIDER, 'size_units' => ['px'], 'range' => ['px' => ['min' => 1, 'max' => 50]], 'default' => ['unit' => 'px', 'size' => 3], 'condition' => [ 'underline_style!' => 'none' ], 'selectors' => [ '{{WRAPPER}} .mh-underline-wrapper::after' => '--underline-height: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-has-underline' => 'text-decoration-thickness: {{SIZE}}{{UNIT}};' ] ] );
+        
         $this->add_control(
             'underline_position',
             [
                 'label' => esc_html__('Position', 'mh-plug'),
                 'type' => Controls_Manager::CHOOSE,
-                'options' => [
-                    'top' => [ 'title' => esc_html__('Top', 'mh-plug'), 'icon' => 'eicon-v-align-top' ],
-                    'bottom' => [ 'title' => esc_html__('Bottom', 'mh-plug'), 'icon' => 'eicon-v-align-bottom' ],
-                ],
-                'default' => 'bottom',
-                'toggle' => false,
-                'condition' => [ 'underline_style' => 'custom' ],
+                'options' => [ 'top' => [ 'title' => esc_html__('Top', 'mh-plug'), 'icon' => 'eicon-v-align-top' ], 'bottom' => [ 'title' => esc_html__('Bottom', 'mh-plug'), 'icon' => 'eicon-v-align-bottom' ], ],
+                'default' => 'bottom', 'toggle' => false, 'condition' => [ 'underline_style!' => 'none' ],
             ]
         );
 
+       $this->add_responsive_control( 
+        'underline_y_offset', [ 'label' => esc_html__('Y Offset', 'mh-plug'), 
+        'type' => Controls_Manager::SLIDER, 
+        'size_units' => ['px'], 'range' => ['px' => ['min' => -100, 'max' => 100]],
+        'default' => ['unit' => 'px', 'size' => 0], 
+        'condition' => [ 'underline_style' => ['solid', 'wavy', 'jagged'] ], 
+        'selectors' => [ '{{WRAPPER}} .mh-underline-wrapper::after' => '--underline-offset: {{SIZE}}{{UNIT}};' ] ] 
+    );
+        
+        // A separate offset control for native text-decoration underlines.
+        $this->add_responsive_control(
+             'underline_native_y_offset', [ 'label' => esc_html__('Y Offset', 'mh-plug'), 
+             'type' => Controls_Manager::SLIDER, 'size_units' => ['px'], 
+             'range' => ['px' => ['min' => -50, 'max' => 50]], 'default' => ['unit' => 'px', 'size' => 0],
+              'condition' => [ 'underline_style' => ['dotted', 'dashed', 'double'] ], 
+              'selectors' => [ '{{WRAPPER}} .mh-has-underline' => 'text-underline-offset: {{SIZE}}{{UNIT}};' ] ] );
+
         $this->end_controls_section();
+
+
+
+
     }
 
     protected function render() {
-        $settings = $this->get_settings_for_display();
-        $tag = esc_attr($settings['heading_html_tag']);
-        $last_item_index = count($settings['heading_parts']) - 1;
+    $settings = $this->get_settings_for_display();
+    $tag = esc_attr($settings['heading_html_tag']);
 
-        // Start the main wrapper
-        echo "<$tag class='mh-advanced-heading-wrapper'>";
+    // Determine if the selected style uses native text-decoration or a pseudo-element
+    $is_native_underline = in_array($settings['underline_style'], ['dotted', 'dashed', 'double']);
+    $is_pseudo_underline = in_array($settings['underline_style'], ['solid', 'wavy', 'jagged']);
 
-        // Loop through each heading part from the repeater
-        foreach ($settings['heading_parts'] as $index => $item) {
-            $repeater_setting_key = $this->get_repeater_setting_key('part_text', 'heading_parts', $index);
-            
-            $part_classes = ['mh-heading-part', 'elementor-repeater-item-' . $item['_id']];
-
-            // Check if underline should be applied
-            if ($settings['underline_style'] !== 'none') {
-                if ($settings['underline_apply_to'] === 'all' || ($settings['underline_apply_to'] === 'last' && $index === $last_item_index)) {
-                    if ($settings['underline_style'] === 'custom') {
-                        $part_classes[] = 'mh-underline-custom';
-                        $part_classes[] = 'mh-underline-position-' . $settings['underline_position'];
-                    } else {
-                        $part_classes[] = 'mh-underline';
-                    }
-                }
-            }
-
-            $this->add_render_attribute($repeater_setting_key, 'class', $part_classes);
-            $this->add_inline_editing_attributes($repeater_setting_key, 'none');
-
-            echo '<span ' . $this->get_render_attribute_string($repeater_setting_key) . '>';
-            echo esc_html($item['part_text']);
-            echo '</span>';
-        }
-
-        echo "</$tag>";
-
-        // If custom underline is chosen, print the necessary inline CSS
-        if ($settings['underline_style'] === 'custom') {
-            ?>
-            <style>
-                .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-custom {
-                    text-decoration: none !important;
-                    position: relative;
-                    display: inline-block;
-                }
-                .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-custom::after {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    width: 100%;
-                    --underline-color: <?php echo esc_attr($settings['underline_color']); ?>; /* Fallback */
-                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0,5 Q25,-1 50,5 T100,5' stroke='currentColor' stroke-width='3' fill='none'/%3E%3C/svg%3E");
-                    background-repeat: no-repeat;
-                    background-size: 100% 100%;
-                    color: var(--underline-color); /* The SVG stroke uses this color */
-                }
-                .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-position-bottom::after {
-                    bottom: 0;
-                    transform: translateY(100%);
-                }
-                .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-position-top::after {
-                    top: 0;
-                    transform: translateY(-100%);
-                }
-            </style>
-            <?php
-        }
+    // --- HTML Rendering ---
+    $this->add_render_attribute('wrapper', 'class', 'mh-underline-wrapper');
+    if ($is_pseudo_underline) {
+        $this->add_render_attribute('wrapper', 'class', 'mh-underline--' . $settings['underline_style']);
+        $this->add_render_attribute('wrapper', 'class', 'mh-underline-pos--' . $settings['underline_position']);
     }
+    ?>
+    <div <?php echo $this->get_render_attribute_string('wrapper'); ?>>
+        <<?php echo $tag; ?> class="mh-advanced-heading-wrapper">
+            <?php foreach ($settings['heading_parts'] as $item) :
+                $part_classes = ['elementor-repeater-item-' . esc_attr($item['_id']), 'mh-heading-part'];
+                if ($is_native_underline) {
+                    $part_classes[] = 'mh-has-underline';
+                }
+            ?>
+                <span class="<?php echo implode(' ', $part_classes); ?>">
+                    <?php echo esc_html($item['part_text']); ?>
+                </span>
+            <?php endforeach; ?>
+        </<?php echo $tag; ?>>
+    </div>
+
+    <?php // --- Inline CSS for Alignment and Underline --- ?>
+    <style>
+        .elementor-element-<?php echo $this->get_id(); ?> .mh-advanced-heading-wrapper {
+            display: flex; flex-wrap: wrap; align-items: baseline;
+        }
+        .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-wrapper {
+            position: relative; display: inline-block; line-height: 1;
+        }
+        
+        <?php // --- NATIVE UNDERLINE STYLES (Dotted, Dashed, Double) ---
+        if ($is_native_underline): ?>
+        .elementor-element-<?php echo $this->get_id(); ?> .mh-has-underline {
+            text-decoration-line: <?php echo $settings['underline_position'] === 'top' ? 'overline' : 'underline'; ?>;
+            text-decoration-style: <?php echo esc_attr($settings['underline_style']); ?>;
+            text-decoration-color: <?php echo esc_attr($settings['underline_simple_color']); ?>;
+        }
+        <?php endif; ?>
+
+        <?php // --- PSEUDO-ELEMENT UNDERLINE STYLES (Solid, Wavy, Jagged) ---
+        if ($is_pseudo_underline): ?>
+        .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-wrapper::after {
+            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+            background-repeat: no-repeat; height: var(--underline-height, 3px);
+        }
+        .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-wrapper.mh-underline-pos--bottom::after {
+            bottom: var(--underline-offset, -5px);
+        }
+        .elementor-element-<?php echo $this->get_id(); ?> .mh-underline-wrapper.mh-underline-pos--top::after {
+            top: var(--underline-offset, -5px);
+        }
+        <?php // SVG styles
+            $color = !empty($settings['underline_background_color']) ? $settings['underline_background_color'] : $settings['underline_simple_color'];
+            if ($settings['underline_style'] === 'wavy') {
+                $svg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0,5 Q25,-1 50,5 T100,5' stroke='" . str_replace('#', '%23', $color) . "' stroke-width='2' fill='none'/%3E%3C/svg%3E";
+                echo '.elementor-element-' . $this->get_id() . ' .mh-underline-wrapper.mh-underline--wavy::after { background-image: url("' . $svg . '"); background-size: cover; }';
+            }
+            if ($settings['underline_style'] === 'jagged') {
+                 $svg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolyline points='0,5 15,0 30,5 45,0 60,5 75,0 90,5' stroke='" . str_replace('#', '%23', $color) . "' stroke-width='2' fill='none'/%3E%3C/svg%3E";
+                 echo '.elementor-element-' . $this->get_id() . ' .mh-underline-wrapper.mh-underline--jagged::after { background-image: url("' . $svg . '"); background-size: cover; }';
+            }
+        ?>
+        <?php endif; ?>
+    </style>
+    <?php
+}
 }

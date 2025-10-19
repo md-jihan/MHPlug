@@ -8,7 +8,19 @@ if (!defined('ABSPATH')) {
  * MH_Admin_Menu Class
  * Final Hybrid Version: Injects menu styles and enqueues page styles.
  */
+
 class MH_Admin_Menu {
+
+    // --- CHANGE THIS PROPERTY ---
+    // Use an associative array for better management.
+    // Key => Internal Name, Value => Display Name
+    private $widgets = [
+        'mh_heading'      => 'Advanced Heading',
+        'mh_button'       => 'Advanced Button',
+        'mh_post_slider'  => 'Post Slider',
+        'mh_post'         => 'Post Grid',
+        'mh_testimonials' => 'Testimonials',
+    ];
 
     public function __construct() {
         add_action('admin_menu', [$this, 'register_menu']);
@@ -83,15 +95,46 @@ class MH_Admin_Menu {
     // --- The rest of the functions are unchanged ---
     public function render_settings_page() { require_once MH_PLUG_PATH . 'admin/settings-page.php'; }
     public function register_settings() {
-        register_setting('mh_plug_settings_group', 'mh_plug_widgets_settings');
+        register_setting(
+            'mh_plug_settings_group',
+            'mh_plug_widgets_settings',
+            [$this, 'sanitize_widgets_settings'] // <-- Add this sanitize callback
+        );
         add_settings_section('mh_plug_widgets_section', null, null, 'mh-plug-settings-page');
-        $widgets = ['mh_heading' => 'Advanced Heading', 'mh_button' => 'Advanced Button', 'mh_post_slider' => 'Post Slider', 'mh_post' => 'Post Grid', 'mh_testimonials' => 'Testimonials'];
-        foreach ($widgets as $id => $label) { add_settings_field($id, $label, [$this, 'render_widget_toggle_field'], 'mh-plug-settings-page', 'mh_plug_widgets_section', ['id' => $id, 'label' => $label]); }
+        // Use the new class property to loop through widgets
+        foreach ($this->widgets as $key => $label) {
+            add_settings_field($key, $label, [$this, 'render_widget_toggle_field'],
+            'mh-plug-settings-page', 'mh_plug_widgets_section', ['id' => $key, 'label' => $label]);
+        }
     }
     public function render_widget_toggle_field($args) {
         $options = get_option('mh_plug_widgets_settings'); $id = esc_attr($args['id']);
         $checked = isset($options[$id]) ? checked($options[$id], 1, false) : 'checked';
         echo "<div class='mh-widget-card'><div class='mh-widget-card-header'><div class='mh-widget-title'>" . esc_html($args['label']) . "</div><label class='mh-switch'><input type='checkbox' name='mh_plug_widgets_settings[{$id}]' value='1' {$checked} /><span class='mh-slider mh-round'></span></label></div></div>";
+    }
+
+    /**
+     * --- ADD THIS ENTIRE NEW FUNCTION ---
+     * Sanitize Callback for Widget Settings.
+     * This function ensures that unchecked boxes are saved as '0' (off).
+     * @param array $input The raw data submitted from the form.
+     * @return array The cleaned data to be saved.
+     */
+    public function sanitize_widgets_settings($input) {
+        // --- MODIFY THIS FUNCTION ---
+        $sanitized_data = [];
+
+        // Get all the valid keys from our new 'widgets' property.
+        $widget_keys = array_keys($this->widgets);
+
+        foreach ($widget_keys as $widget_key) {
+            if (isset($input[$widget_key]) && $input[$widget_key] == '1') {
+                $sanitized_data[$widget_key] = 1;
+            } else {
+                $sanitized_data[$widget_key] = 0;
+            }
+        }
+        return $sanitized_data;
     }
 }
 

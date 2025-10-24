@@ -16,10 +16,6 @@ class MH_Admin_Menu {
     // Key => Internal Name, Value => Display Name
     private $widgets = [
         'mh_heading'      => 'Advanced Heading',
-        'mh_button'       => 'Advanced Button',
-        'mh_post_slider'  => 'Post Slider',
-        'mh_post'         => 'Post Grid',
-        'mh_testimonials' => 'Testimonials',
     ];
 
     public function __construct() {

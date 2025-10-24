@@ -164,6 +164,20 @@ class MH_Heading_Widget extends Widget_Base {
         );
 
         $this->add_control(
+            'underline_apply_to',
+            [
+                'label' => esc_html__('Apply Underline To', 'mh-plug'),
+                'type' => Controls_Manager::SELECT,
+                'options' => [
+                    'all' => esc_html__('All Parts', 'mh-plug'),
+                    'last' => esc_html__('Last Part Only', 'mh-plug'),
+                ],
+                'default' => 'all',
+                'condition' => [ 'underline_style!' => 'none' ],
+            ]
+        );
+
+        $this->add_control(
             'underline_style',
             [
                 'label' => esc_html__('Style', 'mh-plug'),
@@ -244,6 +258,7 @@ class MH_Heading_Widget extends Widget_Base {
     protected function render() {
     $settings = $this->get_settings_for_display();
     $tag = esc_attr($settings['heading_html_tag']);
+    
 
     // Determine if the selected style uses native text-decoration or a pseudo-element
     $is_native_underline = in_array($settings['underline_style'], ['dotted', 'dashed', 'double']);

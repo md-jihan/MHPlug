@@ -108,7 +108,21 @@ class MH_Heading_Widget extends Widget_Base {
                 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
             ]
         );
-        
+
+        // Responsive Margin Control for each part
+        $repeater->add_responsive_control(
+            'part_margin', // Unique ID for the margin control within the repeater
+            [
+                'label'      => esc_html__('Margin', 'mh-plug'),
+                'type'       => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors'  => [
+                    // This targets the specific span element for the current repeater item
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'separator' => 'before', // Optional: Adds a line above this control in the panel
+            ]
+        );
         // --- End of Style Tab inside Repeater ---
 
         // Add the repeater control to the section

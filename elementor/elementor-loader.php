@@ -120,6 +120,7 @@ final class MH_Elementor_Loader {
         $widget_map = [
             'mh_heading'      => ['file' => 'mh-heading-widget.php', 'class' => 'MH_Heading_Widget'],
             'mh_site_logo'    => ['file' => 'mh-site-logo-widget.php', 'class' => 'MH_Site_Logo_Widget'], // <-- ADD THIS LINE
+            'mh_site_title'   => ['file' => 'mh-site-title-widget.php', 'class' => 'MH_Site_Title_Widget'], // <-- ADD THIS LINE
         ];
 
         // Command: Loop through each widget in our map.

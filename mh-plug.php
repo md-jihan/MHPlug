@@ -52,6 +52,13 @@ function mh_plug_enqueue_frontend_scripts() {
     // The `['jquery']` part tells WordPress that this script depends on jQuery.
     // The `true` at the end tells WordPress to load this script in the footer.
     wp_enqueue_script('slick-js', MH_PLUG_URL . 'assets/slick/slick.min.js', ['jquery'], MH_PLUG_VERSION, true);
+    wp_enqueue_style(
+        'mhi-icons', // Use the same handle name
+        MH_PLUG_URL . './elementor/assets/css/style.css', // Correct path
+        [],
+        MH_PLUG_VERSION
+    );
 }
 // The 'wp_enqueue_scripts' action hook is the proper way to add scripts and styles to the frontend.
 add_action('wp_enqueue_scripts', 'mh_plug_enqueue_frontend_scripts');
+

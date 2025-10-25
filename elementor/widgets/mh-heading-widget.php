@@ -27,7 +27,7 @@ class MH_Heading_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        return 'eicon-t-letter';
+        return 'mhi-text';
     }
 
     public function get_categories() {

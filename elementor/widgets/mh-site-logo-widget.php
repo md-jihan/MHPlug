@@ -24,7 +24,7 @@ class MH_Site_Logo_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        return 'eicon-site-logo'; // Elementor's site logo icon
+        return 'mhi-site-logo'; // Elementor's site logo icon
     }
 
     public function get_categories() {

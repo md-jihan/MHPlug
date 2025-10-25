@@ -78,7 +78,8 @@ final class MH_Elementor_Loader {
              * This CSS selector targets the widget wrappers inside our specific category panel.
              * This makes the rule very specific and ensures it only applies to our widgets.
             */
-            #elementor-panel-category-mh-plug-widgets .elementor-element-wrapper {
+           
+.elementor-element-wrapper [class^="mhi-"], .elementor-element-wrapper [class*=" mhi-"] {
                 position: relative !important; /* Make the container a positioning reference */
             }
 
@@ -86,11 +87,11 @@ final class MH_Elementor_Loader {
              * This creates the "MH" badge using a ::after pseudo-element.
              * It's positioned absolutely within the wrapper.
             */
-            #elementor-panel-category-mh-plug-widgets .elementor-element-wrapper::after {
+            .elementor-element-wrapper [class^="mhi-"]::after, .elementor-element-wrapper [class*=" mhi-"]::after {
                 content: 'MH';
                 position: absolute;
-                top: 4px;
-                right: 4px;
+                top: -10px;
+                right: -45px;
                 z-index: 10;
                 background-color: #2293e9ff; /* The background color of the badge */
                 color: #ffffff;
@@ -102,6 +103,7 @@ final class MH_Elementor_Loader {
                 text-transform: uppercase;
                 box-shadow: 0 1px 2px rgba(0,0,0,0.2);
             }
+
         </style>
         <?php
     }
@@ -144,7 +146,23 @@ final class MH_Elementor_Loader {
             }
         }
     }
+
+    
 }
 
 // Command: Start the entire process by calling the instance method.
 MH_Elementor_Loader::instance();
+
+
+/**
+ * Enqueue Custom Icon Font for Elementor Editor.
+ */
+function mh_plug_enqueue_editor_icons() {
+    wp_enqueue_style(
+        'mhi-icons', // Handle name
+        MH_PLUG_URL . './elementor/assets/css/style.css', // Correct path
+        [],
+        MH_PLUG_VERSION
+    );
+}
+add_action( 'elementor/editor/before_enqueue_scripts', 'mh_plug_enqueue_editor_icons' );

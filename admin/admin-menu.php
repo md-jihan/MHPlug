@@ -16,6 +16,7 @@ class MH_Admin_Menu {
     // Key => Internal Name, Value => Display Name
     private $widgets = [
         'mh_heading'      => 'Advanced Heading',
+        'mh_site_logo'    => 'Site Logo', // <-- ADD THIS LINE
     ];
 
     public function __construct() {

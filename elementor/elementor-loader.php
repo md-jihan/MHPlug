@@ -117,6 +117,7 @@ final class MH_Elementor_Loader {
         // Command: Create a map of our widgets, linking the setting ID to the file and class name.
         $widget_map = [
             'mh_heading'      => ['file' => 'mh-heading-widget.php', 'class' => 'MH_Heading_Widget'],
+            'mh_site_logo'    => ['file' => 'mh-site-logo-widget.php', 'class' => 'MH_Site_Logo_Widget'], // <-- ADD THIS LINE
         ];
 
         // Command: Loop through each widget in our map.

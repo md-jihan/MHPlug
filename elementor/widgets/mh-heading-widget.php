@@ -158,13 +158,15 @@ class MH_Heading_Widget extends Widget_Base {
                 'type'    => Controls_Manager::CHOOSE,
                 'options' => [ 'left' => ['title' => esc_html__('Left', 'mh-plug'), 'icon' => 'eicon-text-align-left'], 'center' => ['title' => esc_html__('Center', 'mh-plug'), 'icon' => 'eicon-text-align-center'], 'right' => ['title' => esc_html__('Right', 'mh-plug'), 'icon' => 'eicon-text-align-right'], ],
                 'default'   => 'left',
-                'selectors' => [ '{{WRAPPER}} .mh-advanced-heading-wrapper' => 'text-align: {{VALUE}};' ],
+                'selectors' => [ '{{WRAPPER}}' => 'text-align: {{VALUE}};' ],
             ]
         );
         
         $this->add_control(
             'heading_html_tag',
-            [ 'label' => esc_html__('HTML Tag', 'mh-plug'), 'type' => Controls_Manager::SELECT, 'options' => [ 'h1'=>'H1', 'h2'=>'H2', 'h3'=>'H3', 'h4'=>'H4', 'h5'=>'H5', 'h6'=>'H6', 'p'=>'P', 'div'=>'DIV' ], 'default' => 'h2' ]
+            [ 'label' => esc_html__('HTML Tag', 'mh-plug'), 
+            'type' => Controls_Manager::SELECT, 
+            'options' => [ 'h1'=>'H1', 'h2'=>'H2', 'h3'=>'H3', 'h4'=>'H4', 'h5'=>'H5', 'h6'=>'H6', 'p'=>'P', 'div'=>'DIV' ], 'default' => 'h2' ]
         );
 
         $this->end_controls_section();

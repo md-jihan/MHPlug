@@ -113,17 +113,97 @@ class MH_Site_Title_Widget extends Widget_Base {
             ]
         );
 
+        // --- Start Color Tabs ---
+        $this->start_controls_tabs( 'title_color_tabs' );
+
+        // --- Normal Tab ---
+        $this->start_controls_tab(
+            'title_color_normal',
+            [ 'label' => esc_html__( 'Normal', 'mh-plug' ) ]
+        );
+
         $this->add_control(
             'text_color',
             [
                 'label'     => esc_html__('Text Color', 'mh-plug'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .mh-site-title-content' => 'color: {{VALUE}};', // Target the inner element
-                    '{{WRAPPER}} .mh-site-title-content a' => 'color: {{VALUE}};', // Target the link inside
+                    '{{WRAPPER}} .mh-site-title-content' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .mh-site-title-content a' => 'color: {{VALUE}};',
                 ],
             ]
         );
+
+        $this->add_control(
+            'background_color',
+            [
+                'label'     => esc_html__('Background Color', 'mh-plug'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mh-site-title-content' => 'background-color: {{VALUE}}; display: inline-block;', // Apply to inner element
+                ],
+            ]
+        );
+
+        $this->end_controls_tab(); // End Normal Tab
+
+        // --- Hover Tab ---
+        $this->start_controls_tab(
+            'title_color_hover',
+            [ 'label' => esc_html__( 'Hover', 'mh-plug' ) ]
+        );
+
+        $this->add_control(
+            'text_hover_color',
+            [
+                'label'     => esc_html__('Text Color', 'mh-plug'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    // Apply hover color only when hovering the container if linked, or the content itself if not linked
+                    '{{WRAPPER}} .mh-site-title-container a:hover .mh-site-title-content' => 'color: {{VALUE}};', // Hover link -> change content color
+                    '{{WRAPPER}} .mh-site-title-container > div:hover .mh-site-title-content' => 'color: {{VALUE}};', // Hover div -> change content color
+                    '{{WRAPPER}} .mh-site-title-content a:hover' => 'color: {{VALUE}};', // Directly hover link (fallback)
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'background_hover_color',
+            [
+                'label'     => esc_html__('Background Color', 'mh-plug'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                     // Apply hover bg color similarly
+                    '{{WRAPPER}} .mh-site-title-container a:hover .mh-site-title-content' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .mh-site-title-container > div:hover .mh-site-title-content' => 'background-color: {{VALUE}};',
+                     '{{WRAPPER}} .mh-site-title-content a:hover' => 'background-color: {{VALUE}};', // fallback
+                ],
+            ]
+        );
+        
+        // Add Transition Duration Control
+        $this->add_control(
+            'hover_transition',
+            [
+                'label' => esc_html__( 'Transition Duration', 'elementor' ),
+                'type' => Controls_Manager::SLIDER,
+                'range' => [
+                    'px' => [
+                        'max' => 3,
+                        'step' => 0.1,
+                    ],
+                ],
+                 'selectors' => [
+                    '{{WRAPPER}} .mh-site-title-content, {{WRAPPER}} .mh-site-title-content a' => 'transition: color {{SIZE}}s, background-color {{SIZE}}s;',
+                 ],
+                  'separator' => 'before',
+            ]
+        );
+
+
+        $this->end_controls_tab(); // End Hover Tab
+
+        $this->end_controls_tabs(); // End Color Tabs
 
         $this->add_group_control(
             Group_Control_Typography::get_type(),
@@ -213,53 +293,15 @@ class MH_Site_Title_Widget extends Widget_Base {
                 <?php endif; ?>
             </<?php echo $title_tag; ?>>
         </div>
+
+        <?php // --- ADD CSS TO REMOVE UNDERLINE --- ?>
+        <style>
+            .elementor-element-<?php echo $this->get_id(); ?> .mh-site-title-content a {
+                text-decoration: none; /* Remove default underline */
+            }
+            
+        </style>
         <?php
     }
 
-     /**
-     * Render site title output in the editor.
-     * Written as a Backbone JavaScript template and used to generate the live preview.
-     * Useful for widgets needing dynamic JS updates without full page refresh.
-     * For this simple widget, it's less critical but good practice.
-     */
-    /* // Optional: Add _content_template for better editor preview performance
-    protected function _content_template() {
-        ?>
-        <#
-        var site_title = '<?php echo esc_js(get_bloginfo('name')); ?>';
-        var link_url = '';
-        var has_link = false;
-        var link_attrs = '';
-        var title_tag = settings.title_html_tag || 'h1';
-
-        if ( settings.link_to === 'home' ) {
-            link_url = '<?php echo esc_js(home_url('/')); ?>';
-            has_link = true;
-            link_attrs = 'href="' + link_url + '"';
-        } else if ( settings.link_to === 'custom' && settings.custom_link.url ) {
-            link_url = settings.custom_link.url;
-            has_link = true;
-            link_attrs = 'href="' + link_url + '"';
-            if ( settings.custom_link.is_external ) {
-                link_attrs += ' target="_blank"';
-            }
-            if ( settings.custom_link.nofollow ) {
-                link_attrs += ' rel="nofollow"';
-            }
-        }
-        #>
-        <div class="mh-site-title-container">
-            <{{{ title_tag }}} class="mh-site-title-content">
-                <# if ( has_link ) { #>
-                    <a {{{ link_attrs }}}>
-                        {{{ site_title }}}
-                    </a>
-                <# } else { #>
-                    {{{ site_title }}}
-                <# } #>
-            </{{{ title_tag }}}>
-        </div>
-        <?php
-    }
-    */
 }

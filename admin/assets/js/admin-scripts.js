@@ -26,4 +26,21 @@ jQuery(document).ready(function($) {
     // Optional: To make the dashboard more user-friendly, we can open the first accordion item by default.
     // We select the first item and programmatically trigger a click event on its header.
     $('.mh-accordion-item:first-child .mh-accordion-header').trigger('click');
+
+    // --- ADD THIS NEW CODE BLOCK ---
+
+    // Handle "Enable All" / "Disable All" button clicks
+    $('.mh-toggle-all').on('click', function() {
+        var action = $(this).data('action'); // Get 'enable' or 'disable'
+        var $contentArea = $(this).closest('.mh-accordion-content'); // Find the parent content area
+        var $checkboxes = $contentArea.find('.mh-widget-card input[type="checkbox"]'); // Find all checkboxes within that area
+
+        if (action === 'enable') {
+            $checkboxes.prop('checked', true); // Check all boxes
+        } else if (action === 'disable') {
+            $checkboxes.prop('checked', false); // Uncheck all boxes
+        }
+    });
+
+// --- END OF NEW CODE BLOCK ---
 });

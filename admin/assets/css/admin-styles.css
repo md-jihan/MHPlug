@@ -63,6 +63,16 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
 }
+/* Styling for Enable/Disable buttons */
+.mh-widget-controls {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.mh-widget-controls .button {
+    margin-right: 10px;
+}
 
 .mh-widget-card {
     background-color: #fff;

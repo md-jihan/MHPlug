@@ -30,17 +30,19 @@ if (!defined('ABSPATH')) {
                     <span class="mh-accordion-icon">+</span>
                 </button>
                 <div class="mh-accordion-content">
+                    
+                    <div class="mh-widget-controls">
+                        <button type="button" class="button button-secondary mh-toggle-all" data-action="enable"><?php esc_html_e('Enable All', 'mh-plug'); ?></button>
+                        <button type="button" class="button button-secondary mh-toggle-all" data-action="disable"><?php esc_html_e('Disable All', 'mh-plug'); ?></button>
+                    </div>
+                    
+
                     <div class="mh-settings-grid">
                         <?php
-                        /**
-                         * This is a WordPress trick to render all fields assigned to a specific section.
-                         * We loop through the global $wp_settings_fields variable to find and display
-                         * all fields we registered for the 'mh_plug_widgets_section'.
-                         */
+                        // This will render all fields from 'mh_plug_widgets_section'
                         global $wp_settings_fields;
                         if (isset($wp_settings_fields['mh-plug-settings-page']['mh_plug_widgets_section'])) {
                             foreach ((array) $wp_settings_fields['mh-plug-settings-page']['mh_plug_widgets_section'] as $field) {
-                                // This calls the render function for each field (render_widget_toggle_field).
                                 call_user_func($field['callback'], $field['args']);
                             }
                         }

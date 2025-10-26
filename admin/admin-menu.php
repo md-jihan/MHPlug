@@ -105,10 +105,33 @@ class MH_Admin_Menu {
             'mh-plug-settings-page', 'mh_plug_widgets_section', ['id' => $key, 'label' => $label]);
         }
     }
+   
+    /**
+     * Render the HTML for the 3D toggle switch.
+     * @param array $args Arguments passed from add_settings_field().
+     */
     public function render_widget_toggle_field($args) {
-        $options = get_option('mh_plug_widgets_settings'); $id = esc_attr($args['id']);
-        $checked = isset($options[$id]) ? checked($options[$id], 1, false) : 'checked';
-        echo "<div class='mh-widget-card'><div class='mh-widget-card-header'><div class='mh-widget-title'>" . esc_html($args['label']) . "</div><label class='mh-switch'><input type='checkbox' name='mh_plug_widgets_settings[{$id}]' value='1' {$checked} /><span class='mh-slider mh-round'></span></label></div></div>";
+        $options = get_option('mh_plug_widgets_settings');
+        $id = esc_attr($args['id']);
+        // Check if the option is saved and set to 1 (checked). Default is true (checked) if not set.
+        $is_checked = isset($options[$id]) ? (bool)$options[$id] : true;
+        $checked_attr = $is_checked ? ' checked' : '';
+
+        // Output the new HTML structure for the 3D switch
+        echo "<div class='mh-widget-card'>";
+        echo "  <div class='mh-widget-card-header'>";
+        echo "      <div class='mh-widget-title'>" . esc_html($args['label']) . "</div>";
+        // Start of new switch HTML
+        echo "      <label class='switch'>";
+        echo "          <input class='cb' type='checkbox' name='mh_plug_widgets_settings[{$id}]' value='1' {$checked_attr} />";
+        echo "          <span class='toggle'>";
+        echo "              <span class='left'>off</span>";
+        echo "              <span class='right'>on</span>";
+        echo "          </span>";
+        echo "      </label>";
+        // End of new switch HTML
+        echo "  </div>";
+        echo "</div>";
     }
 
     /**

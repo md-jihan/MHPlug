@@ -16,30 +16,38 @@ if (!defined('ABSPATH')) {
         <div class="mh-accordion">
 
             <div class="mh-accordion-item">
-                <button type="button" class="mh-accordion-header">
-                    <?php esc_html_e('Global Settings (Future)', 'mh-plug'); ?>
-                    <span class="mh-accordion-icon">+</span>
-                </button>
+                <div class="mh-accordion-header">
+                    <span class="mh-accordion-title"><?php esc_html_e('Global Settings (Future)', 'mh-plug'); ?></span>
+                    <?php // Add an inner wrapper for the right-side elements ?>
+                    <span class="mh-header-controls">
+                        <span class="mh-widget-controls">
+                            <button type="button" class="button button-small mh-toggle-all" data-action="enable"><?php esc_html_e('Enable All', 'mh-plug'); ?></button>
+                            <button type="button" class="button button-small mh-toggle-all" data-action="disable"><?php esc_html_e('Disable All', 'mh-plug'); ?></button>
+                        </span>
+                        <span class="mh-accordion-icon">+</span>
+                    </span>
+                </div>
                 <div class="mh-accordion-content">
                     <p>More settings will be added here in a future update.</p>
                 </div>
             </div>
             <div class="mh-accordion-item">
-                <button type="button" class="mh-accordion-header">
-                    <?php esc_html_e('Elementor Widgets', 'mh-plug'); ?>
-                    <span class="mh-accordion-icon">+</span>
-                </button>
+                <?php // Change header from button to div ?>
+                <div class="mh-accordion-header">
+                    <span class="mh-accordion-title"><?php esc_html_e('Elementor Widgets', 'mh-plug'); ?></span>
+                    <?php // Add an inner wrapper for the right-side elements ?>
+                    <span class="mh-header-controls">
+                        <span class="mh-widget-controls">
+                            <button type="button" class="button button-small mh-toggle-all" data-action="enable"><?php esc_html_e('Enable All', 'mh-plug'); ?></button>
+                            <button type="button" class="button button-small mh-toggle-all" data-action="disable"><?php esc_html_e('Disable All', 'mh-plug'); ?></button>
+                        </span>
+                        <span class="mh-accordion-icon">+</span>
+                    </span>
+                </div>
                 <div class="mh-accordion-content">
-                    
-                    <div class="mh-widget-controls">
-                        <button type="button" class="button button-secondary mh-toggle-all" data-action="enable"><?php esc_html_e('Enable All', 'mh-plug'); ?></button>
-                        <button type="button" class="button button-secondary mh-toggle-all" data-action="disable"><?php esc_html_e('Disable All', 'mh-plug'); ?></button>
-                    </div>
-                    
-
+                     <?php // Remove controls div from here ?>
                     <div class="mh-settings-grid">
                         <?php
-                        // This will render all fields from 'mh_plug_widgets_section'
                         global $wp_settings_fields;
                         if (isset($wp_settings_fields['mh-plug-settings-page']['mh_plug_widgets_section'])) {
                             foreach ((array) $wp_settings_fields['mh-plug-settings-page']['mh_plug_widgets_section'] as $field) {
@@ -50,7 +58,6 @@ if (!defined('ABSPATH')) {
                     </div>
                 </div>
             </div>
-
         </div>
 
         <?php

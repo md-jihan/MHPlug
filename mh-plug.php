@@ -38,6 +38,10 @@ require_once MH_PLUG_PATH . 'admin/admin-menu.php';
  */
 require_once MH_PLUG_PATH . 'elementor/elementor-loader.php';
 
+    // --- ADD THIS LINE ---
+// Load Menu Item Icon Fields Functionality
+require_once MH_PLUG_PATH . 'includes/menu-icon-fields.php';
+// --- END OF ADDED LINE ---
 /**
  * Enqueue Frontend Scripts.
  * This function loads the CSS and JavaScript needed for your widgets on the live website.
@@ -58,6 +62,7 @@ function mh_plug_enqueue_frontend_scripts() {
         [],
         MH_PLUG_VERSION
     );
+
 }
 // The 'wp_enqueue_scripts' action hook is the proper way to add scripts and styles to the frontend.
 add_action('wp_enqueue_scripts', 'mh_plug_enqueue_frontend_scripts');

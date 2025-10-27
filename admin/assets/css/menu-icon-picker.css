@@ -1,0 +1,153 @@
+/* Styles for MH Plug Menu Icon Picker */
+
+.mh-menu-icon-picker-wrapper {
+    margin-top: 10px;
+    clear: both; /* Ensure it appears below floating elements */
+}
+
+/* Hide the actual text input field visually but keep accessible */
+.mh-menu-icon-hidden-input {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    word-wrap: normal !important;
+}
+
+
+.mh-menu-icon-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between buttons */
+    margin-top: 5px;
+}
+
+/* Style the main selection button */
+.mh-menu-icon-picker-button {
+    min-width: 120px; /* Give it some initial width */
+    text-align: left;
+    display: flex; /* Align icon and text inside */
+    align-items: center;
+}
+
+.mh-menu-icon-preview {
+    display: inline-flex; /* Use flex for vertical alignment */
+    align-items: center;
+    min-height: 20px; /* Ensure button has height even with no text */
+}
+
+.mh-menu-icon-preview i {
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 1.3em; /* Make preview icon slightly larger */
+    vertical-align: middle;
+    width: 1.3em; /* Give icon fixed width for alignment */
+    text-align: center;
+}
+
+.mh-menu-icon-clear {
+    text-decoration: none;
+    color: #d63638; /* Red color for clear button */
+    margin-left: 5px;
+    padding: 0 5px !important; /* Reduce padding */
+    line-height: inherit !important;
+    height: auto !important;
+    box-shadow: none !important;
+}
+.mh-menu-icon-clear:hover {
+    color: #a00;
+}
+
+/* --- Styles for the Modal --- */
+.mh-icon-picker-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100000; /* High z-index */
+    display: none; /* Hidden by default */
+}
+.mh-icon-picker-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    height: 70vh;
+    max-height: 500px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 100001;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+}
+
+.mh-icon-picker-modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.mh-icon-picker-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+.mh-icon-picker-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 5px;
+    color: #666;
+}
+.mh-icon-picker-modal-close:hover {
+    color: #000;
+}
+
+.mh-icon-picker-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1; /* Take available space */
+}
+
+.mh-icon-picker-modal-body .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 15px;
+    text-align: center;
+}
+
+.mh-icon-picker-modal-body .icon-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.mh-icon-picker-modal-body .icon-item:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+}
+.mh-icon-picker-modal-body .icon-item i {
+    font-size: 24px;
+}
+
+.mh-icon-picker-modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+}

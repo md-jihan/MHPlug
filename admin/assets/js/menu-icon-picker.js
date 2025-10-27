@@ -96,20 +96,32 @@ jQuery(document).ready(function($) {
             $clearButton.hide();
         }
     }
-
-
-    // --- Event Handlers ---
+// --- Event Handlers ---
 
     // Click handler for the main "Select Icon" button
-    $('#menu-management').on('click', '.mh-menu-icon-picker-button', function() {
+    // Use event delegation on a static parent (#menu-management)
+    $(document).on('click', '#menu-management .mh-menu-icon-picker-button', function() {
+        console.log('MH Icon Picker Button Clicked!'); // Debugging line
         var targetInputSelector = $(this).data('target-input');
-        openIconPickerModal(targetInputSelector);
+        if (targetInputSelector) {
+            openIconPickerModal(targetInputSelector);
+        } else {
+            console.error('MH Icon Picker: Target input selector not found.');
+        }
     });
 
     // Click handler for the "Clear" button
-    $('#menu-management').on('click', '.mh-menu-icon-clear', function() {
+    // Use event delegation
+    $(document).on('click', '#menu-management .mh-menu-icon-clear', function() {
+        console.log('MH Icon Clear Button Clicked!'); // Debugging line
         var targetInputSelector = $(this).data('target-input');
-        updateIconSelection(targetInputSelector, ''); // Clear the selection
+         if (targetInputSelector) {
+            updateIconSelection(targetInputSelector, ''); // Clear the selection
+        } else {
+             console.error('MH Icon Picker: Target input selector not found for clear button.');
+        }
     });
+
+    // Make sure the rest of your functions (createIconPickerModal, openIconPickerModal, etc.) are inside the main jQuery(document).ready() block.
 
 });

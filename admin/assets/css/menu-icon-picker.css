@@ -6,20 +6,22 @@
 }
 
 /* Hide the actual text input field visually but keep accessible */
-.mh-menu-icon-hidden-input {
-    border: 0;
-    clip: rect(1px, 1px, 1px, 1px);
-    -webkit-clip-path: inset(50%);
-    clip-path: inset(50%);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
+/* Hide the actual text input field visually but keep accessible */
+/* Make selector more specific */
+#menu-settings-column .mh-menu-icon-hidden-input,
+#menu-management .mh-menu-icon-hidden-input {
+    border: 0 !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    -webkit-clip-path: inset(50%) !important;
+    clip-path: inset(50%) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
     word-wrap: normal !important;
 }
-
 
 .mh-menu-icon-picker-container {
     display: flex;

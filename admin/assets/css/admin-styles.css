@@ -126,7 +126,7 @@
     border: 1px solid #e0e4e7; /* Lighter border */
     border-radius: 6px; /* Slightly less rounded */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    padding: 15px 20px;
+    padding: 10px 15px;
     transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
@@ -157,7 +157,7 @@
  * Scoped and slightly smaller.
  * =================================================================== */
 .mh-plug-admin-wrap .switch {
-  font-size: 14px; /* ADJUST THIS VALUE TO MAKE IT SMALLER (original was 17px) */
+  font-size: 12px; /* ADJUST THIS VALUE TO MAKE IT SMALLER (original was 17px) */
   position: relative;
   display: inline-block;
   width: 5em; /* Width is relative to font-size */
@@ -171,6 +171,7 @@
   width: 0;
   height: 0;
   min-width: 0;
+  margin: 0px -6px 0px 0px;
 }
 
 .mh-plug-admin-wrap .toggle {

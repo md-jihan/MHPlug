@@ -14,11 +14,11 @@ if (!defined('ABSPATH')) {
         ?>
 
         <div class="mh-accordion">
-
+ 
             <div class="mh-accordion-item">
                 <div class="mh-accordion-header">
                     <span class="mh-accordion-title"><?php esc_html_e('Global Settings (Future)', 'mh-plug'); ?></span>
-                    <?php // Add an inner wrapper for the right-side elements ?>
+                   <?php // Add an inner wrapper for the right-side elements ?>
                     <span class="mh-header-controls">
                         <span class="mh-widget-controls">
                             <button type="button" class="button button-small mh-toggle-all" data-action="enable"><?php esc_html_e('Enable All', 'mh-plug'); ?></button>

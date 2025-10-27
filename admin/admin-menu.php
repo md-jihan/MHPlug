@@ -72,42 +72,51 @@ class MH_Admin_Menu {
         </style>
 <?php
     }
-
-    /**
-     * Enqueues assets ONLY for the plugin's settings page.
+/**
+     * Enqueues assets for the plugin's settings page OR the Nav Menus page.
+     * CORRECTED LOGIC
      */
     public function enqueue_page_assets($hook) {
-        // This ensures these files only load on our settings page, not the entire admin area.
-        if ('toplevel_page_mh-plug-settings' !== $hook) {
-            return;
-        }
 
-        // Enqueue the external stylesheet for accordion and widget cards.
-        $css_version = filemtime(MH_PLUG_PATH . 'admin/assets/css/admin-styles.css');
-        wp_enqueue_style('mh-plug-admin-styles', MH_PLUG_URL . 'admin/assets/css/admin-styles.css', [], $css_version);
-        
-        // Enqueue the JavaScript for the accordion.
-        wp_enqueue_script('mh-plug-admin-scripts', MH_PLUG_URL . 'admin/assets/js/admin-scripts.js', ['jquery'], MH_PLUG_VERSION, true);
-    
-    // --- ADD THIS BLOCK ---
+        // Check if we are on the main plugin settings page
+        if ('toplevel_page_mh-plug-settings' === $hook) {
+            // Enqueue the external stylesheet for accordion and widget cards.
+            $css_path = MH_PLUG_PATH . 'admin/assets/css/admin-styles.css';
+            if (file_exists($css_path)) {
+                $css_version = filemtime($css_path);
+                wp_enqueue_style('mh-plug-admin-styles', MH_PLUG_URL . 'admin/assets/css/admin-styles.css', [], $css_version);
+            }
+
+            // Enqueue the JavaScript for the accordion.
+            $js_path = MH_PLUG_PATH . 'admin/assets/js/admin-scripts.js';
+             if (file_exists($js_path)) {
+                $js_version = filemtime($js_path);
+                wp_enqueue_script('mh-plug-admin-scripts', MH_PLUG_URL . 'admin/assets/js/admin-scripts.js', ['jquery'], $js_version, true);
+             }
+        }
         // Check if we are on the Nav Menus admin page
-        if ( 'nav-menus.php' === $hook ) {
+        elseif ( 'nav-menus.php' === $hook ) { // Use elseif here
              // Enqueue CSS for the icon picker button and modal styles
-            $picker_css_version = filemtime(MH_PLUG_PATH . 'admin/assets/css/menu-icon-picker.css');
-            wp_enqueue_style('mh-plug-menu-icon-picker-styles', MH_PLUG_URL . 'admin/assets/css/menu-icon-picker.css', [], $picker_css_version);
+            $picker_css_path = MH_PLUG_PATH . 'admin/assets/css/menu-icon-picker.css';
+             if (file_exists($picker_css_path)) {
+                $picker_css_version = filemtime($picker_css_path);
+                wp_enqueue_style('mh-plug-menu-icon-picker-styles', MH_PLUG_URL . 'admin/assets/css/menu-icon-picker.css', [], $picker_css_version);
+             }
 
              // Enqueue JS for the icon picker functionality
-             $picker_js_version = filemtime(MH_PLUG_PATH . 'admin/assets/js/menu-icon-picker.js');
-            wp_enqueue_script('mh-plug-menu-icon-picker-script', MH_PLUG_URL . 'admin/assets/js/menu-icon-picker.js', ['jquery'], $picker_js_version, true);
+            $picker_js_path = MH_PLUG_PATH . 'admin/assets/js/menu-icon-picker.js';
+             if (file_exists($picker_js_path)) {
+                 $picker_js_version = filemtime($picker_js_path);
+                wp_enqueue_script('mh-plug-menu-icon-picker-script', MH_PLUG_URL . 'admin/assets/js/menu-icon-picker.js', ['jquery'], $picker_js_version, true);
+             }
 
-            // --- IMPORTANT: Enqueue your actual icon font CSS here too! ---
-            // The modal needs access to the font definitions.
-             $icon_font_css_version = filemtime(MH_PLUG_PATH . 'elementor/assets/css/style.css'); // Adjust path if needed
-            wp_enqueue_style('mh-icons-for-picker', MH_PLUG_URL . 'elementor/assets/css/style.css', [], $icon_font_css_version);
-
+            // Enqueue your actual icon font CSS here too!
+            $icon_font_css_path = MH_PLUG_PATH . 'elementor/assets/css/style.css'; // Adjust path if needed
+            if (file_exists($icon_font_css_path)) {
+                $icon_font_css_version = filemtime($icon_font_css_path);
+                wp_enqueue_style('mh-icons-for-picker', MH_PLUG_URL . 'elementor/assets/css/style.css', [], $icon_font_css_version);
+            }
         }
-        // --- END OF ADDED BLOCK ---
-
     }
     
     // --- The rest of the functions are unchanged ---

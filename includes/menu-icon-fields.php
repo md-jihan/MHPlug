@@ -3,7 +3,6 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
 /**
  * ===================================================================
  * Add Icon Field to WordPress Menu Items

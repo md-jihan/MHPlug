@@ -3,8 +3,15 @@
 .mh-menu-icon-picker-wrapper {
     margin-top: 10px;
     clear: both; /* Ensure it appears below floating elements */
-}
 
+}
+.mh-menu-icon-picker-wrapper {
+    margin-bottom: 10px; /* Add space below the icon picker section */
+}
+.field-hide-label {
+    margin-top: 5px; /* Add space above the hide label checkbox */
+    clear: both;
+}
 /* Hide the actual text input field visually but keep accessible */
 /* Hide the actual text input field visually but keep accessible */
 /* Make selector more specific */

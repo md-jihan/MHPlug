@@ -160,3 +160,24 @@
     border-top: 1px solid #ddd;
     text-align: right;
 }
+
+
+
+/* Styles for Modal Search and Sections */
+.mh-icon-picker-modal-header input[type="text"] {
+    min-width: 150px;
+}
+
+.mh-icon-picker-section-title {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Style Font Awesome icons slightly differently if needed */
+.mh-icon-picker-modal-body .fa-icon-grid .icon-item i {
+    font-size: 20px; /* Slightly smaller maybe? */
+}

@@ -116,6 +116,16 @@ class MH_Admin_Menu {
                 $icon_font_css_version = filemtime($icon_font_css_path);
                 wp_enqueue_style('mh-icons-for-picker', MH_PLUG_URL . 'elementor/assets/css/style.css', [], $icon_font_css_version);
             }
+
+            // --- ADD THIS LINE ---
+            // Enqueue Elementor's Font Awesome 5 Free assets if available
+            if ( defined('ELEMENTOR_ASSETS_URL') ) { // Check if Elementor constants are defined
+                 wp_enqueue_style('font-awesome-5-all', ELEMENTOR_ASSETS_URL . 'lib/font-awesome/css/all.min.css', [], '5.15.3'); // Adjust version if needed
+                 //wp_enqueue_style('font-awesome-5-all', ELEMENTOR_ASSETS_URL . 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css', [], '5.15.3'); // Adjust version if needed
+            } else {
+                // Fallback: Enqueue from CDN if Elementor is not active
+                //wp_enqueue_style('font-awesome-5-all', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css', [], '5.15.3');
+            }
         }
     }
     

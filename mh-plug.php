@@ -37,10 +37,28 @@ require_once MH_PLUG_PATH . 'admin/admin-menu.php';
  * This file checks if Elementor is active and then loads all your custom widgets.
  */
 require_once MH_PLUG_PATH . 'elementor/elementor-loader.php';
+/**
+ * Load global plugin features based on dashboard settings.
+ */
+function mh_plug_load_global_features() {
+    // Get our single array of all saved settings
+    $settings = get_option('mh_plug_widgets_settings', []);
 
-    // --- ADD THIS LINE ---
-// Load Menu Item Icon Fields Functionality
-require_once MH_PLUG_PATH . 'includes/menu-icon-fields.php';
+    // Check if the 'Enable Menu Icons' toggle is on (set to 1)
+    $enable_menu_icons = isset($settings['enable_menu_icons']) ? (bool) $settings['enable_menu_icons'] : false;
+
+    if ( $enable_menu_icons ) {
+        require_once plugin_dir_path(__FILE__) . 'includes/menu-icon-fields.php';
+    }
+
+    // You can add other global features here later
+    // Example:
+    // $enable_feature_x = isset($settings['enable_feature_x']) ? (bool) $settings['enable_feature_x'] : false;
+    // if ( $enable_feature_x ) {
+    //    require_once plugin_dir_path(__FILE__) . 'includes/feature-x.php';
+    // }
+}
+add_action('plugins_loaded', 'mh_plug_load_global_features');
 // --- END OF ADDED LINE ---
 /**
  * Enqueue Frontend Scripts.

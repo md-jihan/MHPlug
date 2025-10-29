@@ -28,7 +28,24 @@ if (!defined('ABSPATH')) {
                     </span>
                 </div>
                 <div class="mh-accordion-content">
-                    <p>More settings will be added here in a future update.</p>
+                    
+                    <?php // --- ADD A TITLE WITH ICON --- ?>
+                    <h3 class="mh-section-header">
+                        <span class="dashicons dashicons-admin-generic"></span> <?php // WordPress Dashicon ?>
+                        <?php esc_html_e('General Features', 'mh-plug'); ?>
+                    </h3>
+                
+                    <?php // --- RENDER THE GLOBAL SETTINGS SECTION --- ?>
+                    <div class="mh-settings-grid">
+                        <?php
+                        global $wp_settings_fields;
+                        if (isset($wp_settings_fields['mh-plug-settings-page']['mh_plug_global_settings_section'])) {
+                            foreach ((array) $wp_settings_fields['mh-plug-settings-page']['mh_plug_global_settings_section'] as $field) {
+                                call_user_func($field['callback'], $field['args']);
+                            }
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
             <div class="mh-accordion-item">

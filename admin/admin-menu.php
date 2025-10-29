@@ -120,15 +120,13 @@ class MH_Admin_Menu {
                 wp_enqueue_style('mh-icons-for-picker', MH_PLUG_URL . 'elementor/assets/css/style.css', [], $icon_font_css_version);
             }
 
-            // --- ADD THIS LINE ---
-            // Enqueue Elementor's Font Awesome 5 Free assets if available
-            if ( defined('ELEMENTOR_ASSETS_URL') ) { // Check if Elementor constants are defined
-                 wp_enqueue_style('font-awesome-5-all', ELEMENTOR_ASSETS_URL . 'lib/font-awesome/css/all.min.css', [], '5.15.3'); // Adjust version if needed
-                 //wp_enqueue_style('font-awesome-5-all', ELEMENTOR_ASSETS_URL . 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css', [], '5.15.3'); // Adjust version if needed
-            } else {
-                // Fallback: Enqueue from CDN if Elementor is not active
-                //wp_enqueue_style('font-awesome-5-all', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css', [], '5.15.3');
+            // --- MODIFIED BLOCK ---
+            // Enqueue your local Font Awesome 7.1.0 CSS
+            $fa_css_path = MH_PLUG_PATH . 'assets/fontawesome-7/css/all.min.css';
+            if (file_exists($fa_css_path)) {
+                wp_enqueue_style('mh-fontawesome-7', MH_PLUG_URL . 'assets/fontawesome-7/css/all.min.css', [], '7.1.0'); // Use the FA version
             }
+            // --- END MODIFIED BLOCK ---
         }
     }
     
@@ -141,10 +139,32 @@ class MH_Admin_Menu {
             [$this, 'sanitize_widgets_settings'] // <-- Add this sanitize callback
         );
         add_settings_section('mh_plug_widgets_section', null, null, 'mh-plug-settings-page');
-        // Use the new class property to loop through widgets
+// --- ADD THIS NEW SECTION ---
+        add_settings_section(
+            'mh_plug_global_settings_section', // New unique ID for global settings
+            null, 
+            null, 
+            'mh-plug-settings-page'
+        );
+// Loop through all registered settings
         foreach ($this->widgets as $key => $label) {
-            add_settings_field($key, $label, [$this, 'render_widget_toggle_field'],
-            'mh-plug-settings-page', 'mh_plug_widgets_section', ['id' => $key, 'label' => $label]);
+            
+            // --- ADD THIS LOGIC ---
+            // Decide which section this setting belongs to
+            $section_id = 'mh_plug_widgets_section'; // Default to widgets section
+            if ($key === 'enable_menu_icons') {
+                $section_id = 'mh_plug_global_settings_section'; // Assign this one to the global section
+            }
+            // --- END LOGIC ---
+
+            add_settings_field(
+                $key, 
+                $label, 
+                [$this, 'render_widget_toggle_field'],
+                'mh-plug-settings-page', 
+                $section_id, // <-- USE THE DYNAMIC SECTION ID
+                ['id' => $key, 'label' => $label]
+            );
         }
     }
    

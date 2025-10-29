@@ -18,6 +18,9 @@ class MH_Admin_Menu {
         'mh_heading'      => 'Advanced Heading',
         'mh_site_logo'    => 'Site Logo', // <-- ADD THIS LINE
         'mh_site_title'   => 'Site Title', // <-- ADD THIS LINE
+        
+        // Add Global Settings here for now
+        'enable_menu_icons' => 'Menu Icons', // <-- ADD THIS LINE
     ];
 
     public function __construct() {

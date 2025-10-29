@@ -28,13 +28,6 @@ if (!defined('ABSPATH')) {
                     </span>
                 </div>
                 <div class="mh-accordion-content">
-                    
-                    <?php // --- ADD A TITLE WITH ICON --- ?>
-                    <h3 class="mh-section-header">
-                        <span class="dashicons dashicons-admin-generic"></span> <?php // WordPress Dashicon ?>
-                        <?php esc_html_e('General Features', 'mh-plug'); ?>
-                    </h3>
-                
                     <?php // --- RENDER THE GLOBAL SETTINGS SECTION --- ?>
                     <div class="mh-settings-grid">
                         <?php

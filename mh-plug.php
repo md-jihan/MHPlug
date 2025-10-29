@@ -80,6 +80,14 @@ function mh_plug_enqueue_frontend_scripts() {
         [],
         MH_PLUG_VERSION
     );
+    
+    wp_enqueue_style(
+        'fontawesome-icons', // Use the same handle name
+        MH_PLUG_URL . './assets/fontawesome-7/css/all.min.css', // Correct path
+        [],
+        MH_PLUG_VERSION
+    );
+
 
 }
 // The 'wp_enqueue_scripts' action hook is the proper way to add scripts and styles to the frontend.

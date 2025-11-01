@@ -3,12 +3,21 @@ jQuery(document).ready(function($) {
 
 // Accordion Toggle Logic
     $('.mh-accordion-header').on('click', function(e) {
+
+        var $item = $(this).closest('.mh-accordion-item');
+        // --- CHANGED: START ---
+        // First, check if the parent wrapper is disabled.
+        // This class '.mh-plug-disabled' is added by settings-page.php if Elementor is inactive.
+        if ($item.hasClass('mh-plug-disabled')) {
+            return; // Do nothing if the section is disabled
+        }
+        // --- CHANGED: END --
+
         // *** IMPORTANT: Ignore clicks if they came from the Enable/Disable buttons ***
         if ($(e.target).closest('.mh-widget-controls').length) {
             return; // Stop if the click was on the buttons or their container
         }
 
-        var $item = $(this).closest('.mh-accordion-item');
         var $content = $item.find('.mh-accordion-content');
 
         // Close others
@@ -26,6 +35,13 @@ jQuery(document).ready(function($) {
 // Handle "Enable All" / "Disable All" button clicks
     $('.mh-toggle-all').on('click', function(e) { // Add 'e' for event object
         e.stopPropagation(); // *** IMPORTANT: Stop the click from bubbling up to the header ***
+// --- CHANGED: START ---
+        // Check if the button itself is disabled.
+        // The 'disabled' attribute is added by settings-page.php if Elementor is inactive.
+        if ($(this).is(':disabled')) {
+            return; // Do nothing if the button is disabled
+        }
+        // --- CHANGED: END ---
 
         var action = $(this).data('action');
         // Find the accordion ITEM, then find the content area within it

@@ -325,3 +325,32 @@
 .mh-plug-admin-wrap form p.submit {
     margin-top: 25px;
 }
+
+/* =======================================
+ * Disabled Admin Sections
+ * ======================================= */
+
+/* This grays out the whole accordion item */
+.mh-accordion-item.mh-plug-disabled {
+    opacity: 0.7;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* This allows the error notice to be clicked/copied */
+.mh-accordion-item.mh-plug-disabled .mh-plug-admin-notice {
+    pointer-events: auto;
+}
+
+/* This styles the 'off' text in your specific switch */
+/* It finds a disabled '.cb' input, looks for its sibling '.toggle', 
+   then finds the '.left' span inside that */
+label.switch input.cb:disabled ~ span.toggle span.left {
+    color: #999 !important;
+    opacity: 0.8 !important;
+}
+
+/* This makes the disabled switch non-clickable */
+.mh-plug-disabled .switch {
+    cursor: not-allowed;
+}

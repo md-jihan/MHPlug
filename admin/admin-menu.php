@@ -178,14 +178,15 @@ class MH_Admin_Menu {
         // Check if the option is saved and set to 1 (checked). Default is true (checked) if not set.
         $is_checked = isset($options[$id]) ? (bool)$options[$id] : true;
         $checked_attr = $is_checked ? ' checked' : '';
-
+// --- CHANGE #1: Get the 'disabled' string we passed from settings-page.php ---
+    $disabled_string = isset($args['disabled']) ? $args['disabled'] : '';
         // Output the new HTML structure for the 3D switch
         echo "<div class='mh-widget-card'>";
         echo "  <div class='mh-widget-card-header'>";
         echo "      <div class='mh-widget-title'>" . esc_html($args['label']) . "</div>";
         // Start of new switch HTML
         echo "      <label class='switch'>";
-        echo "          <input class='cb' type='checkbox' name='mh_plug_widgets_settings[{$id}]' value='1' {$checked_attr} />";
+        echo "          <input class='cb' type='checkbox' name='mh_plug_widgets_settings[{$id}]' value='1' {$checked_attr} {$disabled_string}/>";
         echo "          <span class='toggle'>";
         echo "              <span class='left'>off</span>";
         echo "              <span class='right'>on</span>";

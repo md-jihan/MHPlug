@@ -5,13 +5,7 @@ jQuery(document).ready(function($) {
     $('.mh-accordion-header').on('click', function(e) {
 
         var $item = $(this).closest('.mh-accordion-item');
-        // --- CHANGED: START ---
-        // First, check if the parent wrapper is disabled.
-        // This class '.mh-plug-disabled' is added by settings-page.php if Elementor is inactive.
-        if ($item.hasClass('mh-plug-disabled')) {
-            return; // Do nothing if the section is disabled
-        }
-        // --- CHANGED: END --
+       
 
         // *** IMPORTANT: Ignore clicks if they came from the Enable/Disable buttons ***
         if ($(e.target).closest('.mh-widget-controls').length) {

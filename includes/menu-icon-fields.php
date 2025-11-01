@@ -115,7 +115,7 @@ function mh_plug_add_menu_item_icon_field( $item_id, $item, $depth, $args, $id =
         <p class="description"><?php _e('Click the button to select an icon.', 'mh-plug'); ?></p>
 
         <?php // This entire 3D toggle switch section will ONLY appear if its global setting is ON ?>
-        <?php if ($enable_hide_label_toggle) : ?>
+        <?php if (!empty($icon_class)) : ?>
             <div class="field-mh-menu-icon-hide-label">
                 <div class="mh-plug-toggle-switch-container">
                     <div class="mh-plug-toggle-switch">

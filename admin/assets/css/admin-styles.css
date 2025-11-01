@@ -371,3 +371,30 @@ label.switch input.cb:disabled ~ span.toggle span.left {
     cursor: not-allowed;
     opacity: 0.6;
 }
+
+/* --- THIS IS THE "VISUAL OFF" FIX --- */
+
+/* 1. Force the 'off' text to be gray and visible */
+label.switch input.cb:disabled ~ span.toggle span.left {
+    color: #999 !important;
+    opacity: 0.8 !important;
+    visibility: visible !important; /* Make sure it's visible */
+}
+
+/* 2. Force the 'on' text to be hidden */
+label.switch input.cb:disabled ~ span.toggle span.right {
+    visibility: hidden !important; /* Hide the "on" text */
+}
+
+/* 3. Force the background to the 'off' color */
+label.switch input.cb:disabled ~ span.toggle {
+    /* Find the 'off' state background in your 3D switch CSS and put it here */
+    /* background: #DCDCDC !important; */
+    /* box-shadow: ... !important;  */
+}
+
+/* 4. Force the toggle circle (if it's a ::before or ::after) to the left */
+label.switch input.cb:disabled ~ span.toggle::before {
+    transform: translateX(0) !important; /* Or whatever your 'off' position is */
+    /* background: #fff !important; */
+}

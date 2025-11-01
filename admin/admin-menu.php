@@ -178,6 +178,9 @@ class MH_Admin_Menu {
         // Check if the option is saved and set to 1 (checked). Default is true (checked) if not set.
         $is_checked = isset($options[$id]) ? (bool)$options[$id] : true;
         $checked_attr = $is_checked ? ' checked' : '';
+
+        // Get the current value (1 or 0)
+    $current_value = $is_checked ? '1' : '0';
 // --- CHANGE #1: Get the 'disabled' string we passed from settings-page.php ---
     $disabled_string = isset($args['disabled']) ? $args['disabled'] : '';
         // Output the new HTML structure for the 3D switch
@@ -194,6 +197,14 @@ class MH_Admin_Menu {
         echo "      </label>";
         // End of new switch HTML
         echo "  </div>";
+        // --- THIS IS THE "MEMORY" ---
+    // If the switch is disabled, a disabled input's value is NOT sent.
+    // So, we add a HIDDEN input with the SAME name and the REAL value.
+    // This hidden input WILL be sent, preserving the setting.
+    if ( $disabled_string !== '' ) {
+        echo "<input type='hidden' name='mh_plug_widgets_settings[{$id}]' value='{$current_value}' />";
+    }
+    // --- END OF "MEMORY" ---
         echo "</div>";
     }
 

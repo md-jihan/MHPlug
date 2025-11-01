@@ -79,7 +79,7 @@ final class MH_Elementor_Loader {
              * This makes the rule very specific and ensures it only applies to our widgets.
             */
            
-.elementor-element-wrapper [class^="mhi-"], .elementor-element-wrapper [class*=" mhi-"] {
+            .elementor-element-wrapper [class^="mhi-"], .elementor-element-wrapper [class*=" mhi-"] {
                 position: relative !important; /* Make the container a positioning reference */
             }
 

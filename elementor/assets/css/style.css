@@ -46,7 +46,6 @@
 }
 
 
-
 /* =======================================
  * MH Brush Text Widget
  * ======================================= */
@@ -55,24 +54,36 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; /* Default center alignment */
+    align-items: center; /* Default center alignment from control */
     text-decoration: none;
     box-sizing: border-box; /* Ensures padding is included in height */
     
     /* Defaults from controls (can be overridden) */
     min-height: 180px; 
-    padding: 30px 20px;
     
     /* Defaults for background (can be overridden) */
     background-size: contain;
     background-position: center center;
     background-repeat: no-repeat;
+    
+    /* Ensure text color is inherited properly if it's a link */
+    color: inherit; 
+    transition: transform 0.3s ease; /* Added a subtle hover effect */
+}
+
+/* This targets the wrapper only when it's a link */
+a.mh-brush-text-wrapper:hover {
+    text-decoration: none; /* Disable underline on hover */
+    color: inherit;
+    transform: scale(1.03); /* Subtle hover effect */
 }
 
 .mh-brush-text-wrapper .mh-brush-primary-text {
     line-height: 1.1;
+    color: #FFFFFF; /* Default color from control */
 }
 
 .mh-brush-text-wrapper .mh-brush-secondary-text {
     line-height: 1.2;
+    color: #FFFFFF; /* Default color from control */
 }

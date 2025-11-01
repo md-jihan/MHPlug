@@ -166,5 +166,19 @@ function mh_plug_enqueue_editor_icons() {
         [],
         MH_PLUG_VERSION
     );
+
+    // --- NEW: Enqueue the brush color filter script ---
+    wp_enqueue_script(
+        'mh-brush-color-filter-script',
+        MH_PLUG_URL . 'elementor/assets/js/brush-color-filter.js',
+        ['jquery', 'elementor-frontend'], // Ensure Elementor frontend is loaded
+        MH_PLUG_VERSION,
+        true // In footer
+    );
+    // --- END NEW BLOCK ---
 }
 add_action( 'elementor/editor/before_enqueue_scripts', 'mh_plug_enqueue_editor_icons' );
+// This action is important for frontend as well, if we want this script on the front.
+// For editor only: add_action( 'elementor/editor/after_enqueue_scripts', 'mh_plug_enqueue_editor_icons' );
+// For both:
+add_action( 'elementor/frontend/after_register_scripts', 'mh_plug_enqueue_editor_icons' ); // Enqueue on frontend for runtime effects

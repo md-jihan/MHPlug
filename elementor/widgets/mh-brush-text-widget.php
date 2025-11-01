@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
-use Elementor\Group_Control_Background;
+// Removed Group_Control_Background as we'll handle the SVG background differently
 use Elementor\Group_Control_Text_Shadow;
 
 class MH_Brush_Text_Widget extends Widget_Base {
@@ -26,12 +26,10 @@ class MH_Brush_Text_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        // Using an icon from your custom font
         return 'mhi-text'; 
     }
 
     public function get_categories() {
-        // This matches your category in elementor-loader.php
         return ['mh-plug-widgets']; 
     }
 
@@ -108,33 +106,38 @@ class MH_Brush_Text_Widget extends Widget_Base {
 
         // --- Style Tab: Brush Background ---
         $this->start_controls_section(
-            'section_style_background',
+            'section_style_brush_image',
             [
-                'label' => esc_html__('Brush Background', 'mh-plug'),
+                'label' => esc_html__('Brush Image & Color', 'mh-plug'),
                 'tab' => Controls_Manager::TAB_STYLE,
             ]
         );
 
-        $this->add_group_control(
-            Group_Control_Background::get_type(),
+        $this->add_control(
+            'brush_image',
             [
-                'name' => 'brush_background',
-                'label' => esc_html__('Background', 'mh-plug'),
-                'types' => ['classic'], // Only allow image
-                'selector' => '{{WRAPPER}} .mh-brush-text-wrapper',
-                'fields_options' => [
-                    'background' => ['default' => 'classic'],
-                    'image' => [
-                        'label' => esc_html__('Brush Image', 'mh-plug'),
-                        'default' => [
-                            // Using your brash.png file as the default
-                            'url' => plugin_dir_url(__FILE__) . '../assets/images/brash.png', 
-                        ],
-                    ],
-                    'position' => ['default' => 'center center'],
-                    'repeat' => ['default' => 'no-repeat'],
-                    'size' => ['default' => 'contain'],
+                'label' => esc_html__('Brush Image (SVG Recommended)', 'mh-plug'),
+                'type' => Controls_Manager::MEDIA,
+                'default' => [
+                    'url' => plugin_dir_url(__FILE__) . 'assets/images/brush.svg', // Default to SVG
                 ],
+                'description' => esc_html__('Upload an SVG brush stroke for recoloring. PNG/JPG will not recolor.', 'mh-plug'),
+            ]
+        );
+
+        $this->add_control(
+            'brush_color',
+            [
+                'label' => esc_html__('Brush Color', 'mh-plug'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#FFC0CB', // Default pink color from your image
+                'selectors' => [
+                    // We'll use CSS custom property and filter for recoloring
+                    '{{WRAPPER}} .mh-brush-text-wrapper' => '--mh-brush-color: {{VALUE}};', 
+                ],
+                'condition' => [
+                    'brush_image[url]!' => '', // Only show if an image is selected
+                ]
             ]
         );
 
@@ -167,6 +170,66 @@ class MH_Brush_Text_Widget extends Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'brush_size',
+            [
+                'label' => esc_html__('Brush Size', 'mh-plug'),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'contain',
+                'options' => [
+                    'auto' => esc_html__('Auto', 'mh-plug'),
+                    'cover' => esc_html__('Cover', 'mh-plug'),
+                    'contain' => esc_html__('Contain', 'mh-plug'),
+                    'initial' => esc_html__('Initial', 'mh-plug'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mh-brush-text-wrapper' => 'background-size: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'brush_position',
+            [
+                'label' => esc_html__('Brush Position', 'mh-plug'),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'center center',
+                'options' => [
+                    'top left' => esc_html__('Top Left', 'mh-plug'),
+                    'top center' => esc_html__('Top Center', 'mh-plug'),
+                    'top right' => esc_html__('Top Right', 'mh-plug'),
+                    'center left' => esc_html__('Center Left', 'mh-plug'),
+                    'center center' => esc_html__('Center Center', 'mh-plug'),
+                    'center right' => esc_html__('Center Right', 'mh-plug'),
+                    'bottom left' => esc_html__('Bottom Left', 'mh-plug'),
+                    'bottom center' => esc_html__('Bottom Center', 'mh-plug'),
+                    'bottom right' => esc_html__('Bottom Right', 'mh-plug'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mh-brush-text-wrapper' => 'background-position: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'brush_repeat',
+            [
+                'label' => esc_html__('Brush Repeat', 'mh-plug'),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'no-repeat',
+                'options' => [
+                    'no-repeat' => esc_html__('No-repeat', 'mh-plug'),
+                    'repeat' => esc_html__('Repeat', 'mh-plug'),
+                    'repeat-x' => esc_html__('Repeat-x', 'mh-plug'),
+                    'repeat-y' => esc_html__('Repeat-y', 'mh-plug'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mh-brush-text-wrapper' => 'background-repeat: {{VALUE}};',
+                ],
+            ]
+        );
+
+
         $this->end_controls_section();
 
         // --- Style Tab: Primary Text ---
@@ -183,7 +246,7 @@ class MH_Brush_Text_Widget extends Widget_Base {
             [
                 'label' => esc_html__('Color', 'mh-plug'),
                 'type' => Controls_Manager::COLOR,
-                'default' => '#FFFFFF',
+                'default' => '#000000', // Changed to black for contrast
                 'selectors' => [
                     '{{WRAPPER}} .mh-brush-primary-text' => 'color: {{VALUE}};',
                 ],
@@ -234,7 +297,7 @@ class MH_Brush_Text_Widget extends Widget_Base {
             [
                 'label' => esc_html__('Color', 'mh-plug'),
                 'type' => Controls_Manager::COLOR,
-                'default' => '#FFFFFF',
+                'default' => '#000000', // Changed to black for contrast
                 'selectors' => [
                     '{{WRAPPER}} .mh-brush-secondary-text' => 'color: {{VALUE}};',
                 ],
@@ -272,9 +335,7 @@ class MH_Brush_Text_Widget extends Widget_Base {
         if ( ! empty( $settings['link']['url'] ) ) {
             $wrapper_tag = 'a';
             $this->add_link_attributes( 'link_wrapper', $settings['link'] );
-            // Get all attributes as a string, including class
             $wrapper_attrs_string = $this->get_render_attribute_string( 'link_wrapper' );
-            // Manually add your class to the attributes
             if (strpos($wrapper_attrs_string, 'class="') !== false) {
                  $wrapper_attrs_string = str_replace( 'class="', 'class="mh-brush-text-wrapper ', $wrapper_attrs_string );
             } else {
@@ -282,8 +343,13 @@ class MH_Brush_Text_Widget extends Widget_Base {
             }
         }
         
+        // Prepare background image style
+        $background_image_style = '';
+        if ( ! empty( $settings['brush_image']['url'] ) ) {
+            $background_image_style = 'background-image: url(' . esc_url($settings['brush_image']['url']) . ');';
+        }
         ?>
-        <<?php echo $wrapper_tag; ?> <?php echo $wrapper_attrs_string; ?>>
+        <<?php echo $wrapper_tag; ?> <?php echo $wrapper_attrs_string; ?> style="<?php echo esc_attr($background_image_style); ?>">
             <?php if ( ! empty( $settings['primary_text'] ) ) : ?>
                 <span class="mh-brush-primary-text">
                     <?php echo wp_kses_post( $settings['primary_text'] ); ?>
@@ -318,8 +384,13 @@ class MH_Brush_Text_Widget extends Widget_Base {
                     wrapperAttrs += ' rel="nofollow"';
                 }
             }
+
+            var backgroundImageStyle = '';
+            if ( settings.brush_image && settings.brush_image.url ) {
+                backgroundImageStyle = 'background-image: url(' + settings.brush_image.url + ');';
+            }
         #>
-        <{{{ wrapperTag }}} {{{ wrapperAttrs }}}>
+        <{{{ wrapperTag }}} {{{ wrapperAttrs }}} style="{{{ backgroundImageStyle }}}">
             <# if ( settings.primary_text ) { #>
                 <span class="mh-brush-primary-text">
                     {{{ settings.primary_text }}}

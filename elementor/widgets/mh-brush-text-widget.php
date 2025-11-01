@@ -190,7 +190,7 @@ class MH_Brush_Text_Widget extends Widget_Base {
                         'label' => esc_html__('Brush Image', 'mh-plug'),
                         'description' => esc_html__('Upload a brush stroke or splatter image.', 'mh-plug'),
                         'default' => [ // You can provide a default image here if you have one
-                            'url' => plugin_dir_url(__FILE__) . '../../elementor/assets/images/default-brush.png', // Example path
+                            'url' => plugin_dir_url(__FILE__) . '../assets/images/brush.png', // Example path
                         ],
                     ],
                     'position' => [

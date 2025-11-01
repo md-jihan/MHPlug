@@ -21,6 +21,8 @@ class MH_Admin_Menu {
         
         // Add Global Settings here for now
         'enable_menu_icons' => 'Menu Icons', // <-- ADD THIS LINE
+        // --- ADD THIS LINE ---
+        'mh_brush_text'     => 'Brush Text',
     ];
 
     public function __construct() {

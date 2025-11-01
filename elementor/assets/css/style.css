@@ -44,3 +44,35 @@
 .mhi-site-logo:before {
   content: "\e925";
 }
+
+
+
+/* =======================================
+ * MH Brush Text Widget
+ * ======================================= */
+
+.mh-brush-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Default center alignment */
+    text-decoration: none;
+    box-sizing: border-box; /* Ensures padding is included in height */
+    
+    /* Defaults from controls (can be overridden) */
+    min-height: 180px; 
+    padding: 30px 20px;
+    
+    /* Defaults for background (can be overridden) */
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.mh-brush-text-wrapper .mh-brush-primary-text {
+    line-height: 1.1;
+}
+
+.mh-brush-text-wrapper .mh-brush-secondary-text {
+    line-height: 1.2;
+}

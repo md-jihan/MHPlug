@@ -119,7 +119,7 @@ class MH_Brush_Text_Widget extends Widget_Base {
                 'label' => esc_html__('Brush Image (SVG Recommended)', 'mh-plug'),
                 'type' => Controls_Manager::MEDIA,
                 'default' => [
-                    'url' => plugin_dir_url(__FILE__) . 'assets/images/brush.svg', // Default to SVG
+                    'url' => plugin_dir_url(__FILE__) . '../assets/images/brash.svg', // Default to SVG
                 ],
                 'description' => esc_html__('Upload an SVG brush stroke for recoloring. PNG/JPG will not recolor.', 'mh-plug'),
             ]

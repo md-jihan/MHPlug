@@ -1,0 +1,70 @@
+
+/* =======================================
+ * MH Brush Text Widget (NEW STYLES)
+ * ======================================= */
+
+.mh-brush-text-wrapper {
+    position: relative; /* Container for absolute children */
+    display: inline-flex; /* Shrink-to-fit the width control */
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: inherit; /* Inherit color for link */
+    
+    /* Defaults from controls */
+    width: 100%; 
+    height: 180px; 
+    transition: transform 0.3s ease;
+}
+
+/* This targets the wrapper only when it's a link */
+a.mh-brush-text-wrapper:hover {
+    text-decoration: none;
+    color: inherit;
+    transform: scale(1.03); /* Subtle hover effect */
+}
+
+/* The SVG Background */
+.mh-brush-text-wrapper .mh-brush-text-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Behind the content */
+}
+
+.mh-brush-text-wrapper .mh-brush-text-svg svg {
+    width: 100%;
+    height: 100%;
+    /* preserveAspectRatio="none" will stretch the SVG to fill the container */
+}
+
+.mh-brush-text-wrapper .mh-brush-text-svg path {
+    /* Default color from control */
+    fill: #ecd3cb; 
+}
+
+/* The Text Content */
+.mh-brush-text-wrapper .mh-brush-text-content {
+    position: relative;
+    z-index: 2; /* In front of the SVG */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items is set by the Elementor control */
+    width: 100%;
+    height: 100%;
+    padding: 20px; /* Default padding */
+    box-sizing: border-box; /* Include padding in dimensions */
+}
+
+.mh-brush-text-wrapper .mh-brush-primary-text {
+    line-height: 1.1;
+    color: #000000; /* Default color from control */
+}
+
+.mh-brush-text-wrapper .mh-brush-secondary-text {
+    line-height: 1.2;
+    color: #000000; /* Default color from control */
+}

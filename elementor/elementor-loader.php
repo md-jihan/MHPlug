@@ -166,6 +166,12 @@ function mh_plug_enqueue_editor_icons() {
         [],
         MH_PLUG_VERSION
     );
+    wp_enqueue_style(
+        'style', // Handle name
+        MH_PLUG_URL . './elementor/assets/css/widget-style.css', // Correct path
+        [],
+        MH_PLUG_VERSION
+    );
 
     // --- NEW: Enqueue the brush color filter script ---
     wp_enqueue_script(

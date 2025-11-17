@@ -15,16 +15,16 @@ class MH_Admin_Menu {
     // Use an associative array for better management.
     // Key => Internal Name, Value => Display Name
     private $widgets = [
-        'mh_heading'      => 'Advanced Heading',
-        'mh_site_logo'    => 'Site Logo', // <-- ADD THIS LINE
-        'mh_site_title'   => 'Site Title', // <-- ADD THIS LINE
+        'mh_heading'        => 'Advanced Heading',
+        'mh_site_logo'      => 'Site Logo', // <-- ADD THIS LINE
+        'mh_site_title'     => 'Site Title', // <-- ADD THIS LINE
         
         // Add Global Settings here for now
-        'enable_menu_icons' => 'Menu Icons', // <-- ADD THIS LINE
-        // --- ADD THIS LINE ---
+        'enable_menu_icons' => 'Menu Icons',
+        
         'mh_brush_text'     => 'Brush Text',
-        // --- ADD THIS LINE ---
-        'mh_brush_slider' => 'MH Brush Slider',
+        
+        'mh_brush_slider'   => 'MH Brush Slider',
     ];
 
     public function __construct() {

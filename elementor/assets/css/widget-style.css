@@ -1,7 +1,6 @@
 /* =======================================
- * MH Brush Text Widget (NEW STYLES)
+ * MH Brush Text Widget (Base Styles)
  * ======================================= */
-
 .mh-brush-text-wrapper {
     position: relative; 
     display: inline-flex; 
@@ -11,21 +10,12 @@
     color: inherit; 
     width: 100%; 
     height: 180px; 
-    /* This transition is set by the Elementor control */
     transition: transform 0.3s ease;
-    cursor: pointer;
 }
-
-/* This targets the wrapper only when it's a link */
 a.mh-brush-text-wrapper:hover {
     text-decoration: none;
     color: inherit;
-    /* You can add a default scale/transform here if you want */
-}
-
-/* The SVG Background */
-.mh-brush-text-wrapper:hover .mh-brush-text-svg {
-    transform: scale(1.15);
+    transform: scale(1.03);
 }
 .mh-brush-text-wrapper .mh-brush-text-svg {
     position: absolute;
@@ -33,71 +23,75 @@ a.mh-brush-text-wrapper:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Behind the content */
-    transition: transform 0.3s ease;
+    z-index: 1;
 }
-
 .mh-brush-text-wrapper .mh-brush-text-svg svg {
     width: 100%;
     height: 100%;
-    /* preserveAspectRatio="none" will stretch the SVG to fill the container */
+    preserveAspectRatio: none;
 }
-
-.mh-brush-text-wrapper .mh-brush-text-svg path {
-    fill: #ecd3cb; /* Default color from control */
-    /* This transition is set by the Elementor control */
-    transition: fill 0.3s ease;
-}
-
-/* The Text Content */
 .mh-brush-text-wrapper .mh-brush-text-content {
     position: relative;
-    z-index: 2; /* In front of the SVG */
+    z-index: 2; 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* align-items is set by the Elementor control */
     width: 100%;
     height: 100%;
-    padding: 20px; /* Default padding */
-    box-sizing: border-box; 
+    padding: 20px;
+    box-sizing: border-box;
 }
-
 .mh-brush-text-wrapper .mh-brush-primary-text {
     line-height: 1.1;
-    color: #000000; /* Default color from control */
-    /* This transition is set by the Elementor control */
+    color: #000000;
     transition: color 0.3s ease;
 }
-
 .mh-brush-text-wrapper .mh-brush-secondary-text {
     line-height: 1.2;
-    color: #000000; /* Default color from control */
-    /* This transition is set by the Elementor control */
+    color: #000000;
     transition: color 0.3s ease;
 }
+/* This path rule is now used by BOTH widgets */
+.mh-brush-text-wrapper .mh-brush-text-svg path {
+    fill: #ecd3cb; /* Default color */
+    transition: fill 0.3s ease;
+}
+
+
 /* =======================================
- * MH Brush Slider Widget
+ * MH Brush SLIDER Widget (New Styles)
  * ======================================= */
 
 .mh-brush-slider-wrapper {
     position: relative;
-    padding: 0 40px; /* Add space for arrows */
+    padding: 0 40px; /* Space for arrows */
 }
 
-/* This is the individual slide item */
+/* Individual slide item */
 .mh-brush-slide-item {
-    padding: 10px; /* Adds spacing between slides */
+    padding: 10px; /* Spacing between slides */
     box-sizing: border-box;
+    /* CSS Variables for this slide will be injected here */
 }
 
-/* This targets the brush text wrapper inside the slide */
+/* Make slide fill the container */
 .mh-brush-slide-item .mh-brush-text-wrapper {
-    width: 100%; /* Make it fill the slide container */
+    width: 100%;
     margin: 0 auto;
 }
 
-/* Editor-only: Make slides stack vertically */
+/* --- NEW: Use CSS Variables for per-slide colors --- */
+.mh-brush-slide-item .mh-brush-text-svg path {
+    fill: var(--slide-brush-color, #ecd3cb); /* Use var, fallback to default */
+}
+
+.mh-brush-slide-item:hover .mh-brush-text-svg path {
+    fill: var(--slide-brush-color-hover, #004265); /* Use hover var */
+}
+/* --- END NEW --- */
+
+
+/* Editor-only: Make slides stack */
 .elementor-editor-active .mh-brush-slider-preview-editor .mh-brush-slide-item {
     margin-bottom: 20px;
 }
@@ -112,25 +106,21 @@ a.mh-brush-text-wrapper:hover {
     padding: 0;
     cursor: pointer;
     z-index: 10;
-    font-size: 24px; /* Default from control */
+    font-size: 24px;
     color: #000;
     transition: color 0.3s ease;
 }
-
-.mh-brush-slider-arrow.mh-brush-slider-prev- {
-    left: 0;
+.mh-brush-slider-arrow.slick-disabled {
+    opacity: 0.2;
+    cursor: default;
 }
-
-.mh-brush-slider-arrow.mh-brush-slider-next- {
-    right: 0;
+.mh-brush-slider-arrow:not(.slick-disabled):hover {
+    color: #004265; /* Brand color */
 }
-
-.mh-brush-slider-arrow:hover {
-    color: #004265; /* Your brand color */
-}
+[class*="mh-brush-slider-prev-"] { left: 0; }
+[class*="mh-brush-slider-next-"] { right: 0; }
 
 /* --- Dots --- */
-/* These styles are based on the default slick-theme.css */
 .mh-brush-slider-wrapper .slick-dots {
     position: absolute;
     bottom: -30px;
@@ -141,32 +131,33 @@ a.mh-brush-text-wrapper:hover {
     list-style: none;
     text-align: center;
 }
-
 .mh-brush-slider-wrapper .slick-dots li {
     position: relative;
     display: inline-block;
-    width: 20px; /* Will be overridden by control */
-    height: 20px; /* Will be overridden by control */
-    margin: 0 8px; /* Default from control */
+    width: auto; /* Use padding for size */
+    height: auto;
+    margin: 0 4px; /* Default from control */
     padding: 0;
     cursor: pointer;
 }
-
 .mh-brush-slider-wrapper .slick-dots li button {
     font-size: 0;
     line-height: 0;
     display: block;
     width: 8px; /* Default from control */
     height: 8px; /* Default from control */
-    padding: 5px;
+    padding: 0; /* Remove padding */
     cursor: pointer;
     color: transparent;
     border: 0;
     outline: none;
     background: #cccccc; /* Default from control */
     border-radius: 50%;
+    transition: background-color 0.3s ease;
 }
-
+.mh-brush-slider-wrapper .slick-dots li button:hover {
+     background-color: #a8a8a8;
+}
 .mh-brush-slider-wrapper .slick-dots li.slick-active button {
     background: #004265; /* Default from control */
 }

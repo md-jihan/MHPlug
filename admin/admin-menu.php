@@ -23,6 +23,8 @@ class MH_Admin_Menu {
         'enable_menu_icons' => 'Menu Icons', // <-- ADD THIS LINE
         // --- ADD THIS LINE ---
         'mh_brush_text'     => 'Brush Text',
+        // --- ADD THIS LINE ---
+        'mh_brush_slider' => 'MH Brush Slider',
     ];
 
     public function __construct() {

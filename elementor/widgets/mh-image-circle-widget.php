@@ -27,7 +27,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        return 'mhi-border-image'; // Using a standard Elementor icon
+        return 'eicon-image-box'; 
     }
 
     public function get_categories() {
@@ -36,7 +36,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
 
     protected function register_controls() {
 
-        // --- Content Tab: Image & Text ---
+        // --- Content Tab ---
         $this->start_controls_section(
             'section_content_image_text',
             [
@@ -51,7 +51,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
                 'label' => esc_html__('Choose Image', 'mh-plug'),
                 'type' => Controls_Manager::MEDIA,
                 'default' => [
-                    'url' => Elementor\Utils::get_placeholder_image_src(),
+                    'url' => \Elementor\Utils::get_placeholder_image_src(),
                 ],
             ]
         );
@@ -60,7 +60,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
             Group_Control_Image_Size::get_type(),
             [
                 'name' => 'image_size',
-                'default' => 'medium',
+                'default' => 'large',
                 'separator' => 'none',
             ]
         );
@@ -72,7 +72,6 @@ class MH_Image_Circle_Widget extends Widget_Base {
                 'type' => Controls_Manager::TEXT,
                 'default' => esc_html__('Melody Mates', 'mh-plug'),
                 'dynamic' => ['active' => true],
-                'label_block' => true,
             ]
         );
 
@@ -109,6 +108,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
                 'toggle' => true,
                 'selectors' => [
                     '{{WRAPPER}} .mh-image-circle-wrapper' => 'text-align: {{VALUE}};',
+                    '{{WRAPPER}} .mh-image-circle-wrapper' => 'align-items: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
                 ],
             ]
         );
@@ -127,35 +127,18 @@ class MH_Image_Circle_Widget extends Widget_Base {
         $this->add_responsive_control(
             'image_size_control',
             [
-                'label' => esc_html__( 'Image Size (Circle Diameter)', 'mh-plug' ),
+                'label' => esc_html__( 'Image Size (Diameter)', 'mh-plug' ),
                 'type' => Controls_Manager::SLIDER,
                 'range' => [
-                    'px' => ['min' => 50, 'max' => 500, 'step' => 1],
-                    '%' => ['min' => 10, 'max' => 100],
+                    'px' => ['min' => 50, 'max' => 500],
                 ],
                 'default' => [ 'unit' => 'px', 'size' => 180 ],
-                'size_units' => [ 'px', '%', 'em', 'vw' ],
                 'selectors' => [
                     '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
-// ... (Inside register_controls -> section_style_image)
 
-        $this->add_responsive_control(
-            'image_spacing',
-            [
-                'label' => esc_html__('Spacing Below Image', 'mh-plug'),
-                'type' => Controls_Manager::SLIDER,
-                'range' => ['px' => ['min' => 0, 'max' => 100]],
-                'default' => [ 'unit' => 'px', 'size' => 20 ],
-                'selectors' => [
-                    '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        // --- NEW CONTROL: BORDER GAP ---
         $this->add_responsive_control(
             'image_border_gap',
             [
@@ -164,38 +147,45 @@ class MH_Image_Circle_Widget extends Widget_Base {
                 'range' => [
                     'px' => ['min' => 0, 'max' => 50],
                 ],
-                'default' => [ 'unit' => 'px', 'size' => 10 ], // Default gap
+                'default' => [ 'unit' => 'px', 'size' => 10 ],
                 'selectors' => [
                     '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'padding: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
-        // -------------------------------
+
+        $this->add_responsive_control(
+            'image_spacing',
+            [
+                'label' => esc_html__('Spacing Below Image', 'mh-plug'),
+                'type' => Controls_Manager::SLIDER,
+                'default' => [ 'unit' => 'px', 'size' => 20 ],
+                'selectors' => [
+                    '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->start_controls_tabs( 'tabs_image_style' );
+
+        // Normal Tab
+        $this->start_controls_tab(
+            'tab_image_normal',
+            [ 'label' => esc_html__( 'Normal', 'mh-plug' ) ]
+        );
 
         $this->add_group_control(
             Group_Control_Border::get_type(),
             [
                 'name' => 'image_border',
-        // ... (rest of the file)
-                'selector' => '{{WRAPPER}} .mh-image-circle-image-wrapper',
+                'selector' => '{{WRAPPER}} .mh-image-circle-border',
                 'fields_options' => [
-                    'border' => [
-                        'default' => 'solid', // Or 'dashed', 'dotted'
-                    ],
-                    'width' => [
-                        'default' => [
-                            'unit' => 'px',
-                            'size' => 2,
-                        ],
-                    ],
-                    'color' => [
-                        'default' => '#DDDDDD',
-                    ],
+                    'border' => [ 'default' => 'dotted' ],
+                    'width' => [ 'default' => [ 'unit' => 'px', 'size' => 2 ] ],
+                    'color' => [ 'default' => '#DDDDDD' ],
                 ],
-                'separator' => 'before',
             ]
         );
-        
 
         $this->add_control(
             'image_border_radius',
@@ -203,28 +193,61 @@ class MH_Image_Circle_Widget extends Widget_Base {
                 'label' => esc_html__('Border Radius', 'mh-plug'),
                 'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
-                'default' => [
-                    'unit' => '%',
-                    'top' => 50,
-                    'right' => 50,
-                    'bottom' => 50,
-                    'left' => 50,
-                    'isLinked' => true,
-                ],
+                'default' => [ 'unit' => '%', 'top' => 50, 'right' => 50, 'bottom' => 50, 'left' => 50, 'isLinked' => true ],
                 'selectors' => [
-                    '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                    '{{WRAPPER}} .mh-image-circle-image' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};', // To ensure image itself is also round
+                    '{{WRAPPER}} .mh-image-circle-border' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .mh-image-circle-inner' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        // Hover Tab
+        $this->start_controls_tab(
+            'tab_image_hover',
+            [ 'label' => esc_html__( 'Hover', 'mh-plug' ) ]
+        );
+
+        $this->add_control(
+            'image_border_color_hover',
+            [
+                'label' => esc_html__('Border Color', 'mh-plug'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mh-image-circle-wrapper:hover .mh-image-circle-border' => 'border-color: {{VALUE}};',
                 ],
             ]
         );
 
         $this->add_control(
-            'image_hover_animation',
+            'hover_animation_spin',
             [
-                'label' => esc_html__('Hover Animation', 'mh-plug'),
-                'type' => Controls_Manager::HOVER_ANIMATION,
+                'label' => esc_html__('Spin Border on Hover', 'mh-plug'),
+                'type' => Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('Yes', 'mh-plug'),
+                'label_off' => esc_html__('No', 'mh-plug'),
+                'return_value' => 'yes',
+                'default' => 'yes',
             ]
         );
+        
+        $this->add_control(
+            'hover_transition',
+            [
+                'label' => esc_html__( 'Transition Duration (s)', 'mh-plug' ),
+                'type' => Controls_Manager::SLIDER,
+                'range' => [ 'px' => [ 'min' => 0.1, 'max' => 3, 'step' => 0.1 ] ],
+                'default' => [ 'unit' => 'px', 'size' => 10 ], // Actually seconds, but using slider
+                'selectors' => [
+                    '{{WRAPPER}} .mh-image-circle-border' => 'animation-duration: {{SIZE}}s;',
+                ],
+                'condition' => [ 'hover_animation_spin' => 'yes' ],
+            ]
+        );
+
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
 
         $this->end_controls_section();
 
@@ -268,25 +291,29 @@ class MH_Image_Circle_Widget extends Widget_Base {
         $this->end_controls_section();
     }
 
-   /**
-     * Render widget output on the frontend.
-     */
     protected function render() {
         $settings = $this->get_settings_for_display();
 
         $this->add_render_attribute('wrapper', 'class', 'mh-image-circle-wrapper');
         
-        // Image Wrapper attributes
-        $this->add_render_attribute('image_wrapper', 'class', 'mh-image-circle-image-wrapper');
-        if ( ! empty( $settings['image_hover_animation'] ) ) {
-            $this->add_render_attribute('image_wrapper', 'class', 'elementor-animation-' . $settings['image_hover_animation']);
+        // Border Classes
+        $this->add_render_attribute('border_div', 'class', 'mh-image-circle-border');
+        if ( $settings['hover_animation_spin'] === 'yes' ) {
+            $this->add_render_attribute('border_div', 'class', 'mh-spin-on-hover');
         }
 
-        // Get Image URL and set Background Style
+        // Link
+        if ( ! empty( $settings['link']['url'] ) ) {
+            $this->add_link_attributes('link', $settings['link']);
+            $link_tag = 'a';
+        } else {
+            $link_tag = 'div';
+        }
+
+        // Image URL
         $image_url = $settings['image']['url'];
         $image_style = '';
         if ( ! empty( $image_url ) ) {
-            // Get size-specific URL if available
             if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
                 $image_data = wp_get_attachment_image_src( $settings['image']['id'], $settings['image_size_size'] );
                 if ( $image_data ) {
@@ -295,21 +322,16 @@ class MH_Image_Circle_Widget extends Widget_Base {
             }
             $image_style = 'background-image: url(' . esc_url( $image_url ) . ');';
         }
-        
-        $this->add_render_attribute('image_wrapper', 'style', $image_style);
-
-        // Link attributes
-        if ( ! empty( $settings['link']['url'] ) ) {
-            $this->add_link_attributes('link', $settings['link']);
-            $link_tag = 'a';
-        } else {
-            $link_tag = 'div';
-        }
 
         ?>
         <div <?php echo $this->get_render_attribute_string('wrapper'); ?>>
             <<?php echo $link_tag; ?> <?php echo $this->get_render_attribute_string('link'); ?>>
-                <div <?php echo $this->get_render_attribute_string('image_wrapper'); ?>></div>
+                
+                <div class="mh-image-circle-image-wrapper">
+                    <div <?php echo $this->get_render_attribute_string('border_div'); ?>></div>
+                    
+                    <div class="mh-image-circle-inner" style="<?php echo esc_attr($image_style); ?>"></div>
+                </div>
                 
                 <?php if ( $settings['text'] ) : ?>
                     <div class="mh-image-circle-text">
@@ -321,9 +343,6 @@ class MH_Image_Circle_Widget extends Widget_Base {
         <?php
     }
 
-    /**
-     * Render widget output in the editor (backend).
-     */
     protected function _content_template() {
         ?>
         <#
@@ -334,36 +353,26 @@ class MH_Image_Circle_Widget extends Widget_Base {
             dimension: settings.image_size_custom_dimension,
             model: view.getEditModel()
         };
-
         var imageUrl = elementor.imagesManager.getImageUrl( image );
-        var imageStyle = '';
-        
-        if ( imageUrl ) {
-            imageStyle = 'background-image: url(' + imageUrl + ');';
-        }
+        var imageStyle = imageUrl ? 'background-image: url(' + imageUrl + ');' : '';
 
         var link_url = settings.link.url;
         var linkTag = link_url ? 'a' : 'div';
-        var linkAttrs = '';
+        var linkAttrs = link_url ? 'href="' + link_url + '"' : '';
 
-        if ( link_url ) {
-            linkAttrs += 'href="' + link_url + '"';
-        }
-        
-        var imageWrapperClasses = 'mh-image-circle-image-wrapper';
-        if ( settings.image_hover_animation ) {
-            imageWrapperClasses += ' elementor-animation-' + settings.image_hover_animation;
+        var borderClass = 'mh-image-circle-border';
+        if ( settings.hover_animation_spin === 'yes' ) {
+            borderClass += ' mh-spin-on-hover';
         }
         #>
-        
         <div class="mh-image-circle-wrapper">
             <{{{ linkTag }}} {{{ linkAttrs }}}>
-                <div class="{{{ imageWrapperClasses }}}" style="{{{ imageStyle }}}"></div>
-                
+                <div class="mh-image-circle-image-wrapper">
+                    <div class="{{{ borderClass }}}"></div>
+                    <div class="mh-image-circle-inner" style="{{{ imageStyle }}}"></div>
+                </div>
                 <# if ( settings.text ) { #>
-                    <div class="mh-image-circle-text">
-                        {{{ settings.text }}}
-                    </div>
+                    <div class="mh-image-circle-text">{{{ settings.text }}}</div>
                 <# } #>
             </{{{ linkTag }}}>
         </div>

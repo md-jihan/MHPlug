@@ -175,7 +175,6 @@
     width: 30px !important;
     border-radius: 10px;
 }
-
 /* =======================================
  * MH Image Circle Widget
  * ======================================= */
@@ -183,46 +182,76 @@
 .mh-image-circle-wrapper {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Default center alignment */
-    text-align: center; 
+    align-items: center;
+    text-align: center;
     width: 100%;
 }
 
-/* Ensure link/div wrapper maintains layout */
 .mh-image-circle-wrapper > a,
 .mh-image-circle-wrapper > div {
     display: flex;
     flex-direction: column;
-    align-items: inherit; 
-    text-decoration: none; 
-    color: inherit; 
-    width: 100%; /* Ensure it takes full width for alignment to work */
+    align-items: inherit;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
 }
+
+/* Wrapper for Image + Border */
 .mh-image-circle-image-wrapper {
     display: block;
-    width: 180px; /* Default from control */
-    height: 180px; /* Default from control */
-    border-radius: 50%; /* Make circle */
     position: relative;
-    box-sizing: border-box; /* Include border/padding in size */
-    
-    /* --- Background Image Styles --- */
+    box-sizing: border-box;
+    width: 180px; /* Default size */
+    height: 180px; /* Default size */
+    /* Padding acts as the GAP between border and image */
+    padding: 10px; 
+}
+
+/* The Border Element (Rotates) */
+.mh-image-circle-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 50%;
+    /* Border styles set by Elementor Control */
+    border: 2px dotted #DDDDDD; 
+    transition: border-color 0.3s ease;
+    pointer-events: none; /* Let clicks pass through to image/link */
+}
+
+/* The Image Element (Static) */
+.mh-image-circle-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    background-color: #f0f0f0; /* Fallback color */
-    
-    /* --- NEW: Create the Gap --- */
-    padding: 10px; /* Default gap (controlled by Elementor) */
-    background-clip: content-box; /* This makes the background stop at the padding */
-    
-    /* Border styles set by Elementor controls */
-    border: 2px dotted #DDDDDD; 
+    background-color: #f0f0f0;
 }
 
 .mh-image-circle-text {
-    margin-top: 20px; /* Default spacing */
+    margin-top: 20px;
     color: #333333;
     font-size: 1.2em;
     font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* --- Spin Animation --- */
+@keyframes mh-spin-border {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Apply animation on hover if the class is present */
+.mh-image-circle-wrapper:hover .mh-spin-on-hover {
+    animation-name: mh-spin-border;
+    animation-duration: 10s; /* Default, overridden by control */
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }

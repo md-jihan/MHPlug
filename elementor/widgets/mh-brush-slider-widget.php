@@ -182,31 +182,6 @@ class MH_Brush_Slider_Widget extends Widget_Base {
             ]
         );
 
-        /*$this->add_responsive_control(
-            'text_align',
-            [
-                'label' => esc_html__( 'Text Align', 'mh-plug' ),
-                'type' => Controls_Manager::CHOOSE,
-                'options' => [
-                    'left' => [
-                        'title' => esc_html__( 'Left', 'mh-plug' ),
-                        'icon' => 'eicon-text-align-left',
-                    ],
-                    'center' => [
-                        'title' => esc_html__( 'Center', 'mh-plug' ),
-                        'icon' => 'eicon-text-align-center',
-                    ],
-                    'right' => [
-                        'title' => esc_html__( 'Right', 'mh-plug' ),
-                        'icon' => 'eicon-text-align-right',
-                    ],
-                ],
-                'default' => 'center', // Default to Center
-                'selectors' => [
-                    '{{WRAPPER}} .mh-brush-text-content' => 'text-align: {{VALUE}};',
-                ],
-            ]
-        );*/
 
         // ... (before $this->end_controls_section();)
         $this->end_controls_section();

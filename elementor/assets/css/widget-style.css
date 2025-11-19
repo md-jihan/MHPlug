@@ -198,16 +198,15 @@
     color: inherit; 
     width: 100%; /* Ensure it takes full width for alignment to work */
 }
-
 .mh-image-circle-image-wrapper {
     display: block;
-    width: 180px; /* Default from control */
-    height: 180px; /* Default from control */
-    border-radius: 50%; /* Make circle */
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
     position: relative;
-    box-sizing: border-box; /* Include border in size */
+    box-sizing: border-box;
     
-    /* --- Background Image Styles --- */
+    /* --- New Background Styles --- */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;

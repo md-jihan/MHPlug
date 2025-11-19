@@ -271,7 +271,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
         $this->end_controls_section();
     }
 
-    /**
+   /**
      * Render widget output on the frontend.
      */
     protected function render() {
@@ -280,12 +280,26 @@ class MH_Image_Circle_Widget extends Widget_Base {
         $this->add_render_attribute('wrapper', 'class', 'mh-image-circle-wrapper');
         
         // Image Wrapper attributes
-        $image_wrapper_class = 'mh-image-circle-image-wrapper';
+        $this->add_render_attribute('image_wrapper', 'class', 'mh-image-circle-image-wrapper');
         if ( ! empty( $settings['image_hover_animation'] ) ) {
-            $image_wrapper_class .= ' elementor-animation-' . $settings['image_hover_animation'];
+            $this->add_render_attribute('image_wrapper', 'class', 'elementor-animation-' . $settings['image_hover_animation']);
         }
-        $this->add_render_attribute('image_wrapper', 'class', $image_wrapper_class);
 
+        // Get Image URL and set Background Style
+        $image_url = $settings['image']['url'];
+        $image_style = '';
+        if ( ! empty( $image_url ) ) {
+            // Get size-specific URL if available
+            if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
+                $image_data = wp_get_attachment_image_src( $settings['image']['id'], $settings['image_size_size'] );
+                if ( $image_data ) {
+                    $image_url = $image_data[0];
+                }
+            }
+            $image_style = 'background-image: url(' . esc_url( $image_url ) . ');';
+        }
+        
+        $this->add_render_attribute('image_wrapper', 'style', $image_style);
 
         // Link attributes
         if ( ! empty( $settings['link']['url'] ) ) {
@@ -298,11 +312,8 @@ class MH_Image_Circle_Widget extends Widget_Base {
         ?>
         <div <?php echo $this->get_render_attribute_string('wrapper'); ?>>
             <<?php echo $link_tag; ?> <?php echo $this->get_render_attribute_string('link'); ?>>
-                <div <?php echo $this->get_render_attribute_string('image_wrapper'); ?>>
-                    <?php if ( $settings['image']['url'] ) : ?>
-                        <?php echo Group_Control_Image_Size::get_attachment_image_html( $settings, 'image_size', 'image' ); ?>
-                    <?php endif; ?>
-                </div>
+                <div <?php echo $this->get_render_attribute_string('image_wrapper'); ?>></div>
+                
                 <?php if ( $settings['text'] ) : ?>
                     <div class="mh-image-circle-text">
                         <?php echo esc_html( $settings['text'] ); ?>
@@ -328,6 +339,11 @@ class MH_Image_Circle_Widget extends Widget_Base {
         };
 
         var imageUrl = elementor.imagesManager.getImageUrl( image );
+        var imageStyle = '';
+        
+        if ( imageUrl ) {
+            imageStyle = 'background-image: url(' + imageUrl + ');';
+        }
 
         var link_url = settings.link.url;
         var linkTag = link_url ? 'a' : 'div';
@@ -335,27 +351,18 @@ class MH_Image_Circle_Widget extends Widget_Base {
 
         if ( link_url ) {
             linkAttrs += 'href="' + link_url + '"';
-            if ( settings.link.is_external ) {
-                linkAttrs += ' target="_blank"';
-            }
-            if ( settings.link.nofollow ) {
-                linkAttrs += ' rel="nofollow"';
-            }
         }
         
         var imageWrapperClasses = 'mh-image-circle-image-wrapper';
         if ( settings.image_hover_animation ) {
             imageWrapperClasses += ' elementor-animation-' + settings.image_hover_animation;
         }
-
         #>
+        
         <div class="mh-image-circle-wrapper">
             <{{{ linkTag }}} {{{ linkAttrs }}}>
-                <div class="{{{ imageWrapperClasses }}}">
-                    <# if ( imageUrl ) { #>
-                        <img class="mh-image-circle-image" src="{{{ imageUrl }}}" alt="{{{ settings.text }}}" />
-                    <# } #>
-                </div>
+                <div class="{{{ imageWrapperClasses }}}" style="{{{ imageStyle }}}"></div>
+                
                 <# if ( settings.text ) { #>
                     <div class="mh-image-circle-text">
                         {{{ settings.text }}}

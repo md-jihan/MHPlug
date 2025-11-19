@@ -153,7 +153,62 @@ class MH_Brush_Slider_Widget extends Widget_Base {
                 'title_field' => '{{{ primary_text }}}',
             ]
         );
+// ... (inside section_style_brush_shape, after hover_transition control) ...
 
+        $this->add_responsive_control(
+            'content_alignment',
+            [
+                'label' => esc_html__( 'Content Alignment', 'mh-plug' ),
+                'type' => Controls_Manager::CHOOSE,
+                'options' => [
+                    'flex-start' => [
+                        'title' => esc_html__( 'Left', 'mh-plug' ),
+                        'icon' => 'eicon-text-align-left',
+                    ],
+                    'center' => [
+                        'title' => esc_html__( 'Center', 'mh-plug' ),
+                        'icon' => 'eicon-text-align-center',
+                    ],
+                    'flex-end' => [
+                        'title' => esc_html__( 'Right', 'mh-plug' ),
+                        'icon' => 'eicon-text-align-right',
+                    ],
+                ],
+                'default' => 'center', // Default to Center
+                'selectors' => [
+                    '{{WRAPPER}} .mh-brush-text-content' => 'align-items: {{VALUE}};',
+                ],
+                'separator' => 'before',
+            ]
+        );
+
+        /*$this->add_responsive_control(
+            'text_align',
+            [
+                'label' => esc_html__( 'Text Align', 'mh-plug' ),
+                'type' => Controls_Manager::CHOOSE,
+                'options' => [
+                    'left' => [
+                        'title' => esc_html__( 'Left', 'mh-plug' ),
+                        'icon' => 'eicon-text-align-left',
+                    ],
+                    'center' => [
+                        'title' => esc_html__( 'Center', 'mh-plug' ),
+                        'icon' => 'eicon-text-align-center',
+                    ],
+                    'right' => [
+                        'title' => esc_html__( 'Right', 'mh-plug' ),
+                        'icon' => 'eicon-text-align-right',
+                    ],
+                ],
+                'default' => 'center', // Default to Center
+                'selectors' => [
+                    '{{WRAPPER}} .mh-brush-text-content' => 'text-align: {{VALUE}};',
+                ],
+            ]
+        );*/
+
+        // ... (before $this->end_controls_section();)
         $this->end_controls_section();
 
         // --- Content Tab: Slider Settings ---
@@ -473,15 +528,21 @@ class MH_Brush_Slider_Widget extends Widget_Base {
                 <?php foreach ( $settings['slides'] as $index => $slide ) : ?>
                     
                     <?php
-                    // --- CHANGE #3: Set CSS Variables for this slide ---
+                    // --- CHANGED: Fallback logic for hover color ---
+                    // If hover color is empty, use the normal brush color
+                    $hover_color = ! empty( $slide['brush_color_hover'] ) ? $slide['brush_color_hover'] : $slide['brush_color'];
+
                     $slide_styles = [
                         '--slide-brush-color: ' . esc_attr($slide['brush_color']),
-                        '--slide-brush-color-hover: ' . esc_attr($slide['brush_color_hover']),
+                        '--slide-brush-color-hover: ' . esc_attr($hover_color),
                     ];
+                    // -----------------------------------------------
+
                     $this->add_render_attribute( 'slide-item-' . $index, 'class', 'mh-brush-slide-item' );
                     $this->add_render_attribute( 'slide-item-' . $index, 'style', implode(';', $slide_styles) );
                     
                     $wrapper_tag = 'div';
+                    // ... (rest of the loop remains the same)
                     $wrapper_attrs_string = 'class="mh-brush-text-wrapper"';
                     $slide_link_key = 'link_' . $index;
 
@@ -562,10 +623,13 @@ class MH_Brush_Slider_Widget extends Widget_Base {
                         var wrapperTag = 'div';
                         var wrapperAttrs = 'class="mh-brush-text-wrapper"';
                         
-                        // --- CHANGE #3: Add inline style for JS template ---
-                        var slideStyles = '--slide-brush-color: ' + slide.brush_color + '; --slide-brush-color-hover: ' + slide.brush_color_hover + ';';
+                        // --- CHANGED: JS Fallback logic ---
+                        var hoverColor = slide.brush_color_hover ? slide.brush_color_hover : slide.brush_color;
+                        var slideStyles = '--slide-brush-color: ' + slide.brush_color + '; --slide-brush-color-hover: ' + hoverColor + ';';
+                        // ----------------------------------
 
                         if ( slide.link.url ) {
+                            // ... (rest of the function remains the same)
                             wrapperTag = 'a';
                             wrapperAttrs = 'href="' + slide.link.url + '" ' + wrapperAttrs;
                         }

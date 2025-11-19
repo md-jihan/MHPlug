@@ -27,7 +27,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        return 'eicon-image-box'; // Using a standard Elementor icon
+        return 'mhi-border-image'; // Using a standard Elementor icon
     }
 
     public function get_categories() {

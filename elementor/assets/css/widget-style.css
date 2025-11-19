@@ -161,7 +161,7 @@
     border: 2px solid #cccccc;     /* 2px Border */
     border-radius: 50%;            /* Make it round */
     box-sizing: border-box;        /* Ensure border is included in size */
-    transition: all 0.3s ease;
+    transition: all 0.3s linear;
 }
 
 .mh-brush-slider-wrapper .slick-dots li button:hover {
@@ -169,7 +169,9 @@
 }
 
 .mh-brush-slider-wrapper .slick-dots li.slick-active button {
-    background: #004265; /* Filled when active */
+    background: #004265;
     border-color: #004265;
-    transform: scale(1.1); /* Slightly larger when active */
+    transform: scale(1.1);
+    width: 30px !important;
+    border-radius: 10px;
 }

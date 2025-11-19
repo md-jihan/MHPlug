@@ -200,17 +200,21 @@
 }
 .mh-image-circle-image-wrapper {
     display: block;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
+    width: 180px; /* Default from control */
+    height: 180px; /* Default from control */
+    border-radius: 50%; /* Make circle */
     position: relative;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Include border/padding in size */
     
-    /* --- New Background Styles --- */
+    /* --- Background Image Styles --- */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
     background-color: #f0f0f0; /* Fallback color */
+    
+    /* --- NEW: Create the Gap --- */
+    padding: 10px; /* Default gap (controlled by Elementor) */
+    background-clip: content-box; /* This makes the background stop at the padding */
     
     /* Border styles set by Elementor controls */
     border: 2px dotted #DDDDDD; 

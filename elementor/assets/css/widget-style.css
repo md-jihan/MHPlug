@@ -12,10 +12,10 @@
     height: 180px; 
     transition: transform 0.3s ease;
 }
-a.mh-brush-text-wrapper:hover {
+.mh-brush-text-wrapper:hover {
     text-decoration: none;
     color: inherit;
-    transform: scale(1.03);
+    transform: scale(1.09);
 }
 .mh-brush-text-wrapper .mh-brush-text-svg {
     position: absolute;

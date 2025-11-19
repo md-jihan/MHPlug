@@ -24,7 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+.mhi-card:before {
+  content: "\e906";
+}
 .mhi-border-image-slider:before {
   content: "\e904";
 }

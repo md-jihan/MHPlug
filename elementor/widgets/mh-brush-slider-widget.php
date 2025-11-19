@@ -462,7 +462,7 @@ class MH_Brush_Slider_Widget extends Widget_Base {
                 'default' => [ 'unit' => 'px', 'size' => 12 ], // Increased default size slightly
                 'selectors' => [
                     '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li button' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li' => 'margin: 0 calc({{SIZE}}{{UNIT}} / 2);',
+                    '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li' => 'margin: 0 calc({{SIZE}}{{UNIT}} / 3);',
                 ],
                 'condition' => [ 'show_dots' => 'yes' ],
             ]

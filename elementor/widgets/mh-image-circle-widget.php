@@ -140,6 +140,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
                 ],
             ]
         );
+// ... (Inside register_controls -> section_style_image)
 
         $this->add_responsive_control(
             'image_spacing',
@@ -154,10 +155,28 @@ class MH_Image_Circle_Widget extends Widget_Base {
             ]
         );
 
+        // --- NEW CONTROL: BORDER GAP ---
+        $this->add_responsive_control(
+            'image_border_gap',
+            [
+                'label' => esc_html__('Border Gap', 'mh-plug'),
+                'type' => Controls_Manager::SLIDER,
+                'range' => [
+                    'px' => ['min' => 0, 'max' => 50],
+                ],
+                'default' => [ 'unit' => 'px', 'size' => 10 ], // Default gap
+                'selectors' => [
+                    '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'padding: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+        // -------------------------------
+
         $this->add_group_control(
             Group_Control_Border::get_type(),
             [
                 'name' => 'image_border',
+        // ... (rest of the file)
                 'selector' => '{{WRAPPER}} .mh-image-circle-image-wrapper',
                 'fields_options' => [
                     'border' => [
@@ -177,28 +196,6 @@ class MH_Image_Circle_Widget extends Widget_Base {
             ]
         );
         
-        $this->add_control(
-            'image_border_style',
-            [
-                'label' => esc_html__( 'Border Style', 'mh-plug' ),
-                'type' => Controls_Manager::SELECT,
-                'options' => [
-                    'solid' => esc_html__( 'Solid', 'mh-plug' ),
-                    'dashed' => esc_html__( 'Dashed', 'mh-plug' ),
-                    'dotted' => esc_html__( 'Dotted', 'mh-plug' ),
-                    'double' => esc_html__( 'Double', 'mh-plug' ),
-                    'groove' => esc_html__( 'Groove', 'mh-plug' ),
-                    'ridge' => esc_html__( 'Ridge', 'mh-plug' ),
-                    'inset' => esc_html__( 'Inset', 'mh-plug' ),
-                    'outset' => esc_html__( 'Outset', 'mh-plug' ),
-                    'none' => esc_html__( 'None', 'mh-plug' ),
-                ],
-                'default' => 'dotted', // Default to dotted as in the image
-                'selectors' => [
-                    '{{WRAPPER}} .mh-image-circle-image-wrapper' => 'border-style: {{VALUE}};',
-                ],
-            ]
-        );
 
         $this->add_control(
             'image_border_radius',

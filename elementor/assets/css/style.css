@@ -24,6 +24,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.mhi-Border-image-slider:before {
+  content: "\e904";
+}
+.mhi-Border-image:before {
+  content: "\e905";
+}
 .mhi-brush-slider:before {
   content: "\e902";
 }

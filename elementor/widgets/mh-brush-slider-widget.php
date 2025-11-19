@@ -441,10 +441,63 @@ class MH_Brush_Slider_Widget extends Widget_Base {
         $this->add_control( 'arrow_color_hover', [ 'label' => esc_html__('Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-brush-slider-arrow:hover' => 'color: {{VALUE}};' ] ] );
         $this->end_controls_tab();
         $this->end_controls_tabs();
-        $this->add_control( 'heading_style_dots', [ 'label' => esc_html__( 'Dots', 'mh-plug' ), 'type' => Controls_Manager::HEADING, 'condition' => [ 'show_dots' => 'yes' ], 'separator' => 'before' ] );
-        $this->add_responsive_control( 'dots_size', [ 'label' => esc_html__( 'Size', 'mh-plug' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 5, 'max' => 20 ] ], 'default' => [ 'unit' => 'px', 'size' => 8 ], 'selectors' => [ '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li button' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li' => 'margin: 0 calc({{SIZE}}{{UNIT}} / 2);' ], 'condition' => [ 'show_dots' => 'yes' ] ] );
-        $this->add_control( 'dots_color_normal', [ 'label' => esc_html__('Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#cccccc', 'selectors' => [ '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li button' => 'background-color: {{VALUE}};' ], 'condition' => [ 'show_dots' => 'yes' ] ] );
-        $this->add_control( 'dots_color_active', [ 'label' => esc_html__('Active Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#004265', 'selectors' => [ '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li.slick-active button' => 'background-color: {{VALUE}};' ], 'condition' => [ 'show_dots' => 'yes' ] ] );
+        // ... (inside section_style_navigation)
+
+        $this->add_control(
+            'heading_style_dots',
+            [
+                'label' => esc_html__( 'Dots', 'mh-plug' ),
+                'type' => Controls_Manager::HEADING,
+                'condition' => [ 'show_dots' => 'yes' ],
+                'separator' => 'before',
+            ]
+        );
+        
+        $this->add_responsive_control(
+            'dots_size',
+            [
+                'label' => esc_html__( 'Size', 'mh-plug' ),
+                'type' => Controls_Manager::SLIDER,
+                'range' => [ 'px' => [ 'min' => 5, 'max' => 20 ] ],
+                'default' => [ 'unit' => 'px', 'size' => 12 ], // Increased default size slightly
+                'selectors' => [
+                    '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li button' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li' => 'margin: 0 calc({{SIZE}}{{UNIT}} / 2);',
+                ],
+                'condition' => [ 'show_dots' => 'yes' ],
+            ]
+        );
+
+        // --- CHANGED: Set Border Color for Normal State ---
+        $this->add_control(
+            'dots_color_normal',
+            [
+                'label' => esc_html__('Color', 'mh-plug'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#cccccc',
+                'selectors' => [
+                    // Set border color and ensure background is transparent
+                    '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li button' => 'border-color: {{VALUE}}; background-color: transparent;',
+                ],
+                'condition' => [ 'show_dots' => 'yes' ],
+            ]
+        );
+
+        // --- CHANGED: Set Background AND Border for Active State ---
+        $this->add_control(
+            'dots_color_active',
+            [
+                'label' => esc_html__('Active Color', 'mh-plug'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#004265',
+                'selectors' => [
+                    // Fill the circle when active
+                    '{{WRAPPER}} .mh-brush-slider-wrapper .slick-dots li.slick-active button' => 'background-color: {{VALUE}}; border-color: {{VALUE}};',
+                ],
+                'condition' => [ 'show_dots' => 'yes' ],
+            ]
+        );
+
         $this->end_controls_section();
     }
 

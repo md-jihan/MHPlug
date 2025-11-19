@@ -119,11 +119,10 @@
 }
 [class*="mh-brush-slider-prev-"] { left: 0; }
 [class*="mh-brush-slider-next-"] { right: 0; }
-
 /* --- Dots --- */
 .mh-brush-slider-wrapper .slick-dots {
     position: absolute;
-    bottom: -30px;
+    bottom: -15px; /* Moved down slightly */
     display: block;
     width: 100%;
     padding: 0;
@@ -131,33 +130,46 @@
     list-style: none;
     text-align: center;
 }
+
 .mh-brush-slider-wrapper .slick-dots li {
     position: relative;
     display: inline-block;
-    width: auto; /* Use padding for size */
+    width: auto;
     height: auto;
-    margin: 0 4px; /* Default from control */
+    margin: 0 6px; /* Default spacing */
     padding: 0;
     cursor: pointer;
+}
+
+.mh-brush-slider-wrapper .slick-dots li button::before {
+    content: " ";
 }
 .mh-brush-slider-wrapper .slick-dots li button {
     font-size: 0;
     line-height: 0;
     display: block;
-    width: 8px; /* Default from control */
-    height: 8px; /* Default from control */
-    padding: 0; /* Remove padding */
+    width: 12px; /* Default size */
+    height: 12px; /* Default size */
+    padding: 0;
     cursor: pointer;
     color: transparent;
     border: 0;
     outline: none;
-    background: #cccccc; /* Default from control */
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
+    
+    /* --- NEW STYLES FOR HOLLOW DOTS --- */
+    background: transparent;       /* Transparent by default */
+    border: 2px solid #cccccc;     /* 2px Border */
+    border-radius: 50%;            /* Make it round */
+    box-sizing: border-box;        /* Ensure border is included in size */
+    transition: all 0.3s ease;
 }
+
 .mh-brush-slider-wrapper .slick-dots li button:hover {
-     background-color: #a8a8a8;
+     border-color: #a8a8a8; /* Darker border on hover */
 }
+
 .mh-brush-slider-wrapper .slick-dots li.slick-active button {
-    background: #004265; /* Default from control */
+    background: #004265; /* Filled when active */
+    border-color: #004265;
+    transform: scale(1.1); /* Slightly larger when active */
 }

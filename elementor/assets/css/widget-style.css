@@ -28,7 +28,7 @@
 .mh-brush-text-wrapper .mh-brush-text-svg svg {
     width: 100%;
     height: 100%;
-    preserveAspectRatio: none;
+    perspective-origin: none;
 }
 .mh-brush-text-wrapper .mh-brush-text-content {
     position: relative;

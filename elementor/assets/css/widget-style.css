@@ -222,7 +222,10 @@
     transition: border-color 0.3s ease;
     pointer-events: none; /* Let clicks pass through to image/link */
 }
+.mh-image-circle-wrapper:hover .mh-image-circle-inner {
 
+    transform: scale(1.04);
+}
 /* The Image Element (Static) */
 .mh-image-circle-inner {
     width: 100%;
@@ -232,6 +235,7 @@
     background-position: center center;
     background-repeat: no-repeat;
     background-color: #f0f0f0;
+    transition: transform 0.3s ease;
 }
 
 .mh-image-circle-text {

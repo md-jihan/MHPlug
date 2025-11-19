@@ -237,7 +237,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
             [
                 'label' => esc_html__( 'Transition Duration (s)', 'mh-plug' ),
                 'type' => Controls_Manager::SLIDER,
-                'range' => [ 'px' => [ 'min' => 0.1, 'max' => 3, 'step' => 0.1 ] ],
+                'range' => [ 'px' => [ 'min' => 0.1, 'max' => 10, 'step' => 0.1 ] ],
                 'default' => [ 'unit' => 'px', 'size' => 10 ], // Actually seconds, but using slider
                 'selectors' => [
                     '{{WRAPPER}} .mh-image-circle-border' => 'animation-duration: {{SIZE}}s;',

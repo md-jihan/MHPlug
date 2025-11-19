@@ -259,3 +259,29 @@
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
+
+/* --- MH Image Circle Alignment Fix --- */
+
+/* Left Alignment (Desktop, Tablet, Mobile) */
+.mh-align-left .mh-image-circle-wrapper,
+.mh-align-tablet-left .mh-image-circle-wrapper,
+.mh-align-mobile-left .mh-image-circle-wrapper {
+    align-items: flex-start;
+    text-align: left;
+}
+
+/* Center Alignment (Desktop, Tablet, Mobile) */
+.mh-align-center .mh-image-circle-wrapper,
+.mh-align-tablet-center .mh-image-circle-wrapper,
+.mh-align-mobile-center .mh-image-circle-wrapper {
+    align-items: center;
+    text-align: center;
+}
+
+/* Right Alignment (Desktop, Tablet, Mobile) */
+.mh-align-right .mh-image-circle-wrapper,
+.mh-align-tablet-right .mh-image-circle-wrapper,
+.mh-align-mobile-right .mh-image-circle-wrapper {
+    align-items: flex-end;
+    text-align: right;
+}

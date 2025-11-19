@@ -27,7 +27,7 @@ class MH_Image_Circle_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        return 'eicon-image-box'; 
+        return 'mhi-border-image'; 
     }
 
     public function get_categories() {
@@ -105,11 +105,9 @@ class MH_Image_Circle_Widget extends Widget_Base {
                     ],
                 ],
                 'default' => 'center',
-                'toggle' => true,
-                'selectors' => [
-                    '{{WRAPPER}} .mh-image-circle-wrapper' => 'text-align: {{VALUE}};',
-                    '{{WRAPPER}} .mh-image-circle-wrapper' => 'align-items: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
-                ],
+                // This automatically generates classes like: 
+                // .mh-align-left, .mh-align-tablet-center, .mh-align-mobile-right
+                'prefix_class' => 'mh-align-', 
             ]
         );
 
@@ -250,14 +248,21 @@ class MH_Image_Circle_Widget extends Widget_Base {
         $this->end_controls_tabs();
 
         $this->end_controls_section();
-
-        // --- Style Tab: Text ---
+// --- Style Tab: Text ---
         $this->start_controls_section(
             'section_style_text',
             [
                 'label' => esc_html__('Text', 'mh-plug'),
                 'tab' => Controls_Manager::TAB_STYLE,
             ]
+        );
+
+        $this->start_controls_tabs( 'tabs_text_style' );
+
+        // --- Normal Tab ---
+        $this->start_controls_tab(
+            'tab_text_normal',
+            [ 'label' => esc_html__( 'Normal', 'mh-plug' ) ]
         );
 
         $this->add_control(
@@ -272,11 +277,34 @@ class MH_Image_Circle_Widget extends Widget_Base {
             ]
         );
 
+        $this->end_controls_tab();
+
+        // --- Hover Tab ---
+        $this->start_controls_tab(
+            'tab_text_hover',
+            [ 'label' => esc_html__( 'Hover', 'mh-plug' ) ]
+        );
+
+        $this->add_control(
+            'text_color_hover',
+            [
+                'label' => esc_html__('Color', 'mh-plug'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mh-image-circle-wrapper:hover .mh-image-circle-text' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
         $this->add_group_control(
             Group_Control_Typography::get_type(),
             [
                 'name' => 'text_typography',
                 'selector' => '{{WRAPPER}} .mh-image-circle-text',
+                'separator' => 'before',
             ]
         );
 
@@ -285,6 +313,27 @@ class MH_Image_Circle_Widget extends Widget_Base {
             [
                 'name' => 'text_shadow',
                 'selector' => '{{WRAPPER}} .mh-image-circle-text',
+            ]
+        );
+
+        // --- NEW: Margin Control ---
+        $this->add_responsive_control(
+            'text_margin',
+            [
+                'label' => esc_html__( 'Margin', 'mh-plug' ),
+                'type' => Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .mh-image-circle-text' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'default' => [
+                    'top' => 20,
+                    'right' => 0,
+                    'bottom' => 0,
+                    'left' => 0,
+                    'unit' => 'px',
+                    'isLinked' => false,
+                ],
             ]
         );
 

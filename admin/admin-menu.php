@@ -26,6 +26,7 @@ class MH_Admin_Menu {
         
         'mh_brush_slider'   => 'Brush Slider',
         'mh_image_circle'   => 'Image Circle',
+        'mh_image_circle_slider' => 'MH Image Circle Slider',
     ];
 
     public function __construct() {

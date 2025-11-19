@@ -285,3 +285,21 @@
     align-items: flex-end;
     text-align: right;
 }
+
+
+/* =======================================
+ * MH Image Circle Slider Widget
+ * ======================================= */
+
+/* Re-using styles from 'mh-brush-slider' and 'mh-image-circle' */
+
+/* Ensure the slide content is centered */
+.mh-brush-slider-wrapper .mh-image-circle-wrapper {
+    margin: 0 auto;
+}
+
+/* Inherit the flex behavior for alignment */
+.mh-image-circle-slide-item {
+    display: flex; 
+    justify-content: center;
+}

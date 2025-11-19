@@ -124,6 +124,7 @@ final class MH_Elementor_Loader {
             'mh_brush_text'   => ['file' => 'mh-brush-text-widget.php', 'class' => 'MH_Brush_Text_Widget'], // <-- ADD THIS LINE
             // --- ADD THIS LINE ---
             'mh_brush_slider' => ['file' => 'mh-brush-slider-widget.php', 'class' => 'MH_Brush_Slider_Widget'],
+            'mh_image_circle' => ['file' => 'mh-image-circle-widget.php', 'class' => 'MH_Image_Circle_Widget'],
         ];
 
         // Command: Loop through each widget in our map.

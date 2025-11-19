@@ -16,8 +16,8 @@ class MH_Admin_Menu {
     // Key => Internal Name, Value => Display Name
     private $widgets = [
         'mh_heading'        => 'Advanced Heading',
-        'mh_site_logo'      => 'Site Logo', // <-- ADD THIS LINE
-        'mh_site_title'     => 'Site Title', // <-- ADD THIS LINE
+        'mh_site_logo'      => 'Site Logo', 
+        'mh_site_title'     => 'Site Title',
         
         // Add Global Settings here for now
         'enable_menu_icons' => 'Menu Icons',
@@ -25,6 +25,7 @@ class MH_Admin_Menu {
         'mh_brush_text'     => 'Brush Text',
         
         'mh_brush_slider'   => 'Brush Slider',
+        'mh_image_circle'   => 'Image Circle',
     ];
 
     public function __construct() {

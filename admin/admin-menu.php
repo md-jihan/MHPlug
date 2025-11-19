@@ -24,7 +24,7 @@ class MH_Admin_Menu {
         
         'mh_brush_text'     => 'Brush Text',
         
-        'mh_brush_slider'   => 'MH Brush Slider',
+        'mh_brush_slider'   => 'Brush Slider',
     ];
 
     public function __construct() {

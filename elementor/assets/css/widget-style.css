@@ -302,3 +302,48 @@
     display: flex; 
     justify-content: center;
 }
+
+/* =======================================
+ * MH Feature Card Widget
+ * ======================================= */
+
+.mh-feature-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    /* Default padding, bg, radius, shadow are handled by controls */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Optional Hover Effect */
+.mh-feature-card-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; /* Overrides control on hover */
+}
+
+/* The container for Number and Icon */
+.mh-feature-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Aligns them to the top */
+    width: 100%;
+}
+
+/* The Number */
+.mh-feature-card-number {
+    /* Default typography handled by controls */
+    line-height: 1; /* Keeps it tight */
+}
+
+/* The Icon Container */
+.mh-feature-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Default sizes/colors handled by controls */
+}
+
+/* The Title */
+.mh-feature-card-title {
+    margin: 0; /* Reset default margins */
+    /* Margin-top handled by controls */
+}

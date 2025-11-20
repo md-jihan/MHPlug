@@ -1,7 +1,7 @@
 <?php
 /**
  * MH Feature Card Widget
- * Features: Title, Description, Button, Background Image (Content), Overlay (Style)
+ * Features: Title, Description, Button, Background (Image OR Color Choice)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -83,19 +83,6 @@ class MH_Feature_Card_Widget extends Widget_Base {
 				],
 			]
 		);
-
-        // --- NEW: Image in Content Tab ---
-        $this->add_control(
-			'card_image',
-			[
-				'label' => esc_html__( 'Background Image', 'mh-plug' ),
-				'type' => Controls_Manager::MEDIA,
-                'default' => [
-					'url' => Utils::get_placeholder_image_src(),
-				],
-                'separator' => 'before',
-			]
-		);
         
         $this->add_responsive_control(
 			'text_align',
@@ -121,6 +108,63 @@ class MH_Feature_Card_Widget extends Widget_Base {
 					'{{WRAPPER}} .mh-feature-card-wrapper' => 'text-align: {{VALUE}};',
                     '{{WRAPPER}} .mh-feature-card-button-wrapper' => 'justify-content: {{VALUE}};',
 				],
+			]
+		);
+
+        $this->add_control(
+			'divider_bg',
+			[
+				'type' => Controls_Manager::DIVIDER,
+                'style' => 'thick',
+			]
+		);
+
+        // --- BACKGROUND CHOICE ---
+        $this->add_control(
+			'background_type',
+			[
+				'label' => esc_html__( 'Background Type', 'mh-plug' ),
+				'type' => Controls_Manager::CHOOSE,
+				'options' => [
+					'image' => [
+						'title' => esc_html__( 'Image', 'mh-plug' ),
+						'icon' => 'eicon-image',
+					],
+					'color' => [
+						'title' => esc_html__( 'Color', 'mh-plug' ),
+						'icon' => 'eicon-paint-brush',
+					],
+				],
+				'default' => 'image',
+                'toggle' => false,
+			]
+		);
+
+        // Option 1: Image
+        $this->add_control(
+			'card_image',
+			[
+				'label' => esc_html__( 'Background Image', 'mh-plug' ),
+				'type' => Controls_Manager::MEDIA,
+                'default' => [
+					'url' => Utils::get_placeholder_image_src(),
+				],
+                'condition' => [
+                    'background_type' => 'image',
+                ],
+			]
+		);
+
+        // Option 2: Color
+        $this->add_control(
+			'card_bg_color',
+			[
+				'label' => esc_html__( 'Background Color', 'mh-plug' ),
+				'type' => Controls_Manager::COLOR,
+				'default' => '#333333',
+                'condition' => [
+                    'background_type' => 'color',
+                ],
 			]
 		);
 
@@ -173,19 +217,6 @@ class MH_Feature_Card_Widget extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-wrapper' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
-			]
-		);
-
-        // Advanced Background Control (Position, Size, Repeat)
-        // The Image from Content tab will be used, but these settings control how it looks.
-        $this->add_group_control(
-			Group_Control_Background::get_type(),
-			[
-				'name' => 'box_background_settings',
-				'label' => esc_html__( 'Background Settings', 'mh-plug' ),
-				'types' => [ 'classic', 'gradient' ],
-				'selector' => '{{WRAPPER}} .mh-feature-card-wrapper',
-                'exclude' => ['image'], // We use the image from Content tab
 			]
 		);
 
@@ -288,7 +319,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Color', 'mh-plug' ),
 				'type' => Controls_Manager::COLOR,
-				'default' => '#FFFFFF', // Default to white for dark backgrounds
+				'default' => '#FFFFFF', 
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-title' => 'color: {{VALUE}};',
 				],
@@ -331,7 +362,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Color', 'mh-plug' ),
 				'type' => Controls_Manager::COLOR,
-				'default' => '#EEEEEE', // Default light gray
+				'default' => '#EEEEEE',
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-description' => 'color: {{VALUE}};',
 				],
@@ -491,13 +522,20 @@ class MH_Feature_Card_Widget extends Widget_Base {
 	protected function render() {
 		$settings = $this->get_settings_for_display();
         
-        // Handle Background Image
+        // Determine background style based on selection
         $wrapper_style = '';
-        if ( ! empty( $settings['card_image']['url'] ) ) {
-            $wrapper_style = 'background-image: url(' . esc_url( $settings['card_image']['url'] ) . ');';
+        if ( 'image' === $settings['background_type'] ) {
+            if ( ! empty( $settings['card_image']['url'] ) ) {
+                $wrapper_style = 'background-image: url(' . esc_url( $settings['card_image']['url'] ) . ');';
+            }
+        } else {
+            if ( ! empty( $settings['card_bg_color'] ) ) {
+                $wrapper_style = 'background-color: ' . esc_attr( $settings['card_bg_color'] ) . ';';
+            }
         }
+
 		?>
-		<div class="mh-feature-card-wrapper" style="<?php echo esc_attr( $wrapper_style ); ?>">
+		<div class="mh-feature-card-wrapper" style="<?php echo $wrapper_style; ?>">
 			
 			<?php if ( ! empty( $settings['card_title'] ) ) : ?>
 				<h3 class="mh-feature-card-title">
@@ -522,4 +560,40 @@ class MH_Feature_Card_Widget extends Widget_Base {
 		</div>
 		<?php
 	}
+
+    protected function _content_template() {
+        ?>
+        <#
+        var wrapperStyle = '';
+        if ( settings.background_type === 'image' && settings.card_image.url ) {
+            wrapperStyle = 'background-image: url(' + settings.card_image.url + ');';
+        } else if ( settings.background_type === 'color' && settings.card_bg_color ) {
+            wrapperStyle = 'background-color: ' + settings.card_bg_color + ';';
+        }
+        #>
+        <div class="mh-feature-card-wrapper" style="{{{ wrapperStyle }}}">
+			
+			<# if ( settings.card_title ) { #>
+				<h3 class="mh-feature-card-title">
+					{{{ settings.card_title }}}
+				</h3>
+			<# } #>
+
+			<# if ( settings.card_description ) { #>
+				<div class="mh-feature-card-description">
+					{{{ settings.card_description }}}
+				</div>
+			<# } #>
+
+            <# if ( settings.button_text ) { #>
+                <div class="mh-feature-card-button-wrapper">
+                    <a href="{{{ settings.button_link.url }}}" class="mh-feature-card-button">
+                        {{{ settings.button_text }}}
+                    </a>
+                </div>
+            <# } #>
+
+		</div>
+        <?php
+    }
 }

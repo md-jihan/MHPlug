@@ -317,7 +317,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #333; /* Fallback */
+    color: #000;
     
     position: relative; /* Establish stacking context */
     overflow: hidden; 

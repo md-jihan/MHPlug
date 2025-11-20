@@ -1,7 +1,7 @@
 <?php
 /**
  * MH Feature Card Widget
- * * Features: Title, Description, Button, Background Image
+ * Features: Title, Description, Button, Background Image (Content), Overlay (Style)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,6 +14,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
+use Elementor\Utils;
 
 class MH_Feature_Card_Widget extends Widget_Base {
 
@@ -26,7 +27,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 	}
 
 	public function get_icon() {
-		return 'mhi-card';
+		return 'eicon-info-box';
 	}
 
 	public function get_categories() {
@@ -58,7 +59,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Description', 'mh-plug' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.', 'mh-plug' ),
+				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'mh-plug' ),
 			]
 		);
 
@@ -80,6 +81,19 @@ class MH_Feature_Card_Widget extends Widget_Base {
 				'default' => [
 					'url' => '#',
 				],
+			]
+		);
+
+        // --- NEW: Image in Content Tab ---
+        $this->add_control(
+			'card_image',
+			[
+				'label' => esc_html__( 'Background Image', 'mh-plug' ),
+				'type' => Controls_Manager::MEDIA,
+                'default' => [
+					'url' => Utils::get_placeholder_image_src(),
+				],
+                'separator' => 'before',
 			]
 		);
         
@@ -132,6 +146,10 @@ class MH_Feature_Card_Widget extends Widget_Base {
 						'max' => 1000,
 					],
 				],
+                'default' => [
+					'unit' => 'px',
+					'size' => 300,
+				],
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-wrapper' => 'min-height: {{SIZE}}{{UNIT}};',
 				],
@@ -158,14 +176,16 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			]
 		);
 
-        // Background Image Control
+        // Advanced Background Control (Position, Size, Repeat)
+        // The Image from Content tab will be used, but these settings control how it looks.
         $this->add_group_control(
 			Group_Control_Background::get_type(),
 			[
-				'name' => 'box_background',
-				'label' => esc_html__( 'Background', 'mh-plug' ),
+				'name' => 'box_background_settings',
+				'label' => esc_html__( 'Background Settings', 'mh-plug' ),
 				'types' => [ 'classic', 'gradient' ],
 				'selector' => '{{WRAPPER}} .mh-feature-card-wrapper',
+                'exclude' => ['image'], // We use the image from Content tab
 			]
 		);
 
@@ -185,6 +205,8 @@ class MH_Feature_Card_Widget extends Widget_Base {
 				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-wrapper' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    // Ensure overlay inherits radius
+                    '{{WRAPPER}} .mh-feature-card-wrapper::before' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -200,6 +222,58 @@ class MH_Feature_Card_Widget extends Widget_Base {
 
 		$this->end_controls_section();
 
+        // --- STYLE: BACKGROUND OVERLAY ---
+        $this->start_controls_section(
+			'section_style_overlay',
+			[
+				'label' => esc_html__( 'Background Overlay', 'mh-plug' ),
+				'tab' => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+        $this->start_controls_tabs( 'tabs_overlay_style' );
+
+        $this->start_controls_tab(
+			'tab_overlay_normal',
+			[
+				'label' => esc_html__( 'Normal', 'mh-plug' ),
+			]
+		);
+
+        $this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'background_overlay',
+				'label' => esc_html__( 'Overlay', 'mh-plug' ),
+				'types' => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .mh-feature-card-wrapper::before',
+			]
+		);
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab(
+			'tab_overlay_hover',
+			[
+				'label' => esc_html__( 'Hover', 'mh-plug' ),
+			]
+		);
+
+        $this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'background_overlay_hover',
+				'label' => esc_html__( 'Overlay', 'mh-plug' ),
+				'types' => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .mh-feature-card-wrapper:hover::before',
+			]
+		);
+
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
+        $this->end_controls_section();
+
 		// --- STYLE: TITLE ---
 		$this->start_controls_section(
 			'section_style_title',
@@ -214,7 +288,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Color', 'mh-plug' ),
 				'type' => Controls_Manager::COLOR,
-				'default' => '#222222',
+				'default' => '#FFFFFF', // Default to white for dark backgrounds
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-title' => 'color: {{VALUE}};',
 				],
@@ -257,7 +331,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Color', 'mh-plug' ),
 				'type' => Controls_Manager::COLOR,
-				'default' => '#666666',
+				'default' => '#EEEEEE', // Default light gray
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-description' => 'color: {{VALUE}};',
 				],
@@ -416,8 +490,14 @@ class MH_Feature_Card_Widget extends Widget_Base {
 
 	protected function render() {
 		$settings = $this->get_settings_for_display();
+        
+        // Handle Background Image
+        $wrapper_style = '';
+        if ( ! empty( $settings['card_image']['url'] ) ) {
+            $wrapper_style = 'background-image: url(' . esc_url( $settings['card_image']['url'] ) . ');';
+        }
 		?>
-		<div class="mh-feature-card-wrapper">
+		<div class="mh-feature-card-wrapper" style="<?php echo esc_attr( $wrapper_style ); ?>">
 			
 			<?php if ( ! empty( $settings['card_title'] ) ) : ?>
 				<h3 class="mh-feature-card-title">

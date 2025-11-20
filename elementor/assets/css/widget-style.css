@@ -302,6 +302,7 @@
     display: flex; 
     justify-content: center;
 }
+
 /* =======================================
  * MH Feature Card Widget
  * ======================================= */
@@ -309,13 +310,36 @@
 .mh-feature-card-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically if height is set */
+    justify-content: center; /* Vertical Center */
     transition: all 0.3s ease;
+    
+    /* Default Background Props */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #333; /* Fallback */
+    
+    position: relative; /* Establish stacking context */
+    overflow: hidden; 
+    z-index: 0; /* Ensure ::before sits behind content */
+}
+
+/* Overlay Pseudo-element */
+.mh-feature-card-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* Top/Right/Bottom/Left = 0 */
+    z-index: -1; /* Behind content */
+    transition: background 0.3s ease;
+    /* Background color set by Elementor Control */
+}
+
+/* Content Layers */
+.mh-feature-card-title,
+.mh-feature-card-description,
+.mh-feature-card-button-wrapper {
     position: relative;
-    overflow: hidden;
+    z-index: 1; /* On top of overlay */
 }
 
 .mh-feature-card-title {
@@ -329,7 +353,7 @@
 }
 
 .mh-feature-card-button-wrapper {
-    display: flex; /* Allows alignment control via Elementor */
+    display: flex;
 }
 
 .mh-feature-card-button {
@@ -342,6 +366,5 @@
 }
 
 .mh-feature-card-button:hover {
-    /* Hover styles handled by Elementor controls */
     transform: translateY(-2px);
 }

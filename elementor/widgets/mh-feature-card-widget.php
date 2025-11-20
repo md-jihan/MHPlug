@@ -27,7 +27,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 	}
 
 	public function get_icon() {
-		return 'eicon-info-box';
+		return 'mhi-card';
 	}
 
 	public function get_categories() {

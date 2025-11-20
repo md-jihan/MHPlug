@@ -29,7 +29,7 @@ class MH_Image_Circle_Slider_Widget extends Widget_Base {
     }
 
     public function get_icon() {
-        return 'eicon-slider-3d'; 
+        return 'mhi-border-image-slider'; 
     }
 
     public function get_categories() {

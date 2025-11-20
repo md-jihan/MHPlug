@@ -1,7 +1,6 @@
 <?php
 /**
- * MH Post Carousel Widget (Layout Builder Edition)
- * Features: Slider/Grid toggle, Drag & Drop Layout Builder for all elements.
+ * MH Post Carousel Widget (Layout Builder + Inline Option)
  */
 
 if (!defined('ABSPATH')) {
@@ -57,7 +56,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
         $this->end_controls_section();
 
-        // --- 2. LAYOUT BUILDER (The Drag & Drop Magic) ---
+        // --- 2. LAYOUT BUILDER ---
         $this->start_controls_section(
             'section_layout_builder',
             [
@@ -70,7 +69,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             'layout_note',
             [
                 'type' => Controls_Manager::RAW_HTML,
-                'raw' => '<small>' . __('Add items to the list below. Drag and drop to reorder them in the card.', 'mh-plug') . '</small>',
+                'raw' => '<small>' . __('Drag and drop to reorder. Set Width to "Inline" to place items side-by-side.', 'mh-plug') . '</small>',
                 'content_classes' => 'elementor-descriptor',
             ]
         );
@@ -96,9 +95,21 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
+        // --- NEW: Width Control for Side-by-Side ---
+        $repeater->add_control(
+            'element_width',
+            [
+                'label' => esc_html__( 'Width', 'mh-plug' ),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'full',
+                'options' => [
+                    'full' => esc_html__( 'Full Width (Stack)', 'mh-plug' ),
+                    'inline' => esc_html__( 'Inline (Side by Side)', 'mh-plug' ),
+                ],
+            ]
+        );
+
         // --- Settings per element ---
-        
-        // Image Settings
         $repeater->add_group_control(
             Group_Control_Image_Size::get_type(),
             [
@@ -108,7 +119,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // Excerpt Settings
         $repeater->add_control(
             'excerpt_length',
             [
@@ -119,7 +129,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // Button Settings
         $repeater->add_control(
             'button_text',
             [
@@ -130,7 +139,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // Icons for Meta/Terms
         $repeater->add_control(
             'meta_icon',
             [
@@ -148,9 +156,9 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'fields' => $repeater->get_controls(),
                 'default' => [
                     [ 'element_type' => 'image' ],
-                    [ 'element_type' => 'category' ],
+                    [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ],
+                    [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ],
                     [ 'element_type' => 'title' ],
-                    [ 'element_type' => 'date', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ],
                     [ 'element_type' => 'excerpt' ],
                     [ 'element_type' => 'button' ],
                 ],
@@ -171,8 +179,10 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'default' => 'left',
                 'selectors' => [
                     '{{WRAPPER}} .mh-post-card' => 'text-align: {{VALUE}};',
-                    '{{WRAPPER}} .mh-post-button-wrapper' => 'justify-content: {{VALUE}};',
-                    '{{WRAPPER}} .mh-post-meta-item' => 'justify-content: {{VALUE}};',
+                    // Flex alignment for column layout
+                    '{{WRAPPER}} .mh-post-content' => 'align-items: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
+                    // Flex alignment for inline items
+                    '{{WRAPPER}} .mh-post-content' => 'justify-content: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
                 ],
             ]
         );
@@ -210,13 +220,11 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // Slider specific
         $this->add_control( 'autoplay', [ 'label' => 'Autoplay', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
         $this->add_control( 'autoplay_speed', [ 'label' => 'Speed (ms)', 'type' => Controls_Manager::NUMBER, 'default' => 3000, 'condition' => [ 'enable_slider' => 'yes', 'autoplay' => 'yes' ] ] );
         $this->add_control( 'show_arrows', [ 'label' => 'Arrows', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
         $this->add_control( 'show_dots', [ 'label' => 'Dots', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
 
-        // Gap
         $this->add_responsive_control(
             'grid_gap',
             [
@@ -233,7 +241,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
         $this->end_controls_section();
 
-        // --- STYLES: CARD ---
+        // --- STYLES ---
         $this->start_controls_section( 'section_style_card', [ 'label' => 'Card Box', 'tab' => Controls_Manager::TAB_STYLE ] );
         $this->add_control( 'box_bg_color', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'background-color: {{VALUE}};' ] ] );
         $this->add_responsive_control( 'box_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
@@ -242,22 +250,18 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'box_shadow', 'selector' => '{{WRAPPER}} .mh-post-card' ] );
         $this->end_controls_section();
 
-        // --- STYLES: TYPOGRAPHY ---
         $this->start_controls_section( 'section_style_typography', [ 'label' => 'Content Styles', 'tab' => Controls_Manager::TAB_STYLE ] );
         
-        // Title
         $this->add_control( 'heading_title', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING ] );
         $this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-element-title a' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'title_typo', 'selector' => '{{WRAPPER}} .mh-post-element-title' ] );
         $this->add_responsive_control( 'title_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-element-title' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
 
-        // Meta (Date, Author, etc)
         $this->add_control( 'heading_meta', [ 'label' => 'Meta / Terms', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'meta_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-meta-item' => 'color: {{VALUE}};', '{{WRAPPER}} .mh-post-meta-item a' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'meta_typo', 'selector' => '{{WRAPPER}} .mh-post-meta-item' ] );
         $this->add_responsive_control( 'meta_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-meta-item' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
 
-        // Description
         $this->add_control( 'heading_desc', [ 'label' => 'Description', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-element-excerpt' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'desc_typo', 'selector' => '{{WRAPPER}} .mh-post-element-excerpt' ] );
@@ -279,7 +283,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
         if (!$query->have_posts()) return;
 
-        // Slider Mode
         if ( 'yes' === $settings['enable_slider'] ) {
             $slick_options = [
                 'slidesToShow' => (int)$settings['slides_to_show'],
@@ -310,9 +313,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 <script>jQuery(document).ready(function($){var s=$('.elementor-element-<?php echo esc_attr($widget_id); ?> .mh-post-carousel');if(s.length&&$.fn.slick){s.slick(s.data('slick'));}});</script>
             </div>
             <?php
-        } 
-        // Grid Mode
-        else {
+        } else {
             $grid_style = '--mh-grid-cols: ' . $settings['slides_to_show'] . ';';
             if ( ! empty( $settings['slides_to_show_tablet'] ) ) $grid_style .= ' --mh-grid-cols-tablet: ' . $settings['slides_to_show_tablet'] . ';';
             if ( ! empty( $settings['slides_to_show_mobile'] ) ) $grid_style .= ' --mh-grid-cols-mobile: ' . $settings['slides_to_show_mobile'] . ';';
@@ -331,16 +332,21 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         wp_reset_postdata();
     }
 
-    // --- THE MAGIC: Render elements in Drag & Drop Order ---
     protected function render_post_card($settings) {
         echo '<div class="mh-post-card">';
+        echo '<div class="mh-post-content">'; // New Wrapper for flex layout
         
         foreach ( $settings['card_elements'] as $element ) {
+            
+            // Calculate the class based on the "Width" setting
+            $width_class = ( $element['element_width'] === 'inline' ) ? 'mh-width-inline' : 'mh-width-full';
+            $wrapper_class = $width_class . ' mh-post-element-' . $element['element_type'];
+
             switch ( $element['element_type'] ) {
                 
                 case 'image':
                     if ( has_post_thumbnail() ) {
-                        echo '<div class="mh-post-element-image">';
+                        echo '<div class="' . esc_attr($wrapper_class) . '">';
                         echo '<a href="' . get_permalink() . '">';
                         the_post_thumbnail( $element['thumbnail_size'] );
                         echo '</a>';
@@ -349,50 +355,51 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                     break;
 
                 case 'title':
-                    echo '<h3 class="mh-post-element-title">';
+                    echo '<h3 class="' . esc_attr($wrapper_class) . '">';
                     echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
                     echo '</h3>';
                     break;
 
                 case 'excerpt':
-                    echo '<div class="mh-post-element-excerpt">';
+                    echo '<div class="' . esc_attr($wrapper_class) . '">';
                     echo wp_trim_words( get_the_excerpt(), $element['excerpt_length'] );
                     echo '</div>';
                     break;
 
                 case 'button':
-                    echo '<div class="mh-post-button-wrapper">';
+                    // Buttons usually need their own wrapper for alignment if full width
+                    echo '<div class="' . esc_attr($wrapper_class) . ' mh-post-button-wrapper">';
                     echo '<a href="' . get_permalink() . '" class="mh-post-button">' . esc_html( $element['button_text'] ) . '</a>';
                     echo '</div>';
                     break;
 
-                // --- Meta & Terms ---
+                // Meta items
                 case 'date':
-                    $this->render_meta_item( $element, get_the_date() );
+                    $this->render_meta_item( $element, get_the_date(), $wrapper_class );
                     break;
 
                 case 'author':
-                    $this->render_meta_item( $element, get_the_author() );
+                    $this->render_meta_item( $element, get_the_author(), $wrapper_class );
                     break;
 
                 case 'category':
                     $cats = get_the_category_list( ', ' );
-                    if ( $cats ) $this->render_meta_item( $element, $cats );
+                    if ( $cats ) $this->render_meta_item( $element, $cats, $wrapper_class );
                     break;
 
                 case 'tags':
                     $tags = get_the_tag_list( '', ', ' );
-                    if ( $tags ) $this->render_meta_item( $element, $tags );
+                    if ( $tags ) $this->render_meta_item( $element, $tags, $wrapper_class );
                     break;
             }
         }
         
-        echo '</div>';
+        echo '</div>'; // End .mh-post-content
+        echo '</div>'; // End .mh-post-card
     }
 
-    // Helper for meta items with icons
-    protected function render_meta_item( $element, $content ) {
-        echo '<div class="mh-post-meta-item">';
+    protected function render_meta_item( $element, $content, $wrapper_class ) {
+        echo '<div class="mh-post-meta-item ' . esc_attr($wrapper_class) . '">';
         if ( ! empty( $element['meta_icon']['value'] ) ) {
             Icons_Manager::render_icon( $element['meta_icon'], [ 'aria-hidden' => 'true', 'class' => 'mh-meta-icon' ] );
         }

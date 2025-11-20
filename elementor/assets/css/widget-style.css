@@ -368,115 +368,98 @@
 .mh-feature-card-button:hover {
     transform: translateY(-2px);
 }
-
 /* =======================================
  * MH Post Carousel (Layout Builder)
  * ======================================= */
 
-/* Card Container */
 .mh-post-card {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
     height: 100%;
+    overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Styles like padding/bg are set by controls */
+    /* Background, Border, Radius set by controls */
 }
-
 .mh-post-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* --- Elements --- */
-
-/* Image */
-.mh-post-element-image {
-    margin-bottom: 15px; /* Default spacing */
-    /* If padding is set on the card, we might want negative margins to make image full width? 
-       For now, let's keep it contained within the padding. */
+/* --- The Flex Container for Layout --- */
+.mh-post-content {
+    display: flex;
+    flex-direction: row; /* Default to row to allow inline items */
+    flex-wrap: wrap;     /* Allow wrapping */
+    /* Padding set by control */
 }
+
+/* --- Width Classes --- */
+.mh-width-full {
+    width: 100%;
+    flex-basis: 100%;
+}
+
+.mh-width-inline {
+    width: auto;
+    /* Add some spacing between inline items */
+    margin-right: 10px; 
+    display: inline-flex;
+    align-items: center;
+}
+/* Remove right margin from the last inline item */
+.mh-width-inline:last-child {
+    margin-right: 0;
+}
+
+/* --- Elements --- */
 .mh-post-element-image img {
     width: 100%;
-    height: 220px;
-    object-fit: cover;
+    height: auto;
     display: block;
-    transition: transform 0.3s ease;
 }
-.mh-post-card:hover .mh-post-element-image img {
-    transform: scale(1.05);
-}
-
-/* Title */
 .mh-post-element-title {
     margin: 0 0 10px 0;
     font-size: 1.2em;
     line-height: 1.4;
 }
-.mh-post-element-title a {
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+.mh-post-element-title a { text-decoration: none; transition: color 0.3s ease; }
+.mh-post-element-excerpt { margin-bottom: 15px; color: #666; }
 
-/* Excerpt */
-.mh-post-element-excerpt {
-    margin-bottom: 15px;
-    color: #666;
-}
-
-/* Button */
-.mh-post-button-wrapper {
-    display: flex;
-    margin-top: auto; /* Pushes button to bottom if everything else is aligned top */
-}
 .mh-post-button {
     display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9em;
+    background: #004265;
+    color: #fff;
+    border-radius: 4px;
     transition: all 0.3s ease;
 }
+.mh-post-button:hover { background: #333; }
 
-/* Meta & Terms Items */
+/* Meta & Terms */
 .mh-post-meta-item {
+    font-size: 0.85em;
+    margin-bottom: 10px;
+    color: #888;
     display: flex;
     align-items: center;
-    font-size: 0.85em;
-    margin-bottom: 8px;
-    gap: 6px;
-    color: #888;
+    gap: 5px;
 }
-.mh-meta-icon {
-    color: #004265; /* Default icon color */
-}
-.mh-post-meta-item a {
-    color: inherit;
-    text-decoration: none;
-}
+.mh-post-meta-item a { color: inherit; text-decoration: none; }
+.mh-meta-icon { color: #004265; margin-right: 3px; }
 
-/* --- Slider Mode --- */
-.mh-post-carousel-wrapper {
-    position: relative;
-    padding: 0 20px;
-}
+/* --- Slider & Grid (Same as before) --- */
+.mh-post-carousel-wrapper { position: relative; padding: 0 20px; }
 .mh-post-carousel .slick-arrow {
-    /* (Same arrow styles as before) */
     position: absolute; top: 50%; transform: translateY(-50%);
     background: #fff; border: none; width: 40px; height: 40px;
     border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 10; cursor: pointer; display: flex;
-    align-items: center; justify-content: center;
-    color: #333; font-size: 18px; transition: all 0.3s ease;
+    align-items: center; justify-content: center; color: #333; font-size: 18px;
 }
-.mh-post-carousel .slick-arrow:hover { background: #004265; color: #fff; }
 .mh-post-carousel .slick-prev { left: -10px; }
 .mh-post-carousel .slick-next { right: -10px; }
 
-/* --- Grid Mode --- */
-.mh-post-grid {
-    display: grid;
-    grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr);
-}
+.mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
 @media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }

@@ -1,7 +1,7 @@
 <?php
 /**
  * MH Feature Card Widget
- * Features: Title, Description, Button, Background (Image OR Color Choice)
+ * Features: Title, Description, Button, Background (Image, Color, or None)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -134,6 +134,10 @@ class MH_Feature_Card_Widget extends Widget_Base {
 						'title' => esc_html__( 'Color', 'mh-plug' ),
 						'icon' => 'eicon-paint-brush',
 					],
+                    'none' => [
+						'title' => esc_html__( 'None', 'mh-plug' ),
+						'icon' => 'eicon-ban',
+					],
 				],
 				'default' => 'image',
                 'toggle' => false,
@@ -220,6 +224,22 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			]
 		);
 
+        // Advanced Background Control (Position, Size, Repeat)
+        // Only show if Image is selected, as these settings apply to the background image
+        $this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'box_background_settings',
+				'label' => esc_html__( 'Background Settings', 'mh-plug' ),
+				'types' => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .mh-feature-card-wrapper',
+                'exclude' => ['image'], 
+                'condition' => [
+                    'background_type' => 'image',
+                ],
+			]
+		);
+
 		$this->add_group_control(
 			Group_Control_Border::get_type(),
 			[
@@ -236,7 +256,6 @@ class MH_Feature_Card_Widget extends Widget_Base {
 				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-wrapper' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                    // Ensure overlay inherits radius
                     '{{WRAPPER}} .mh-feature-card-wrapper::before' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
@@ -259,6 +278,10 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Background Overlay', 'mh-plug' ),
 				'tab' => Controls_Manager::TAB_STYLE,
+                // Only show overlay options if Image is selected
+                'condition' => [
+                    'background_type' => 'image',
+                ],
 			]
 		);
 
@@ -319,7 +342,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Color', 'mh-plug' ),
 				'type' => Controls_Manager::COLOR,
-				'default' => '#FFFFFF', 
+				'default' => '#FFFFFF', // Default to white
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-title' => 'color: {{VALUE}};',
 				],
@@ -362,7 +385,7 @@ class MH_Feature_Card_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Color', 'mh-plug' ),
 				'type' => Controls_Manager::COLOR,
-				'default' => '#EEEEEE',
+				'default' => '#EEEEEE', 
 				'selectors' => [
 					'{{WRAPPER}} .mh-feature-card-description' => 'color: {{VALUE}};',
 				],
@@ -528,11 +551,12 @@ class MH_Feature_Card_Widget extends Widget_Base {
             if ( ! empty( $settings['card_image']['url'] ) ) {
                 $wrapper_style = 'background-image: url(' . esc_url( $settings['card_image']['url'] ) . ');';
             }
-        } else {
+        } elseif ( 'color' === $settings['background_type'] ) {
             if ( ! empty( $settings['card_bg_color'] ) ) {
                 $wrapper_style = 'background-color: ' . esc_attr( $settings['card_bg_color'] ) . ';';
             }
         }
+        // If 'none', no style attribute is added
 
 		?>
 		<div class="mh-feature-card-wrapper" style="<?php echo $wrapper_style; ?>">

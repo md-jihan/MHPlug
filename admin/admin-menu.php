@@ -27,7 +27,8 @@ class MH_Admin_Menu {
         'mh_brush_slider'   => 'Brush Slider',
         'mh_image_circle'   => 'Image Circle',
         'mh_image_circle_slider' => 'Image Circle Slider',
-        'mh_feature_card' => 'Feature Card',
+        'mh_feature_card'   => 'Feature Card',
+        'mh_post_carousel'  => 'Post',
     ];
 
     public function __construct() {

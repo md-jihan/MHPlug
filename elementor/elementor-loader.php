@@ -126,7 +126,10 @@ final class MH_Elementor_Loader {
             'mh_brush_slider' => ['file' => 'mh-brush-slider-widget.php', 'class' => 'MH_Brush_Slider_Widget'],
             'mh_image_circle' => ['file' => 'mh-image-circle-widget.php', 'class' => 'MH_Image_Circle_Widget'],
             'mh_image_circle_slider' => ['file' => 'mh-image-circle-slider-widget.php', 'class' => 'MH_Image_Circle_Slider_Widget'],
-            'mh_feature_card' => ['file' => 'mh-feature-card-widget.php', 'class' => 'MH_Feature_Card_Widget'],];
+            'mh_feature_card' => ['file' => 'mh-feature-card-widget.php', 'class' => 'MH_Feature_Card_Widget'],
+            'mh_post_carousel' => ['file' => 'mh-post-carousel-widget.php', 'class' => 'MH_Post_Carousel_Widget'],
+        
+        ];
 
         // Command: Loop through each widget in our map.
         foreach ($widget_map as $option_key => $widget_data) {

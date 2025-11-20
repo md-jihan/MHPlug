@@ -302,7 +302,6 @@
     display: flex; 
     justify-content: center;
 }
-
 /* =======================================
  * MH Feature Card Widget
  * ======================================= */
@@ -310,40 +309,39 @@
 .mh-feature-card-wrapper {
     display: flex;
     flex-direction: column;
-    /* Default padding, bg, radius, shadow are handled by controls */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    justify-content: center; /* Center content vertically if height is set */
+    transition: all 0.3s ease;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Optional Hover Effect */
-.mh-feature-card-wrapper:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; /* Overrides control on hover */
-}
-
-/* The container for Number and Icon */
-.mh-feature-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Aligns them to the top */
-    width: 100%;
-}
-
-/* The Number */
-.mh-feature-card-number {
-    /* Default typography handled by controls */
-    line-height: 1; /* Keeps it tight */
-}
-
-/* The Icon Container */
-.mh-feature-card-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    /* Default sizes/colors handled by controls */
-}
-
-/* The Title */
 .mh-feature-card-title {
-    margin: 0; /* Reset default margins */
-    /* Margin-top handled by controls */
+    margin: 0 0 15px 0;
+    font-weight: 600;
+}
+
+.mh-feature-card-description {
+    margin: 0 0 25px 0;
+    line-height: 1.6;
+}
+
+.mh-feature-card-button-wrapper {
+    display: flex; /* Allows alignment control via Elementor */
+}
+
+.mh-feature-card-button {
+    display: inline-block;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+}
+
+.mh-feature-card-button:hover {
+    /* Hover styles handled by Elementor controls */
+    transform: translateY(-2px);
 }

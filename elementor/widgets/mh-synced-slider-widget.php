@@ -1,7 +1,7 @@
 <?php
 /**
  * MH Synced Slider Widget
- * Two synced slick sliders: Left (Text) and Right (Images in Center Mode).
+ * Features: Dual Syncing Sliders (Text Left, Images Right with Center Mode)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,17 +33,9 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		return [ 'mh-plug-widgets' ];
 	}
 
-	public function get_script_depends() {
-		return [ 'jquery', 'slick' ];
-	}
-
-	public function get_style_depends() {
-		return [ 'slick', 'slick-theme' ];
-	}
-
 	protected function register_controls() {
 
-		// --- CONTENT SECTION ---
+		// --- SLIDES CONTENT ---
 		$this->start_controls_section(
 			'section_content',
 			[
@@ -52,6 +44,17 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		);
 
 		$repeater = new Repeater();
+
+        $repeater->add_control(
+			'image',
+			[
+				'label' => esc_html__( 'Image (Right Side)', 'mh-plug' ),
+				'type' => Controls_Manager::MEDIA,
+				'default' => [
+					'url' => Utils::get_placeholder_image_src(),
+				],
+			]
+		);
 
 		$repeater->add_control(
 			'subtitle',
@@ -76,7 +79,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Description', 'mh-plug' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'mh-plug' ),
+				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'mh-plug' ),
 			]
 		);
 
@@ -97,17 +100,6 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'placeholder' => esc_html__( 'https://your-link.com', 'mh-plug' ),
 				'default' => [
 					'url' => '#',
-				],
-			]
-		);
-
-		$repeater->add_control(
-			'image',
-			[
-				'label' => esc_html__( 'Image', 'mh-plug' ),
-				'type' => Controls_Manager::MEDIA,
-				'default' => [
-					'url' => Utils::get_placeholder_image_src(),
 				],
 			]
 		);
@@ -153,31 +145,27 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 
 		$this->end_controls_section();
 
-		// --- STYLE: TEXT CONTENT ---
+		// --- STYLE: TEXT ---
 		$this->start_controls_section(
 			'section_style_text',
 			[
-				'label' => esc_html__( 'Text Content (Left)', 'mh-plug' ),
+				'label' => esc_html__( 'Text Content', 'mh-plug' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 
-        // Subtitle
         $this->add_control( 'heading_subtitle', [ 'label' => 'Subtitle', 'type' => Controls_Manager::HEADING ] );
 		$this->add_control( 'subtitle_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'subtitle_typography', 'selector' => '{{WRAPPER}} .mh-synced-subtitle' ] );
 
-        // Title
         $this->add_control( 'heading_title_main', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
 		$this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'title_typography', 'selector' => '{{WRAPPER}} .mh-synced-title' ] );
 
-        // Description
         $this->add_control( 'heading_desc', [ 'label' => 'Description', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
 		$this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'desc_typography', 'selector' => '{{WRAPPER}} .mh-synced-desc' ] );
 
-        // Button
         $this->add_control( 'heading_btn', [ 'label' => 'Button', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'btn_color', [ 'label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'color: {{VALUE}};' ] ] );
         $this->add_control( 'btn_bg_color', [ 'label' => 'Background Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'background-color: {{VALUE}};' ] ] );
@@ -195,25 +183,28 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		}
 
 		$id = $this->get_id();
-        // Unique IDs for the two sliders
-		$text_slider_id = 'mh-text-slider-' . $id;
-		$image_slider_id = 'mh-image-slider-' . $id;
+		$text_slider_class = 'mh-text-slider-' . $id;
+		$image_slider_class = 'mh-image-slider-' . $id;
 		?>
 
 		<div class="mh-synced-slider-wrapper">
-            <div class="mh-text-slider" id="<?php echo esc_attr( $text_slider_id ); ?>">
+            
+            <div class="mh-text-slider <?php echo esc_attr( $text_slider_class ); ?>">
 				<?php foreach ( $slides as $slide ) : ?>
-					<div class="mh-text-slide">
-                        <div class="mh-text-content">
+					<div class="mh-text-slide-item">
+                        <div class="mh-text-content-inner">
                             <?php if ( ! empty( $slide['subtitle'] ) ) : ?>
-                                <h4 class="mh-synced-subtitle"><?php echo esc_html( $slide['subtitle'] ); ?></h4>
+                                <h5 class="mh-synced-subtitle"><?php echo esc_html( $slide['subtitle'] ); ?></h5>
                             <?php endif; ?>
+                            
                             <?php if ( ! empty( $slide['title'] ) ) : ?>
                                 <h2 class="mh-synced-title"><?php echo wp_kses_post( $slide['title'] ); ?></h2>
                             <?php endif; ?>
+                            
                             <?php if ( ! empty( $slide['description'] ) ) : ?>
                                 <div class="mh-synced-desc"><?php echo wp_kses_post( $slide['description'] ); ?></div>
                             <?php endif; ?>
+                            
                             <?php if ( ! empty( $slide['button_text'] ) ) : ?>
                                 <a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-synced-btn">
                                     <?php echo esc_html( $slide['button_text'] ); ?>
@@ -224,44 +215,50 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				<?php endforeach; ?>
 			</div>
 
-            <div class="mh-image-slider" id="<?php echo esc_attr( $image_slider_id ); ?>">
+            <div class="mh-image-slider <?php echo esc_attr( $image_slider_class ); ?>">
 				<?php foreach ( $slides as $slide ) : ?>
-					<div class="mh-image-slide">
-                        <?php if ( ! empty( $slide['image']['id'] ) ) : ?>
-                            <?php echo wp_get_attachment_image( $slide['image']['id'], $settings['image_size_size'], false, [ 'class' => 'mh-slider-img' ] ); ?>
-                        <?php endif; ?>
+					<div class="mh-image-slide-item">
+                        <div class="mh-image-box">
+                            <?php if ( ! empty( $slide['image']['id'] ) ) : ?>
+                                <?php echo wp_get_attachment_image( $slide['image']['id'], $settings['image_size_size'], false, [ 'class' => 'mh-slider-img' ] ); ?>
+                            <?php endif; ?>
+                        </div>
 					</div>
 				<?php endforeach; ?>
 			</div>
+
 		</div>
 
         <script>
 		jQuery(document).ready(function($) {
-            // Left Text Slider
-			$('#<?php echo esc_attr( $text_slider_id ); ?>').slick({
+            var textSlider = $('.<?php echo esc_attr( $text_slider_class ); ?>');
+            var imageSlider = $('.<?php echo esc_attr( $image_slider_class ); ?>');
+
+            // Left Side: Single Item, Fade Effect
+			textSlider.slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
 				arrows: false,
-				fade: true, // Text fades for smoother transition
-				asNavFor: '#<?php echo esc_attr( $image_slider_id ); ?>' // Sync with image slider
+				fade: true,
+				asNavFor: imageSlider // Syncs with image slider
 			});
 
-            // Right Image Slider (Center Mode)
-			$('#<?php echo esc_attr( $image_slider_id ); ?>').slick({
-				slidesToShow: 3, // Show 3 items for center mode effect
+            // Right Side: Center Mode, Multi Item
+			imageSlider.slick({
+				slidesToShow: 3, // Show partial next/prev items
 				slidesToScroll: 1,
-				asNavFor: '#<?php echo esc_attr( $text_slider_id ); ?>', // Sync with text slider
+				asNavFor: textSlider, // Syncs with text slider
 				dots: false,
-				centerMode: true, // The magic setting
-				centerPadding: '0px', // Adjust if you want more side visibility
+				centerMode: true, // Key feature for the image layout
+                centerPadding: '0px',
 				focusOnSelect: true,
-                arrows: false, // Hide default arrows, we will use custom ones if needed
+                arrows: false, // Remove default arrows
                 responsive: [
                     {
                         breakpoint: 768,
                         settings: {
                             slidesToShow: 1,
-                            centerMode: false // Disable center mode on mobile for simplicity
+                            centerMode: false
                         }
                     }
                 ]

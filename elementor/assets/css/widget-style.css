@@ -475,3 +475,28 @@
 .mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
 @media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
+/* --- MH Post Carousel: Image Breakout Fix --- */
+
+.mh-post-element-image {
+    /* Pull image left/right to touch edges */
+    margin-left: calc( -1 * var(--mh-card-pl, 0px) );
+    margin-right: calc( -1 * var(--mh-card-pr, 0px) );
+    
+    /* Recalculate width to fill the extra space */
+    width: calc( 100% + var(--mh-card-pl, 0px) + var(--mh-card-pr, 0px) );
+    max-width: none;
+}
+
+/* If image is the first item, pull it to the top edge */
+.mh-post-element-image:first-child {
+    margin-top: calc( -1 * var(--mh-card-pt, 0px) );
+    border-top-left-radius: inherit;  /* Inherit card radius */
+    border-top-right-radius: inherit;
+}
+
+/* If image is the last item, pull it to the bottom edge */
+.mh-post-element-image:last-child {
+    margin-bottom: calc( -1 * var(--mh-card-pb, 0px) );
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+}

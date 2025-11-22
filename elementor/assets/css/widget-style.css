@@ -397,7 +397,7 @@
     box-sizing: border-box;
 }
 
-/* --- 3. Inline Grouping --- */
+/* --- 3. Inline Grouping & Separator --- */
 .mh-inline-group {
     display: flex;
     flex-direction: row;
@@ -405,8 +405,34 @@
     width: 100%;
     align-items: center;
     margin-bottom: 10px;
-    gap: 10px;
+    /* Remove gap, we will use margins on the separator instead */
+    gap: 0; 
 }
+
+/* Inline Items */
+.mh-width-inline {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Add the Pipe Separator '|' after every inline item */
+.mh-width-inline::after {
+    content: " | ";
+    display: inline-block;
+    margin: 0 10px; /* Adjust spacing around the pipe here */
+    opacity: 0.5;   /* Make it slightly transparent */
+    font-weight: 400;
+    color: inherit; /* Takes the text color */
+}
+
+/* HIDE the separator for the last item in the group */
+.mh-width-inline:last-child::after {
+    display: none;
+    content: none;
+}
+
+/* Reset margins inside group */
 .mh-inline-group .mh-post-meta-item,
 .mh-inline-group .mh-post-element-title,
 .mh-inline-group .mh-post-element-excerpt {
@@ -468,6 +494,8 @@
 }
 .mh-post-carousel .slick-dots li.slick-active button {
     background: #004265; border-color: #004265; transform: scale(1.1);
+    width: 30px !important;
+    border-radius: 10px;
 }
 
 /* --- 6. Alignment & Grid --- */

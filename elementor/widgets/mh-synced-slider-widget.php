@@ -1,6 +1,6 @@
 <?php
 /**
- * MH Synced Slider Widget (Design Update)
+ * MH Synced Slider Widget (Center Mode Fixed)
  * Features:
  * - Text on Left (with Background/Padding)
  * - Images on Right (Center Mode)
@@ -392,10 +392,11 @@ class MH_Synced_Slider_Widget extends Widget_Base {
             $next_icon_html = ob_get_clean();
             if(empty($next_icon_html)) $next_icon_html = '<i class="eicon-chevron-right"></i>';
 
-            // Arrows now generated here but will be appended via JS or placed in layout
+            // We attach arrows to the Image Slider
             $prev_arrow = '<button type="button" class="mh-synced-arrow mh-prev">' . $prev_icon_html . '</button>';
             $next_arrow = '<button type="button" class="mh-synced-arrow mh-next">' . $next_icon_html . '</button>';
         }
+
 		?>
 
 		<div class="mh-synced-slider-wrapper" 
@@ -428,7 +429,6 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                         </div>
                     <?php endforeach; ?>
                 </div>
-                
                 <?php if ( $show_arrows ) : ?>
                     <div class="mh-synced-arrows-container">
                         <?php echo $prev_arrow; ?>
@@ -451,12 +451,12 @@ class MH_Synced_Slider_Widget extends Widget_Base {
             </div>
 		</div>
 
-		<script>
+        <script>
 		jQuery(document).ready(function($) {
             var $wrapper = $('.elementor-element-<?php echo esc_attr($id); ?> .mh-synced-slider-wrapper');
             var textId = '#' + $wrapper.data('text-id');
             var imageId = '#' + $wrapper.data('image-id');
-            var autoplay = $wrapper.data('autoplay') === true;
+            var autoplay = $wrapper.data('autoplay') === true; // convert string 'true' if needed
             var speed = $wrapper.data('speed');
             var infinite = $wrapper.data('infinite') === true;
 
@@ -470,7 +470,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 autoplay: autoplay,
                 autoplaySpeed: speed,
                 infinite: infinite,
-                draggable: false
+                draggable: false // Let image slider control drag
 			});
 
             // Right Image Slider (Center Mode)
@@ -482,7 +482,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				centerMode: true,
                 centerPadding: '0px',
 				focusOnSelect: true,
-                arrows: false,
+                arrows: false, // We use custom buttons
                 infinite: infinite,
                 autoplay: autoplay,
                 autoplaySpeed: speed,
@@ -497,6 +497,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 ]
 			});
 
+            // Custom Navigation
             $wrapper.find('.mh-prev').click(function(){
                 $(imageId).slick('slickPrev');
             });

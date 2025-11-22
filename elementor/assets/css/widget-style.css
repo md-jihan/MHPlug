@@ -511,7 +511,7 @@
 
 
 /* =======================================
- * MH Synced Slider Widget (Final)
+ * MH Synced Slider Widget (Design Update)
  * ======================================= */
 
 .mh-synced-slider-wrapper {
@@ -531,7 +531,8 @@
     z-index: 5; /* High z-index to sit on top if needed */
     padding: 50px; /* Default padding, overridden by control */
     background-color: #1a1a1a; /* Default, overridden */
-    /* You might want a negative margin-right if you want overlap */
+    /* Optional: Negative margin to pull text box over image */
+    /* margin-right: -50px; */ 
 }
 
 .mh-text-slide {
@@ -611,7 +612,7 @@
 }
 
 
-/* --- Right: Image Slider --- */
+/* --- Right: Image Slider (Center Mode) --- */
 .mh-image-slider-container {
     width: 65%; 
     position: relative;
@@ -620,20 +621,21 @@
 .mh-image-slider { margin: 0; }
 
 .mh-image-slide-item {
-    padding: 0; 
+    padding: 0; /* NO GAP */
     outline: none;
     transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
-    transform: scale(0.9); /* Inactive slides are smaller */
+    transform: scale(0.8); /* Smaller inactive slides */
     opacity: 0.5; 
     position: relative;
     z-index: 1;
+    /* Overlap effect */
+    margin: 0 -30px; 
 }
 
 .mh-image-box {
-    border-radius: 0; /* Sharp corners typically, or set by control */
+    border-radius: 0; /* Square default */
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    height: 100%;
     width: 100%;
 }
 
@@ -642,11 +644,13 @@
     height: 400px; /* Landscape height */
     object-fit: cover;
     display: block;
+    /* Force Square Aspect Ratio */
+    aspect-ratio: 1 / 1;
 }
 
 /* Active Center Slide */
 .mh-image-slider .slick-center .mh-image-slide-item {
-    transform: scale(1); /* Full size */
+    transform: scale(1.1); /* Scale UP to overlap neighbors */
     opacity: 1;
     z-index: 10; 
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
@@ -673,6 +677,10 @@
         transform: scale(1); 
         opacity: 1;
         padding: 0 5px;
+        margin: 0;
     }
-    .mh-slider-img { height: 250px; }
+    .mh-image-slider .slick-center .mh-image-slide-item {
+        transform: scale(1);
+    }
+    .mh-slider-img { height: 250px; aspect-ratio: auto; }
 }

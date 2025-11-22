@@ -508,3 +508,138 @@
 .mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
 @media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
+
+/* =======================================
+ * MH Synced Slider Widget
+ * ======================================= */
+
+.mh-synced-slider-wrapper {
+    display: flex;
+    align-items: center; /* Vertically center both sides */
+    overflow: hidden; /* Hide overflowing images from center mode */
+    padding: 50px 0;
+}
+
+/* --- Left Side: Text Slider --- */
+.mh-text-slider {
+    width: 40%; /* Adjust width as needed */
+    padding-right: 50px;
+    z-index: 2; /* Ensure text is above images if they overlap */
+}
+
+.mh-text-slide {
+    outline: none; /* Remove Slick focus outline */
+}
+
+.mh-text-content {
+    /* Add padding or max-width if needed */
+}
+
+.mh-synced-subtitle {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.mh-synced-title {
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 30px;
+    color: #fff; /* Assuming dark background */
+}
+
+.mh-synced-desc {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 40px;
+    max-width: 450px;
+}
+
+.mh-synced-btn {
+    display: inline-block;
+    padding: 15px 35px;
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 30px; /* Rounded button */
+    transition: all 0.3s ease;
+}
+
+.mh-synced-btn:hover {
+    background-color: #ccc;
+}
+
+
+/* --- Right Side: Image Slider --- */
+.mh-image-slider {
+    width: 60%; /* Adjust width as needed */
+    /* Slick needs a container width to calculate center mode correctly */
+}
+
+.mh-image-slide {
+    padding: 20px; /* Spacing between images */
+    outline: none;
+    transition: all 0.5s ease; /* Smooth transition for size change */
+    transform: scale(0.8); /* Start smaller */
+    opacity: 0.5; /* Start semi-transparent */
+}
+
+.mh-slider-img {
+    width: 100%;
+    height: 500px; /* Fixed height for consistency */
+    object-fit: cover;
+    border-radius: 20px; /* Rounded corners for images */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+/* --- Center Mode Active State --- */
+/* The image in the center gets this class */
+.mh-image-slider .slick-center {
+    transform: scale(1); /* Full size */
+    opacity: 1; /* Full opacity */
+    z-index: 10; /* Bring to front */
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .mh-synced-slider-wrapper {
+        flex-direction: column; /* Stack on mobile */
+    }
+
+    .mh-text-slider,
+    .mh-image-slider {
+        width: 100%;
+        padding: 0;
+    }
+
+    .mh-text-slider {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .mh-text-content {
+        padding: 0 20px;
+    }
+
+    .mh-synced-desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .mh-image-slide {
+        padding: 10px;
+        transform: scale(1); /* No scaling on mobile */
+        opacity: 1;
+    }
+    
+    .mh-slider-img {
+        height: 350px;
+    }
+}

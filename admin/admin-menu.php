@@ -29,6 +29,7 @@ class MH_Admin_Menu {
         'mh_image_circle_slider' => 'Image Circle Slider',
         'mh_feature_card'   => 'Feature Card',
         'mh_post_carousel'  => 'Post',
+        'mh_synced_slider' => 'Synced Slider',
     ];
 
     public function __construct() {

@@ -368,12 +368,12 @@
 .mh-feature-card-button:hover {
     transform: translateY(-2px);
 }
+
 /* =======================================
- * MH Post Carousel (Layout Builder)
+ * MH Post Carousel & Grid (Final)
  * ======================================= */
 
 /* --- 1. Equal Height Fixes --- */
-/* Force Slick Slider Tracks to Flex */
 .mh-post-carousel .slick-track {
     display: flex !important;
 }
@@ -381,9 +381,8 @@
     height: auto !important;
     display: flex !important;
     flex-direction: column;
-    float: none !important; 
+    float: none !important;
 }
-/* Ensure Items fill the height */
 .mh-post-carousel-item,
 .mh-post-grid-item {
     height: 100%;
@@ -391,15 +390,14 @@
     flex-direction: column;
 }
 
-/* --- 2. Main Card Container --- */
+/* --- 2. Card & Layout --- */
 .mh-post-card {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: 100%; /* Force full height */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff; /* Default fallback */
-    width: 100%;
+    /* Padding/Bg set by controls */
 }
 
 .mh-post-card:hover {
@@ -407,102 +405,59 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* --- 3. Content Area (Flex Container) --- */
 .mh-post-content {
     display: flex;
-    flex-direction: row; /* Allows 'Inline' items side-by-side */
-    flex-wrap: wrap;     /* Wrap items to new lines */
-    align-content: flex-start; /* Pack content at the top */
-    flex-grow: 1;        /* Grow to fill empty space */
+    flex-direction: row; /* Allows Inline items */
+    flex-wrap: wrap;
+    align-content: flex-start;
+    flex-grow: 1; /* Grows to fill height */
     width: 100%;
-    box-sizing: border-box;
-    /* Padding is set by control, usually on .mh-post-card */
 }
 
-/* --- 4. Width Classes --- */
+/* --- 3. Width Helpers --- */
 .mh-width-full {
     width: 100%;
     flex-basis: 100%;
 }
-
 .mh-width-inline {
     width: auto;
-    margin-right: 10px; 
+    margin-right: 10px;
     display: inline-flex;
     align-items: center;
 }
-.mh-width-inline:last-child {
-    margin-right: 0;
-}
+.mh-width-inline:last-child { margin-right: 0; }
 
-/* --- 5. Individual Elements --- */
-.mh-post-element-image {
-    width: 100%;
-    margin-bottom: 15px;
-}
-.mh-post-element-image img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-}
-.mh-post-card:hover .mh-post-element-image img {
-    transform: scale(1.05);
-}
+/* --- 4. Elements --- */
+.mh-post-element-image { width: 100%; margin-bottom: 15px; }
+.mh-post-element-image img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.3s ease; }
+.mh-post-card:hover .mh-post-element-image img { transform: scale(1.05); }
 
-.mh-post-element-title {
-    margin: 0 0 10px 0;
-    font-size: 1.2em;
-    line-height: 1.4;
-}
-.mh-post-element-title a { 
-    text-decoration: none; 
-    transition: color 0.3s ease; 
-    color: inherit;
-}
+.mh-post-element-title { margin: 0 0 10px 0; font-size: 1.2em; line-height: 1.4; }
+.mh-post-element-title a { text-decoration: none; transition: color 0.3s ease; color: inherit; }
+.mh-post-element-excerpt { margin-bottom: 15px; color: #666; width: 100%; }
 
-.mh-post-element-excerpt { 
-    margin-bottom: 15px; 
-    color: #666; 
-    width: 100%;
-}
-
-/* Sticky Button Logic */
+/* Button - Aligned to Bottom */
 .mh-post-button-wrapper {
-    margin-top: auto !important; /* Pushes button to bottom */
-    width: 100%;                 
-    padding-top: 15px;           
+    margin-top: auto !important;
+    width: 100%;
+    padding-top: 15px;
     display: flex;
-    /* Justify content set by control */
+    /* justify-content set by control */
 }
-
 .mh-post-button {
-    display: inline-block;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9em;
-    background: #004265;
-    color: #fff;
-    border-radius: 4px;
+    display: inline-block; padding: 10px 20px;
+    text-decoration: none; font-weight: 500; font-size: 0.9em;
+    background: #004265; color: #fff; border-radius: 4px;
     transition: all 0.3s ease;
 }
 .mh-post-button:hover { background: #333; color: #fff; }
 
-/* Meta & Terms */
-.mh-post-meta-item {
-    font-size: 0.85em;
-    margin-bottom: 10px;
-    color: #888;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
+/* Meta */
+.mh-post-meta-item { font-size: 0.85em; margin-bottom: 8px; color: #888; display: flex; align-items: center; gap: 5px; }
 .mh-post-meta-item a { color: inherit; text-decoration: none; }
 .mh-meta-icon { color: #004265; margin-right: 3px; }
 
-/* --- Slider Styles --- */
+/* --- 5. Slider & Grid Wrappers --- */
 .mh-post-carousel-wrapper { position: relative; padding: 0 20px; }
 .mh-post-carousel .slick-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
@@ -516,14 +471,49 @@
 .mh-post-carousel .slick-prev { left: -10px; }
 .mh-post-carousel .slick-next { right: -10px; }
 
-/* --- Grid Styles --- */
-.mh-post-grid { 
-    display: grid; 
-    grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr);
+.mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
+@media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
+@media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
+/* --- Post Carousel Alignment Fix --- */
+
+/* 1. Left Alignment (Default) */
+.mh-align-left .mh-post-card,
+.mh-align-tablet-left .mh-post-card,
+.mh-align-mobile-left .mh-post-card {
+    text-align: left;
 }
-@media (max-width: 1024px) { 
-    .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } 
+.mh-align-left .mh-post-button-wrapper,
+.mh-align-tablet-left .mh-post-button-wrapper,
+.mh-align-mobile-left .mh-post-button-wrapper {
+    justify-content: flex-start;
 }
-@media (max-width: 767px) { 
-    .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } 
+
+/* 2. Center Alignment */
+.mh-align-center .mh-post-card,
+.mh-align-tablet-center .mh-post-card,
+.mh-align-mobile-center .mh-post-card {
+    text-align: center;
+}
+.mh-align-center .mh-post-button-wrapper,
+.mh-align-tablet-center .mh-post-button-wrapper,
+.mh-align-mobile-center .mh-post-button-wrapper {
+    justify-content: center;
+}
+.mh-align-center .mh-post-content {
+    justify-content: center; /* Centers inline items */
+}
+
+/* 3. Right Alignment */
+.mh-align-right .mh-post-card,
+.mh-align-tablet-right .mh-post-card,
+.mh-align-mobile-right .mh-post-card {
+    text-align: right;
+}
+.mh-align-right .mh-post-button-wrapper,
+.mh-align-tablet-right .mh-post-button-wrapper,
+.mh-align-mobile-right .mh-post-button-wrapper {
+    justify-content: flex-end;
+}
+.mh-align-right .mh-post-content {
+    justify-content: flex-end; /* Aligns inline items to right */
 }

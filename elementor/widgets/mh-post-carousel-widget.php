@@ -1,7 +1,11 @@
 <?php
 /**
- * MH Post Carousel Widget (Final Ultimate Version)
- * Features: Layout Builder, Slider/Grid Toggle, Equal Height, Sticky Button
+ * MH Post Carousel Widget (Final Version)
+ * Features:
+ * - Drag & Drop Layout Builder
+ * - Slick Slider & Grid Layouts
+ * - Equal Height Cards
+ * - Bottom-Aligned Buttons
  */
 
 if (!defined('ABSPATH')) {
@@ -61,7 +65,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->start_controls_section(
             'section_layout_builder',
             [
-                'label' => esc_html__('Layout Builder', 'mh-plug'),
+                'label' => esc_html__('Card Layout Builder', 'mh-plug'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -70,7 +74,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             'layout_note',
             [
                 'type' => Controls_Manager::RAW_HTML,
-                'raw' => '<small>' . __('Drag & Drop items to reorder. Use "Width: Inline" to place items side-by-side.', 'mh-plug') . '</small>',
+                'raw' => '<small>' . __('Drag and drop elements to reorder. Use "Inline" width to place items side-by-side.', 'mh-plug') . '</small>',
                 'content_classes' => 'elementor-descriptor',
             ]
         );
@@ -109,8 +113,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // --- Item Specific Controls ---
-        
+        // --- Settings per element ---
         $repeater->add_group_control(
             Group_Control_Image_Size::get_type(),
             [
@@ -155,19 +158,18 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'label' => esc_html__('Elements', 'mh-plug'),
                 'type' => Controls_Manager::REPEATER,
                 'fields' => $repeater->get_controls(),
+                // Defaults that include thumbnail_size to prevent errors
                 'default' => [
                     [ 'element_type' => 'image', 'thumbnail_size' => 'medium_large' ],
-                    [ 'element_type' => 'category', 'element_width' => 'full' ],
-                    [ 'element_type' => 'title' ],
                     [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ],
                     [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ],
+                    [ 'element_type' => 'title' ],
                     [ 'element_type' => 'excerpt' ],
                     [ 'element_type' => 'button' ],
                 ],
                 'title_field' => '{{{ element_type }}}',
             ]
         );
-        
         $this->add_responsive_control(
             'content_align',
             [
@@ -179,10 +181,8 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                     'right' => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
                 ],
                 'default' => 'left',
-                'selectors' => [
-                    '{{WRAPPER}} .mh-post-card' => 'text-align: {{VALUE}};',
-                    '{{WRAPPER}} .mh-post-content' => 'justify-content: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
-                ],
+                // This generates classes like: mh-align-left, mh-align-tablet-center, etc.
+                'prefix_class' => 'mh-align%s-', 
             ]
         );
 
@@ -192,7 +192,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->start_controls_section(
             'section_slider_settings',
             [
-                'label' => esc_html__('Slider / Grid', 'mh-plug'),
+                'label' => esc_html__('Slider / Layout', 'mh-plug'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -240,7 +240,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
         $this->end_controls_section();
 
-        // --- STYLES: CARD ---
+        // --- STYLES ---
         $this->start_controls_section( 'section_style_card', [ 'label' => 'Card Box', 'tab' => Controls_Manager::TAB_STYLE ] );
         $this->add_control( 'box_bg_color', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'background-color: {{VALUE}};' ] ] );
         $this->add_responsive_control( 'box_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
@@ -249,38 +249,40 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'box_shadow', 'selector' => '{{WRAPPER}} .mh-post-card' ] );
         $this->end_controls_section();
 
-        // --- STYLES: TYPOGRAPHY ---
         $this->start_controls_section( 'section_style_typography', [ 'label' => 'Content Styles', 'tab' => Controls_Manager::TAB_STYLE ] );
         
+        // Title Styles
         $this->add_control( 'heading_title', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING ] );
         $this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-element-title a' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'title_typo', 'selector' => '{{WRAPPER}} .mh-post-element-title' ] );
         $this->add_responsive_control( 'title_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-element-title' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
 
+        // Meta Styles
         $this->add_control( 'heading_meta', [ 'label' => 'Meta / Terms', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'meta_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-meta-item' => 'color: {{VALUE}};', '{{WRAPPER}} .mh-post-meta-item a' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'meta_typo', 'selector' => '{{WRAPPER}} .mh-post-meta-item' ] );
         $this->add_responsive_control( 'meta_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-meta-item' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
 
+        // Description Styles
         $this->add_control( 'heading_desc', [ 'label' => 'Description', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-element-excerpt' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'desc_typo', 'selector' => '{{WRAPPER}} .mh-post-element-excerpt' ] );
         $this->add_responsive_control( 'desc_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-element-excerpt' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
-
-        // Button Style
+        
+        // Button Styles
         $this->add_control( 'heading_btn', [ 'label' => 'Button', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->start_controls_tabs('tabs_btn_style');
-        $this->start_controls_tab('tab_btn_normal', ['label' => 'Normal']);
-        $this->add_control('btn_text_color', ['label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => ['{{WRAPPER}} .mh-post-button' => 'color: {{VALUE}};']]);
-        $this->add_control('btn_bg_color', ['label' => 'Background', 'type' => Controls_Manager::COLOR, 'default' => '#004265', 'selectors' => ['{{WRAPPER}} .mh-post-button' => 'background-color: {{VALUE}};']]);
+        $this->start_controls_tab( 'tab_btn_normal', ['label' => 'Normal'] );
+        $this->add_control( 'btn_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-button' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_bg_color', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-button' => 'background-color: {{VALUE}};' ] ] );
         $this->end_controls_tab();
-        $this->start_controls_tab('tab_btn_hover', ['label' => 'Hover']);
-        $this->add_control('btn_text_color_hover', ['label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .mh-post-button:hover' => 'color: {{VALUE}};']]);
-        $this->add_control('btn_bg_color_hover', ['label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .mh-post-button:hover' => 'background-color: {{VALUE}};']]);
+        $this->start_controls_tab( 'tab_btn_hover', ['label' => 'Hover'] );
+        $this->add_control( 'btn_color_hover', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-button:hover' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_bg_color_hover', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-button:hover' => 'background-color: {{VALUE}};' ] ] );
         $this->end_controls_tab();
         $this->end_controls_tabs();
-        $this->add_responsive_control('btn_padding', ['label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'selectors' => ['{{WRAPPER}} .mh-post-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};']]);
-        $this->add_responsive_control('btn_radius', ['label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => ['{{WRAPPER}} .mh-post-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};']]);
+        $this->add_responsive_control( 'btn_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'selectors' => [ '{{WRAPPER}} .mh-post-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
+        $this->add_responsive_control( 'btn_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .mh-post-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
         $this->end_controls_section();
     }
@@ -349,8 +351,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
     protected function render_post_card($settings) {
         echo '<div class="mh-post-card">';
-        // Important: .mh-post-content acts as a Flex Container for rows/columns
-        echo '<div class="mh-post-content">'; 
+        echo '<div class="mh-post-content">';
         
         if ( ! empty( $settings['card_elements'] ) ) {
             foreach ( $settings['card_elements'] as $element ) {
@@ -359,8 +360,10 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 $wrapper_class = $width_class . ' mh-post-element-' . $element['element_type'];
 
                 switch ( $element['element_type'] ) {
+                    
                     case 'image':
                         if ( has_post_thumbnail() ) {
+                            // Fallback if thumbnail_size is missing
                             $thumb_size = isset($element['thumbnail_size']) ? $element['thumbnail_size'] : 'medium_large';
                             echo '<div class="' . esc_attr($wrapper_class) . '">';
                             echo '<a href="' . get_permalink() . '">';
@@ -383,7 +386,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                         break;
 
                     case 'button':
-                        // Add mh-post-button-wrapper class to handle sticky bottom logic
+                        // Add a specific wrapper for the button to handle alignment logic
                         echo '<div class="' . esc_attr($wrapper_class) . ' mh-post-button-wrapper">';
                         echo '<a href="' . get_permalink() . '" class="mh-post-button">' . esc_html( isset($element['button_text']) ? $element['button_text'] : 'Read More' ) . '</a>';
                         echo '</div>';
@@ -410,8 +413,8 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             }
         }
         
-        echo '</div>'; // End .mh-post-content
-        echo '</div>'; // End .mh-post-card
+        echo '</div>';
+        echo '</div>';
     }
 
     protected function render_meta_item( $element, $content, $wrapper_class ) {

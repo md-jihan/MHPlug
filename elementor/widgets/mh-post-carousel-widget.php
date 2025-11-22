@@ -1,11 +1,11 @@
 <?php
 /**
- * MH Post Carousel Widget (Final Version with Icon Choice)
+ * MH Post Carousel Widget (Final Version)
  * Features:
  * - Drag & Drop Layout Builder
  * - Slider/Grid Modes
- * - Custom Navigation Icons
- * - Equal Height & Bottom Buttons
+ * - Bottom Aligned Buttons
+ * - Custom Navigation Styling (Arrows & Dots)
  */
 
 if (!defined('ABSPATH')) {
@@ -42,22 +42,128 @@ class MH_Post_Carousel_Widget extends Widget_Base {
     protected function register_controls() {
 
         // --- 1. QUERY SECTION ---
-        $this->start_controls_section( 'section_query', [ 'label' => esc_html__('Query', 'mh-plug'), 'tab' => Controls_Manager::TAB_CONTENT ] );
-        $this->add_control( 'posts_per_page', [ 'label' => esc_html__('Posts Per Page', 'mh-plug'), 'type' => Controls_Manager::NUMBER, 'default' => 6 ] );
+        $this->start_controls_section(
+            'section_query',
+            [
+                'label' => esc_html__('Query', 'mh-plug'),
+                'tab' => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'posts_per_page',
+            [
+                'label' => esc_html__('Posts Per Page', 'mh-plug'),
+                'type' => Controls_Manager::NUMBER,
+                'default' => 6,
+            ]
+        );
+
         $this->end_controls_section();
 
         // --- 2. LAYOUT BUILDER ---
-        $this->start_controls_section( 'section_layout_builder', [ 'label' => esc_html__('Card Layout Builder', 'mh-plug'), 'tab' => Controls_Manager::TAB_CONTENT ] );
-        $this->add_control( 'layout_note', [ 'type' => Controls_Manager::RAW_HTML, 'raw' => '<small>' . __('Drag and drop elements to reorder. Use "Inline" width to place items side-by-side.', 'mh-plug') . '</small>', 'content_classes' => 'elementor-descriptor' ] );
+        $this->start_controls_section(
+            'section_layout_builder',
+            [
+                'label' => esc_html__('Card Layout Builder', 'mh-plug'),
+                'tab' => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'layout_note',
+            [
+                'type' => Controls_Manager::RAW_HTML,
+                'raw' => '<small>' . __('Drag and drop elements to reorder. Use "Inline" width to place items side-by-side.', 'mh-plug') . '</small>',
+                'content_classes' => 'elementor-descriptor',
+            ]
+        );
 
         $repeater = new Repeater();
-        $repeater->add_control( 'element_type', [ 'label' => esc_html__('Element Type', 'mh-plug'), 'type' => Controls_Manager::SELECT, 'default' => 'title', 'options' => [ 'image' => 'Featured Image', 'title' => 'Title', 'excerpt' => 'Description', 'button' => 'Read More Button', 'date' => 'Date', 'author' => 'Author', 'category' => 'Category', 'tags' => 'Tags' ] ] );
-        $repeater->add_control( 'element_width', [ 'label' => esc_html__( 'Width', 'mh-plug' ), 'type' => Controls_Manager::SELECT, 'default' => 'full', 'options' => [ 'full' => 'Full Width (Stack)', 'inline' => 'Inline (Side by Side)' ] ] );
-        
-        $repeater->add_group_control( Group_Control_Image_Size::get_type(), [ 'name' => 'thumbnail', 'default' => 'medium_large', 'condition' => ['element_type' => 'image'] ] );
-        $repeater->add_control( 'excerpt_length', [ 'label' => 'Length', 'type' => Controls_Manager::NUMBER, 'default' => 15, 'condition' => ['element_type' => 'excerpt'] ] );
-        $repeater->add_control( 'button_text', [ 'label' => 'Text', 'type' => Controls_Manager::TEXT, 'default' => 'Read More', 'condition' => ['element_type' => 'button'] ] );
-        $repeater->add_control( 'meta_icon', [ 'label' => 'Icon', 'type' => Controls_Manager::ICONS, 'condition' => ['element_type' => ['date', 'author', 'category', 'tags']] ] );
+
+        $repeater->add_control(
+            'element_type',
+            [
+                'label' => esc_html__('Element Type', 'mh-plug'),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'title',
+                'options' => [
+                    'image'       => esc_html__('Featured Image', 'mh-plug'),
+                    'title'       => esc_html__('Title', 'mh-plug'),
+                    'excerpt'     => esc_html__('Description', 'mh-plug'),
+                    'button'      => esc_html__('Read More Button', 'mh-plug'),
+                    'date'        => esc_html__('Date', 'mh-plug'),
+                    'author'      => esc_html__('Author', 'mh-plug'),
+                    'category'    => esc_html__('Category', 'mh-plug'),
+                    'tags'        => esc_html__('Tags', 'mh-plug'),
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'element_width',
+            [
+                'label' => esc_html__( 'Width', 'mh-plug' ),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'full',
+                'options' => [
+                    'full' => esc_html__( 'Full Width (Stack)', 'mh-plug' ),
+                    'inline' => esc_html__( 'Inline (Side by Side)', 'mh-plug' ),
+                ],
+            ]
+        );
+
+        // --- Settings per element ---
+        $repeater->add_group_control(
+            Group_Control_Image_Size::get_type(),
+            [
+                'name' => 'thumbnail',
+                'default' => 'medium_large',
+                'condition' => ['element_type' => 'image'],
+            ]
+        );
+
+        $repeater->add_responsive_control(
+            'image_border_radius',
+            [
+                'label' => esc_html__( 'Border Radius', 'mh-plug' ),
+                'type' => Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}} img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition' => ['element_type' => 'image'],
+            ]
+        );
+
+        $repeater->add_control(
+            'excerpt_length',
+            [
+                'label' => esc_html__('Length (Words)', 'mh-plug'),
+                'type' => Controls_Manager::NUMBER,
+                'default' => 15,
+                'condition' => ['element_type' => 'excerpt'],
+            ]
+        );
+
+        $repeater->add_control(
+            'button_text',
+            [
+                'label' => esc_html__('Button Text', 'mh-plug'),
+                'type' => Controls_Manager::TEXT,
+                'default' => esc_html__('Read More', 'mh-plug'),
+                'condition' => ['element_type' => 'button'],
+            ]
+        );
+
+        $repeater->add_control(
+            'meta_icon',
+            [
+                'label' => esc_html__('Icon', 'mh-plug'),
+                'type' => Controls_Manager::ICONS,
+                'condition' => ['element_type' => ['date', 'author', 'category', 'tags']],
+            ]
+        );
 
         // Styling inside Repeater
         $repeater->add_control( 'style_heading', [ 'label' => 'Styling', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
@@ -69,24 +175,80 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $repeater->add_control( 'btn_bg_color', [ 'label' => 'Button Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'background-color: {{VALUE}};' ], 'condition' => ['element_type' => 'button'] ] );
         $repeater->add_control( 'btn_text_color', [ 'label' => 'Button Text', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'color: {{VALUE}};' ], 'condition' => ['element_type' => 'button'] ] );
         $repeater->add_responsive_control( 'btn_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px'], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => ['element_type' => 'button'] ] );
-        $repeater->add_responsive_control( 'image_border_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px'], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => ['element_type' => 'image'] ] );
         
         $repeater->add_responsive_control( 'item_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px' ], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'default' => [ 'top' => 0, 'right' => 0, 'bottom' => 10, 'left' => 0, 'unit' => 'px', 'isLinked' => false ] ] );
 
-        $this->add_control( 'card_elements', [ 'label' => esc_html__('Elements', 'mh-plug'), 'type' => Controls_Manager::REPEATER, 'fields' => $repeater->get_controls(), 'default' => [ [ 'element_type' => 'image', 'thumbnail_size' => 'medium_large', 'item_margin' => ['bottom' => 15, 'unit' => 'px'] ], [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ], [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ], [ 'element_type' => 'title', 'item_typography_font_size' => ['size' => 20, 'unit' => 'px'] ], [ 'element_type' => 'excerpt', 'item_text_color' => '#666666' ], [ 'element_type' => 'button', 'btn_bg_color' => '#004265', 'btn_text_color' => '#ffffff', 'item_margin' => ['top' => 'auto'] ] ], 'title_field' => '{{{ element_type }}}' ] );
-        $this->add_responsive_control( 'content_align', [ 'label' => 'Content Alignment', 'type' => Controls_Manager::CHOOSE, 'options' => [ 'left' => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ], 'center' => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ], 'right' => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ] ], 'default' => 'left', 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'text-align: {{VALUE}};', '{{WRAPPER}} .mh-post-content' => 'justify-content: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);', '{{WRAPPER}} .mh-post-button-wrapper' => 'justify-content: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);' ] ] );
+        $this->add_control(
+            'card_elements',
+            [
+                'label' => esc_html__('Elements', 'mh-plug'),
+                'type' => Controls_Manager::REPEATER,
+                'fields' => $repeater->get_controls(),
+                'default' => [
+                    [ 'element_type' => 'image', 'thumbnail_size' => 'medium_large', 'item_margin' => ['bottom' => 15, 'unit' => 'px'] ],
+                    [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ],
+                    [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ],
+                    [ 'element_type' => 'title', 'item_typography_font_size' => ['size' => 20, 'unit' => 'px'] ],
+                    [ 'element_type' => 'excerpt', 'item_text_color' => '#666666' ],
+                    [ 'element_type' => 'button', 'btn_bg_color' => '#004265', 'btn_text_color' => '#ffffff', 'item_margin' => ['top' => 'auto'] ],
+                ],
+                'title_field' => '{{{ element_type }}}',
+            ]
+        );
+        
+        $this->add_responsive_control(
+            'content_align',
+            [
+                'label' => esc_html__('Content Alignment', 'mh-plug'),
+                'type' => Controls_Manager::CHOOSE,
+                'options' => [
+                    'left' => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
+                    'center' => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
+                    'right' => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
+                ],
+                'default' => 'left',
+                'prefix_class' => 'mh-align%s-',
+            ]
+        );
+
         $this->end_controls_section();
 
         // --- 3. SLIDER SETTINGS ---
-        $this->start_controls_section( 'section_slider_settings', [ 'label' => 'Slider / Layout', 'tab' => Controls_Manager::TAB_CONTENT ] );
-        $this->add_control( 'enable_slider', [ 'label' => 'Enable Slider', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
-        $this->add_responsive_control( 'slides_to_show', [ 'label' => 'Columns', 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 6, 'default' => 3, 'tablet_default' => 2, 'mobile_default' => 1 ] );
+        $this->start_controls_section(
+            'section_slider_settings',
+            [
+                'label' => esc_html__('Slider / Layout', 'mh-plug'),
+                'tab' => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'enable_slider',
+            [
+                'label' => esc_html__('Enable Slider', 'mh-plug'),
+                'type' => Controls_Manager::SWITCHER,
+                'default' => 'yes',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slides_to_show',
+            [
+                'label' => esc_html__('Columns / Slides', 'mh-plug'),
+                'type' => Controls_Manager::NUMBER,
+                'min' => 1,
+                'max' => 6,
+                'default' => 3,
+                'tablet_default' => 2,
+                'mobile_default' => 1,
+            ]
+        );
+
         $this->add_control( 'autoplay', [ 'label' => 'Autoplay', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
         $this->add_control( 'autoplay_speed', [ 'label' => 'Speed (ms)', 'type' => Controls_Manager::NUMBER, 'default' => 3000, 'condition' => [ 'enable_slider' => 'yes', 'autoplay' => 'yes' ] ] );
         
         $this->add_control( 'show_arrows', [ 'label' => 'Arrows', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
         
-        // --- NEW: Custom Arrow Icons ---
         $this->add_control(
             'arrow_prev_icon',
             [
@@ -105,10 +267,23 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'condition' => [ 'enable_slider' => 'yes', 'show_arrows' => 'yes' ],
             ]
         );
-        // -------------------------------
 
         $this->add_control( 'show_dots', [ 'label' => 'Dots', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
-        $this->add_responsive_control( 'grid_gap', [ 'label' => 'Gap', 'type' => Controls_Manager::SLIDER, 'default' => [ 'size' => 20 ], 'selectors' => [ '{{WRAPPER}} .mh-post-grid' => 'gap: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-post-carousel-item' => 'padding: 0 calc({{SIZE}}{{UNIT}} / 2);', '{{WRAPPER}} .mh-post-carousel .slick-list' => 'margin: 0 calc(-{{SIZE}}{{UNIT}} / 2);' ] ] );
+        
+        $this->add_responsive_control(
+            'grid_gap',
+            [
+                'label' => esc_html__( 'Gap', 'mh-plug' ),
+                'type' => Controls_Manager::SLIDER,
+                'default' => [ 'size' => 20 ],
+                'selectors' => [
+                    '{{WRAPPER}} .mh-post-grid' => 'gap: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .mh-post-carousel-item' => 'padding: 0 calc({{SIZE}}{{UNIT}} / 2);',
+                    '{{WRAPPER}} .mh-post-carousel .slick-list' => 'margin: 0 calc(-{{SIZE}}{{UNIT}} / 2);',
+                ],
+            ]
+        );
+
         $this->end_controls_section();
 
         // --- STYLES: CARD ---
@@ -118,6 +293,39 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'box_border', 'selector' => '{{WRAPPER}} .mh-post-card' ] );
         $this->add_responsive_control( 'box_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
         $this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'box_shadow', 'selector' => '{{WRAPPER}} .mh-post-card' ] );
+        $this->end_controls_section();
+
+        // --- STYLES: NAVIGATION ---
+        $this->start_controls_section(
+            'section_style_navigation',
+            [
+                'label' => esc_html__('Navigation', 'mh-plug'),
+                'tab' => Controls_Manager::TAB_STYLE,
+                'condition' => [ 'enable_slider' => 'yes' ],
+            ]
+        );
+
+        // Arrows Style
+        $this->add_control( 'heading_style_arrows', [ 'label' => esc_html__( 'Arrows', 'mh-plug' ), 'type' => Controls_Manager::HEADING, 'condition' => [ 'show_arrows' => 'yes' ] ] );
+        $this->add_responsive_control( 'arrow_size', [ 'label' => esc_html__( 'Size', 'mh-plug' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 10, 'max' => 100 ] ], 'default' => [ 'unit' => 'px', 'size' => 20 ], 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-arrow' => 'font-size: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'show_arrows' => 'yes' ] ] );
+        $this->start_controls_tabs( 'tabs_arrow_style' );
+        $this->start_controls_tab( 'tab_arrow_normal', [ 'label' => esc_html__( 'Normal', 'mh-plug' ), 'condition' => [ 'show_arrows' => 'yes' ] ] );
+        $this->add_control( 'arrow_color_normal', [ 'label' => esc_html__('Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#333', 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-arrow' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_bg_color_normal', [ 'label' => esc_html__('Background', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-arrow' => 'background-color: {{VALUE}};' ] ] );
+        $this->end_controls_tab();
+        $this->start_controls_tab( 'tab_arrow_hover', [ 'label' => esc_html__( 'Hover', 'mh-plug' ), 'condition' => [ 'show_arrows' => 'yes' ] ] );
+        $this->add_control( 'arrow_color_hover', [ 'label' => esc_html__('Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-arrow:hover' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_bg_color_hover', [ 'label' => esc_html__('Background', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#004265', 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-arrow:hover' => 'background-color: {{VALUE}};' ] ] );
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
+        // Dots Style
+        $this->add_control( 'heading_style_dots', [ 'label' => esc_html__( 'Dots', 'mh-plug' ), 'type' => Controls_Manager::HEADING, 'condition' => [ 'show_dots' => 'yes' ], 'separator' => 'before' ] );
+        $this->add_responsive_control( 'dots_size', [ 'label' => esc_html__( 'Size', 'mh-plug' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 5, 'max' => 20 ] ], 'default' => [ 'unit' => 'px', 'size' => 12 ], 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-dots li button' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-post-carousel .slick-dots li' => 'margin: 0 calc({{SIZE}}{{UNIT}} / 2);' ], 'condition' => [ 'show_dots' => 'yes' ] ] );
+        
+        $this->add_control( 'dots_color_normal', [ 'label' => esc_html__('Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#cccccc', 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-dots li button' => 'border-color: {{VALUE}}; background-color: transparent;' ], 'condition' => [ 'show_dots' => 'yes' ] ] );
+        $this->add_control( 'dots_color_active', [ 'label' => esc_html__('Active Color', 'mh-plug'), 'type' => Controls_Manager::COLOR, 'default' => '#004265', 'selectors' => [ '{{WRAPPER}} .mh-post-carousel .slick-dots li.slick-active button' => 'background-color: {{VALUE}}; border-color: {{VALUE}};' ], 'condition' => [ 'show_dots' => 'yes' ] ] );
+
         $this->end_controls_section();
     }
 
@@ -145,7 +353,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ];
 
             if ($settings['show_arrows'] === 'yes') {
-                // Capture icons properly
                 ob_start();
                 Icons_Manager::render_icon( $settings['arrow_prev_icon'], [ 'aria-hidden' => 'true' ] );
                 $prev_icon_html = ob_get_clean();

@@ -141,7 +141,7 @@
     cursor: pointer;
 }
 
-.mh-brush-slider-wrapper .slick-dots li button::before {
+.slick-dots li button::before {
     content: " ";
 }
 .mh-brush-slider-wrapper .slick-dots li button {
@@ -499,4 +499,50 @@
     margin-bottom: calc( -1 * var(--mh-card-pb, 0px) );
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
+}
+/* --- Post Carousel Dots (Hollow Style) --- */
+.mh-post-carousel .slick-dots {
+    position: absolute;
+    bottom: -30px;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.mh-post-carousel .slick-dots li {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin: 0 6px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.mh-post-carousel .slick-dots li button {
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    cursor: pointer;
+    color: transparent;
+    border: 0;
+    outline: none;
+    /* New Style */
+    background: transparent;
+    border: 2px solid #cccccc; /* Default Color */
+    border-radius: 50%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.mh-post-carousel .slick-dots li.slick-active button {
+    background: #004265; /* Active Color */
+    border-color: #004265;
+    transform: scale(1.1);
 }

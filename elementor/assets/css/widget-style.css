@@ -463,3 +463,58 @@
 .mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
 @media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
+
+/* ==================================================
+ * MH Post Carousel - Equal Height & Bottom Button Fix
+ * ================================================== */
+
+/* 1. Force Slick Slider Tracks to Flex (Equal Height Slides) */
+.mh-post-carousel .slick-track {
+    display: flex !important;
+}
+
+.mh-post-carousel .slick-slide {
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column;
+}
+
+/* 2. Ensure the Item Wrapper takes full height */
+.mh-post-carousel-item,
+.mh-post-grid-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 3. Make the Card take full height */
+.mh-post-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* 4. Make the Content Area grow to fill space */
+.mh-post-content {
+    flex-grow: 1; /* expands to fill available vertical space */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    height: 100%;
+}
+
+/* 5. Handle the Layout Builder Rows */
+/* This allows 'Inline' elements to sit side-by-side, while keeping the column flow */
+.mh-post-content {
+    display: flex;
+    flex-direction: row; /* Required for inline items */
+    flex-wrap: wrap;     /* Wrap items to next line */
+    align-content: flex-start; /* Keep content at top */
+}
+
+/* 6. Push the Button to the Bottom */
+.mh-post-button-wrapper {
+    margin-top: auto !important; /* Forces button to bottom */
+    width: 100%;                 /* Ensure full width */
+    padding-top: 15px;           /* Breathing room */
+}

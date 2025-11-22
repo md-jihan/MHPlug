@@ -1,6 +1,7 @@
 <?php
 /**
- * MH Post Carousel Widget (Layout Builder + Inline Option)
+ * MH Post Carousel Widget (Layout Builder Edition)
+ * Features: Slider/Grid toggle, Drag & Drop Layout Builder for all elements.
  */
 
 if (!defined('ABSPATH')) {
@@ -95,7 +96,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // --- NEW: Width Control for Side-by-Side ---
         $repeater->add_control(
             'element_width',
             [
@@ -110,6 +110,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         );
 
         // --- Settings per element ---
+        
         $repeater->add_group_control(
             Group_Control_Image_Size::get_type(),
             [
@@ -154,8 +155,9 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'label' => esc_html__('Elements', 'mh-plug'),
                 'type' => Controls_Manager::REPEATER,
                 'fields' => $repeater->get_controls(),
+                // FIX: Added 'thumbnail_size' to the default image array to prevent error
                 'default' => [
-                    [ 'element_type' => 'image' ],
+                    [ 'element_type' => 'image', 'thumbnail_size' => 'medium_large' ],
                     [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ],
                     [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ],
                     [ 'element_type' => 'title' ],
@@ -179,9 +181,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'default' => 'left',
                 'selectors' => [
                     '{{WRAPPER}} .mh-post-card' => 'text-align: {{VALUE}};',
-                    // Flex alignment for column layout
                     '{{WRAPPER}} .mh-post-content' => 'align-items: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
-                    // Flex alignment for inline items
                     '{{WRAPPER}} .mh-post-content' => 'justify-content: {{VALUE}} == "left" ? flex-start : ({{VALUE}} == "right" ? flex-end : center);',
                 ],
             ]
@@ -334,68 +334,69 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
     protected function render_post_card($settings) {
         echo '<div class="mh-post-card">';
-        echo '<div class="mh-post-content">'; // New Wrapper for flex layout
+        echo '<div class="mh-post-content">';
         
-        foreach ( $settings['card_elements'] as $element ) {
-            
-            // Calculate the class based on the "Width" setting
-            $width_class = ( $element['element_width'] === 'inline' ) ? 'mh-width-inline' : 'mh-width-full';
-            $wrapper_class = $width_class . ' mh-post-element-' . $element['element_type'];
-
-            switch ( $element['element_type'] ) {
+        if ( ! empty( $settings['card_elements'] ) ) {
+            foreach ( $settings['card_elements'] as $element ) {
                 
-                case 'image':
-                    if ( has_post_thumbnail() ) {
+                $width_class = ( isset($element['element_width']) && $element['element_width'] === 'inline' ) ? 'mh-width-inline' : 'mh-width-full';
+                $wrapper_class = $width_class . ' mh-post-element-' . $element['element_type'];
+
+                switch ( $element['element_type'] ) {
+                    
+                    case 'image':
+                        if ( has_post_thumbnail() ) {
+                            // FIX: Check if thumbnail_size is set, fallback to medium_large
+                            $thumb_size = isset($element['thumbnail_size']) ? $element['thumbnail_size'] : 'medium_large';
+                            echo '<div class="' . esc_attr($wrapper_class) . '">';
+                            echo '<a href="' . get_permalink() . '">';
+                            the_post_thumbnail( $thumb_size );
+                            echo '</a>';
+                            echo '</div>';
+                        }
+                        break;
+
+                    case 'title':
+                        echo '<h3 class="' . esc_attr($wrapper_class) . '">';
+                        echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
+                        echo '</h3>';
+                        break;
+
+                    case 'excerpt':
                         echo '<div class="' . esc_attr($wrapper_class) . '">';
-                        echo '<a href="' . get_permalink() . '">';
-                        the_post_thumbnail( $element['thumbnail_size'] );
-                        echo '</a>';
+                        echo wp_trim_words( get_the_excerpt(), isset($element['excerpt_length']) ? $element['excerpt_length'] : 15 );
                         echo '</div>';
-                    }
-                    break;
+                        break;
 
-                case 'title':
-                    echo '<h3 class="' . esc_attr($wrapper_class) . '">';
-                    echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
-                    echo '</h3>';
-                    break;
+                    case 'button':
+                        echo '<div class="' . esc_attr($wrapper_class) . ' mh-post-button-wrapper">';
+                        echo '<a href="' . get_permalink() . '" class="mh-post-button">' . esc_html( isset($element['button_text']) ? $element['button_text'] : 'Read More' ) . '</a>';
+                        echo '</div>';
+                        break;
 
-                case 'excerpt':
-                    echo '<div class="' . esc_attr($wrapper_class) . '">';
-                    echo wp_trim_words( get_the_excerpt(), $element['excerpt_length'] );
-                    echo '</div>';
-                    break;
+                    case 'date':
+                        $this->render_meta_item( $element, get_the_date(), $wrapper_class );
+                        break;
 
-                case 'button':
-                    // Buttons usually need their own wrapper for alignment if full width
-                    echo '<div class="' . esc_attr($wrapper_class) . ' mh-post-button-wrapper">';
-                    echo '<a href="' . get_permalink() . '" class="mh-post-button">' . esc_html( $element['button_text'] ) . '</a>';
-                    echo '</div>';
-                    break;
+                    case 'author':
+                        $this->render_meta_item( $element, get_the_author(), $wrapper_class );
+                        break;
 
-                // Meta items
-                case 'date':
-                    $this->render_meta_item( $element, get_the_date(), $wrapper_class );
-                    break;
+                    case 'category':
+                        $cats = get_the_category_list( ', ' );
+                        if ( $cats ) $this->render_meta_item( $element, $cats, $wrapper_class );
+                        break;
 
-                case 'author':
-                    $this->render_meta_item( $element, get_the_author(), $wrapper_class );
-                    break;
-
-                case 'category':
-                    $cats = get_the_category_list( ', ' );
-                    if ( $cats ) $this->render_meta_item( $element, $cats, $wrapper_class );
-                    break;
-
-                case 'tags':
-                    $tags = get_the_tag_list( '', ', ' );
-                    if ( $tags ) $this->render_meta_item( $element, $tags, $wrapper_class );
-                    break;
+                    case 'tags':
+                        $tags = get_the_tag_list( '', ', ' );
+                        if ( $tags ) $this->render_meta_item( $element, $tags, $wrapper_class );
+                        break;
+                }
             }
         }
         
-        echo '</div>'; // End .mh-post-content
-        echo '</div>'; // End .mh-post-card
+        echo '</div>';
+        echo '</div>';
     }
 
     protected function render_meta_item( $element, $content, $wrapper_class ) {

@@ -1,11 +1,7 @@
 <?php
 /**
- * MH Post Carousel Widget (Final Version)
- * Features:
- * - Drag & Drop Layout Builder
- * - Slick Slider & Grid Layouts
- * - Equal Height Cards
- * - Bottom-Aligned Buttons
+ * MH Post Carousel Widget (Final Layout Fix)
+ * Features: Smart Inline Grouping + Bottom Aligned Button
  */
 
 if (!defined('ABSPATH')) {
@@ -42,202 +38,37 @@ class MH_Post_Carousel_Widget extends Widget_Base {
     protected function register_controls() {
 
         // --- 1. QUERY SECTION ---
-        $this->start_controls_section(
-            'section_query',
-            [
-                'label' => esc_html__('Query', 'mh-plug'),
-                'tab' => Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-        $this->add_control(
-            'posts_per_page',
-            [
-                'label' => esc_html__('Posts Per Page', 'mh-plug'),
-                'type' => Controls_Manager::NUMBER,
-                'default' => 6,
-            ]
-        );
-
+        $this->start_controls_section( 'section_query', [ 'label' => esc_html__('Query', 'mh-plug'), 'tab' => Controls_Manager::TAB_CONTENT ] );
+        $this->add_control( 'posts_per_page', [ 'label' => esc_html__('Posts Per Page', 'mh-plug'), 'type' => Controls_Manager::NUMBER, 'default' => 6 ] );
         $this->end_controls_section();
 
         // --- 2. LAYOUT BUILDER ---
-        $this->start_controls_section(
-            'section_layout_builder',
-            [
-                'label' => esc_html__('Card Layout Builder', 'mh-plug'),
-                'tab' => Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-        $this->add_control(
-            'layout_note',
-            [
-                'type' => Controls_Manager::RAW_HTML,
-                'raw' => '<small>' . __('Drag and drop elements to reorder. Use "Inline" width to place items side-by-side.', 'mh-plug') . '</small>',
-                'content_classes' => 'elementor-descriptor',
-            ]
-        );
+        $this->start_controls_section( 'section_layout_builder', [ 'label' => esc_html__('Card Layout Builder', 'mh-plug'), 'tab' => Controls_Manager::TAB_CONTENT ] );
+        $this->add_control( 'layout_note', [ 'type' => Controls_Manager::RAW_HTML, 'raw' => '<small>' . __('Consecutive "Inline" items will be grouped side-by-side.', 'mh-plug') . '</small>', 'content_classes' => 'elementor-descriptor' ] );
 
         $repeater = new Repeater();
+        $repeater->add_control( 'element_type', [ 'label' => esc_html__('Element Type', 'mh-plug'), 'type' => Controls_Manager::SELECT, 'default' => 'title', 'options' => [ 'image' => 'Featured Image', 'title' => 'Title', 'excerpt' => 'Description', 'button' => 'Read More Button', 'date' => 'Date', 'author' => 'Author', 'category' => 'Category', 'tags' => 'Tags' ] ] );
+        $repeater->add_control( 'element_width', [ 'label' => esc_html__( 'Width', 'mh-plug' ), 'type' => Controls_Manager::SELECT, 'default' => 'full', 'options' => [ 'full' => 'Full Width (Stack)', 'inline' => 'Inline (Side by Side)' ] ] );
+        
+        $repeater->add_group_control( Group_Control_Image_Size::get_type(), [ 'name' => 'thumbnail', 'default' => 'medium_large', 'condition' => ['element_type' => 'image'] ] );
+        $repeater->add_control( 'excerpt_length', [ 'label' => 'Length', 'type' => Controls_Manager::NUMBER, 'default' => 15, 'condition' => ['element_type' => 'excerpt'] ] );
+        $repeater->add_control( 'button_text', [ 'label' => 'Text', 'type' => Controls_Manager::TEXT, 'default' => 'Read More', 'condition' => ['element_type' => 'button'] ] );
+        $repeater->add_control( 'meta_icon', [ 'label' => 'Icon', 'type' => Controls_Manager::ICONS, 'condition' => ['element_type' => ['date', 'author', 'category', 'tags']] ] );
 
-        $repeater->add_control(
-            'element_type',
-            [
-                'label' => esc_html__('Element Type', 'mh-plug'),
-                'type' => Controls_Manager::SELECT,
-                'default' => 'title',
-                'options' => [
-                    'image'       => esc_html__('Featured Image', 'mh-plug'),
-                    'title'       => esc_html__('Title', 'mh-plug'),
-                    'excerpt'     => esc_html__('Description', 'mh-plug'),
-                    'button'      => esc_html__('Read More Button', 'mh-plug'),
-                    'date'        => esc_html__('Date', 'mh-plug'),
-                    'author'      => esc_html__('Author', 'mh-plug'),
-                    'category'    => esc_html__('Category', 'mh-plug'),
-                    'tags'        => esc_html__('Tags', 'mh-plug'),
-                ],
-            ]
-        );
-
-        $repeater->add_control(
-            'element_width',
-            [
-                'label' => esc_html__( 'Width', 'mh-plug' ),
-                'type' => Controls_Manager::SELECT,
-                'default' => 'full',
-                'options' => [
-                    'full' => esc_html__( 'Full Width (Stack)', 'mh-plug' ),
-                    'inline' => esc_html__( 'Inline (Side by Side)', 'mh-plug' ),
-                ],
-            ]
-        );
-
-        // --- Settings per element ---
-        $repeater->add_group_control(
-            Group_Control_Image_Size::get_type(),
-            [
-                'name' => 'thumbnail',
-                'default' => 'medium_large',
-                'condition' => ['element_type' => 'image'],
-            ]
-        );
-
-        $repeater->add_control(
-            'excerpt_length',
-            [
-                'label' => esc_html__('Length (Words)', 'mh-plug'),
-                'type' => Controls_Manager::NUMBER,
-                'default' => 15,
-                'condition' => ['element_type' => 'excerpt'],
-            ]
-        );
-
-        $repeater->add_control(
-            'button_text',
-            [
-                'label' => esc_html__('Button Text', 'mh-plug'),
-                'type' => Controls_Manager::TEXT,
-                'default' => esc_html__('Read More', 'mh-plug'),
-                'condition' => ['element_type' => 'button'],
-            ]
-        );
-
-        $repeater->add_control(
-            'meta_icon',
-            [
-                'label' => esc_html__('Icon', 'mh-plug'),
-                'type' => Controls_Manager::ICONS,
-                'condition' => ['element_type' => ['date', 'author', 'category', 'tags']],
-            ]
-        );
-
-        $this->add_control(
-            'card_elements',
-            [
-                'label' => esc_html__('Elements', 'mh-plug'),
-                'type' => Controls_Manager::REPEATER,
-                'fields' => $repeater->get_controls(),
-                // Defaults that include thumbnail_size to prevent errors
-                'default' => [
-                    [ 'element_type' => 'image', 'thumbnail_size' => 'medium_large' ],
-                    [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ],
-                    [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ],
-                    [ 'element_type' => 'title' ],
-                    [ 'element_type' => 'excerpt' ],
-                    [ 'element_type' => 'button' ],
-                ],
-                'title_field' => '{{{ element_type }}}',
-            ]
-        );
-        $this->add_responsive_control(
-            'content_align',
-            [
-                'label' => esc_html__('Content Alignment', 'mh-plug'),
-                'type' => Controls_Manager::CHOOSE,
-                'options' => [
-                    'left' => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
-                    'center' => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
-                    'right' => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
-                ],
-                'default' => 'left',
-                // This generates classes like: mh-align-left, mh-align-tablet-center, etc.
-                'prefix_class' => 'mh-align%s-', 
-            ]
-        );
-
+        $this->add_control( 'card_elements', [ 'label' => esc_html__('Elements', 'mh-plug'), 'type' => Controls_Manager::REPEATER, 'fields' => $repeater->get_controls(), 'default' => [ [ 'element_type' => 'image', 'thumbnail_size' => 'medium_large' ], [ 'element_type' => 'date', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-calendar-alt', 'library' => 'regular' ] ], [ 'element_type' => 'author', 'element_width' => 'inline', 'meta_icon' => [ 'value' => 'far fa-user', 'library' => 'regular' ] ], [ 'element_type' => 'title' ], [ 'element_type' => 'excerpt' ], [ 'element_type' => 'button' ] ], 'title_field' => '{{{ element_type }}}' ] );
+        
+        $this->add_responsive_control( 'content_align', [ 'label' => 'Content Alignment', 'type' => Controls_Manager::CHOOSE, 'options' => [ 'left' => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ], 'center' => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ], 'right' => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ] ], 'default' => 'left', 'prefix_class' => 'mh-align%s-' ] );
         $this->end_controls_section();
 
         // --- 3. SLIDER SETTINGS ---
-        $this->start_controls_section(
-            'section_slider_settings',
-            [
-                'label' => esc_html__('Slider / Layout', 'mh-plug'),
-                'tab' => Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-        $this->add_control(
-            'enable_slider',
-            [
-                'label' => esc_html__('Enable Slider', 'mh-plug'),
-                'type' => Controls_Manager::SWITCHER,
-                'default' => 'yes',
-            ]
-        );
-
-        $this->add_responsive_control(
-            'slides_to_show',
-            [
-                'label' => esc_html__('Columns / Slides', 'mh-plug'),
-                'type' => Controls_Manager::NUMBER,
-                'min' => 1,
-                'max' => 6,
-                'default' => 3,
-                'tablet_default' => 2,
-                'mobile_default' => 1,
-            ]
-        );
-
+        $this->start_controls_section( 'section_slider_settings', [ 'label' => 'Slider / Layout', 'tab' => Controls_Manager::TAB_CONTENT ] );
+        $this->add_control( 'enable_slider', [ 'label' => 'Enable Slider', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
+        $this->add_responsive_control( 'slides_to_show', [ 'label' => 'Columns', 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 6, 'default' => 3, 'tablet_default' => 2, 'mobile_default' => 1 ] );
         $this->add_control( 'autoplay', [ 'label' => 'Autoplay', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
         $this->add_control( 'autoplay_speed', [ 'label' => 'Speed (ms)', 'type' => Controls_Manager::NUMBER, 'default' => 3000, 'condition' => [ 'enable_slider' => 'yes', 'autoplay' => 'yes' ] ] );
         $this->add_control( 'show_arrows', [ 'label' => 'Arrows', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
         $this->add_control( 'show_dots', [ 'label' => 'Dots', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => [ 'enable_slider' => 'yes' ] ] );
-
-        $this->add_responsive_control(
-            'grid_gap',
-            [
-                'label' => esc_html__( 'Gap', 'mh-plug' ),
-                'type' => Controls_Manager::SLIDER,
-                'default' => [ 'size' => 20 ],
-                'selectors' => [
-                    '{{WRAPPER}} .mh-post-grid' => 'gap: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} .mh-post-carousel-item' => 'padding: 0 calc({{SIZE}}{{UNIT}} / 2);',
-                    '{{WRAPPER}} .mh-post-carousel .slick-list' => 'margin: 0 calc(-{{SIZE}}{{UNIT}} / 2);',
-                ],
-            ]
-        );
-
+        $this->add_responsive_control( 'grid_gap', [ 'label' => 'Gap', 'type' => Controls_Manager::SLIDER, 'default' => [ 'size' => 20 ], 'selectors' => [ '{{WRAPPER}} .mh-post-grid' => 'gap: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-post-carousel-item' => 'padding: 0 calc({{SIZE}}{{UNIT}} / 2);', '{{WRAPPER}} .mh-post-carousel .slick-list' => 'margin: 0 calc(-{{SIZE}}{{UNIT}} / 2);' ] ] );
         $this->end_controls_section();
 
         // --- STYLES ---
@@ -250,26 +81,21 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->end_controls_section();
 
         $this->start_controls_section( 'section_style_typography', [ 'label' => 'Content Styles', 'tab' => Controls_Manager::TAB_STYLE ] );
-        
-        // Title Styles
         $this->add_control( 'heading_title', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING ] );
         $this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-element-title a' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'title_typo', 'selector' => '{{WRAPPER}} .mh-post-element-title' ] );
         $this->add_responsive_control( 'title_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-element-title' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
 
-        // Meta Styles
         $this->add_control( 'heading_meta', [ 'label' => 'Meta / Terms', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'meta_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-meta-item' => 'color: {{VALUE}};', '{{WRAPPER}} .mh-post-meta-item a' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'meta_typo', 'selector' => '{{WRAPPER}} .mh-post-meta-item' ] );
         $this->add_responsive_control( 'meta_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-meta-item' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
 
-        // Description Styles
         $this->add_control( 'heading_desc', [ 'label' => 'Description', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-element-excerpt' => 'color: {{VALUE}};' ] ] );
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'desc_typo', 'selector' => '{{WRAPPER}} .mh-post-element-excerpt' ] );
         $this->add_responsive_control( 'desc_spacing', [ 'label' => 'Spacing', 'type' => Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .mh-post-element-excerpt' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
         
-        // Button Styles
         $this->add_control( 'heading_btn', [ 'label' => 'Button', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
         $this->start_controls_tabs('tabs_btn_style');
         $this->start_controls_tab( 'tab_btn_normal', ['label' => 'Normal'] );
@@ -283,7 +109,6 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->end_controls_tabs();
         $this->add_responsive_control( 'btn_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'selectors' => [ '{{WRAPPER}} .mh-post-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
         $this->add_responsive_control( 'btn_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .mh-post-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
-
         $this->end_controls_section();
     }
 
@@ -291,13 +116,8 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $settings = $this->get_settings_for_display();
         $widget_id = $this->get_id();
         
-        $args = [
-            'post_type' => 'post',
-            'posts_per_page' => $settings['posts_per_page'],
-            'post_status' => 'publish',
-        ];
+        $args = [ 'post_type' => 'post', 'posts_per_page' => $settings['posts_per_page'], 'post_status' => 'publish' ];
         $query = new \WP_Query($args);
-
         if (!$query->have_posts()) return;
 
         if ( 'yes' === $settings['enable_slider'] ) {
@@ -352,69 +172,87 @@ class MH_Post_Carousel_Widget extends Widget_Base {
     protected function render_post_card($settings) {
         echo '<div class="mh-post-card">';
         echo '<div class="mh-post-content">';
+
+        // --- SMART GROUPING LOGIC ---
+        // We loop through elements and group consecutive "inline" items in a wrapper.
+        // This allows the main container to be a column (so button can be pushed down),
+        // while keeping specific items side-by-side.
         
-        if ( ! empty( $settings['card_elements'] ) ) {
-            foreach ( $settings['card_elements'] as $element ) {
-                
-                $width_class = ( isset($element['element_width']) && $element['element_width'] === 'inline' ) ? 'mh-width-inline' : 'mh-width-full';
-                $wrapper_class = $width_class . ' mh-post-element-' . $element['element_type'];
+        $elements = $settings['card_elements'];
+        $count = count($elements);
+        $in_inline_group = false;
 
-                switch ( $element['element_type'] ) {
-                    
-                    case 'image':
-                        if ( has_post_thumbnail() ) {
-                            // Fallback if thumbnail_size is missing
-                            $thumb_size = isset($element['thumbnail_size']) ? $element['thumbnail_size'] : 'medium_large';
-                            echo '<div class="' . esc_attr($wrapper_class) . '">';
-                            echo '<a href="' . get_permalink() . '">';
-                            the_post_thumbnail( $thumb_size );
-                            echo '</a>';
-                            echo '</div>';
-                        }
-                        break;
+        for ($i = 0; $i < $count; $i++) {
+            $element = $elements[$i];
+            $is_inline = ( isset($element['element_width']) && $element['element_width'] === 'inline' );
 
-                    case 'title':
-                        echo '<h3 class="' . esc_attr($wrapper_class) . '">';
-                        echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
-                        echo '</h3>';
-                        break;
+            // Start inline group
+            if ( $is_inline && ! $in_inline_group ) {
+                echo '<div class="mh-inline-group">';
+                $in_inline_group = true;
+            }
+            
+            // Close inline group if current item is NOT inline
+            if ( ! $is_inline && $in_inline_group ) {
+                echo '</div>'; // Close mh-inline-group
+                $in_inline_group = false;
+            }
 
-                    case 'excerpt':
-                        echo '<div class="' . esc_attr($wrapper_class) . '">';
-                        echo wp_trim_words( get_the_excerpt(), isset($element['excerpt_length']) ? $element['excerpt_length'] : 15 );
-                        echo '</div>';
-                        break;
+            // Render the element
+            $this->render_single_element($element);
 
-                    case 'button':
-                        // Add a specific wrapper for the button to handle alignment logic
-                        echo '<div class="' . esc_attr($wrapper_class) . ' mh-post-button-wrapper">';
-                        echo '<a href="' . get_permalink() . '" class="mh-post-button">' . esc_html( isset($element['button_text']) ? $element['button_text'] : 'Read More' ) . '</a>';
-                        echo '</div>';
-                        break;
-
-                    case 'date':
-                        $this->render_meta_item( $element, get_the_date(), $wrapper_class );
-                        break;
-
-                    case 'author':
-                        $this->render_meta_item( $element, get_the_author(), $wrapper_class );
-                        break;
-
-                    case 'category':
-                        $cats = get_the_category_list( ', ' );
-                        if ( $cats ) $this->render_meta_item( $element, $cats, $wrapper_class );
-                        break;
-
-                    case 'tags':
-                        $tags = get_the_tag_list( '', ', ' );
-                        if ( $tags ) $this->render_meta_item( $element, $tags, $wrapper_class );
-                        break;
-                }
+            // Close inline group if it's the last item
+            if ( $is_inline && $in_inline_group && $i === $count - 1 ) {
+                echo '</div>';
             }
         }
         
-        echo '</div>';
-        echo '</div>';
+        echo '</div>'; // End .mh-post-content
+        echo '</div>'; // End .mh-post-card
+    }
+
+    protected function render_single_element($element) {
+        
+        $wrapper_class = 'mh-post-element-' . $element['element_type'];
+
+        switch ( $element['element_type'] ) {
+            case 'image':
+                if ( has_post_thumbnail() ) {
+                    $thumb_size = isset($element['thumbnail_size']) ? $element['thumbnail_size'] : 'medium_large';
+                    echo '<div class="' . esc_attr($wrapper_class) . '">';
+                    echo '<a href="' . get_permalink() . '">';
+                    the_post_thumbnail( $thumb_size );
+                    echo '</a>';
+                    echo '</div>';
+                }
+                break;
+            case 'title':
+                echo '<h3 class="' . esc_attr($wrapper_class) . '"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+                break;
+            case 'excerpt':
+                echo '<div class="' . esc_attr($wrapper_class) . '">' . wp_trim_words( get_the_excerpt(), isset($element['excerpt_length']) ? $element['excerpt_length'] : 15 ) . '</div>';
+                break;
+            case 'button':
+                // Button wrapper gets margin-top: auto via CSS to push it down
+                echo '<div class="' . esc_attr($wrapper_class) . ' mh-post-button-wrapper">';
+                echo '<a href="' . get_permalink() . '" class="mh-post-button">' . esc_html( isset($element['button_text']) ? $element['button_text'] : 'Read More' ) . '</a>';
+                echo '</div>';
+                break;
+            case 'date':
+                $this->render_meta_item( $element, get_the_date(), $wrapper_class );
+                break;
+            case 'author':
+                $this->render_meta_item( $element, get_the_author(), $wrapper_class );
+                break;
+            case 'category':
+                $cats = get_the_category_list( ', ' );
+                if ( $cats ) $this->render_meta_item( $element, $cats, $wrapper_class );
+                break;
+            case 'tags':
+                $tags = get_the_tag_list( '', ', ' );
+                if ( $tags ) $this->render_meta_item( $element, $tags, $wrapper_class );
+                break;
+        }
     }
 
     protected function render_meta_item( $element, $content, $wrapper_class ) {

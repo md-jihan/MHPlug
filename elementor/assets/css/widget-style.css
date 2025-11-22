@@ -372,26 +372,54 @@
  * MH Post Carousel (Layout Builder)
  * ======================================= */
 
-.mh-post-card {
+/* --- 1. Equal Height Fixes --- */
+/* Force Slick Slider Tracks to Flex */
+.mh-post-carousel .slick-track {
+    display: flex !important;
+}
+.mh-post-carousel .slick-slide {
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column;
+    float: none !important; 
+}
+/* Ensure Items fill the height */
+.mh-post-carousel-item,
+.mh-post-grid-item {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 2. Main Card Container --- */
+.mh-post-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Force full height */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Background, Border, Radius set by controls */
+    background-color: #fff; /* Default fallback */
+    width: 100%;
 }
+
 .mh-post-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* --- The Flex Container for Layout --- */
+/* --- 3. Content Area (Flex Container) --- */
 .mh-post-content {
     display: flex;
-    flex-direction: row; /* Default to row to allow inline items */
-    flex-wrap: wrap;     /* Allow wrapping */
-    /* Padding set by control */
+    flex-direction: row; /* Allows 'Inline' items side-by-side */
+    flex-wrap: wrap;     /* Wrap items to new lines */
+    align-content: flex-start; /* Pack content at the top */
+    flex-grow: 1;        /* Grow to fill empty space */
+    width: 100%;
+    box-sizing: border-box;
+    /* Padding is set by control, usually on .mh-post-card */
 }
 
-/* --- Width Classes --- */
+/* --- 4. Width Classes --- */
 .mh-width-full {
     width: 100%;
     flex-basis: 100%;
@@ -399,29 +427,55 @@
 
 .mh-width-inline {
     width: auto;
-    /* Add some spacing between inline items */
     margin-right: 10px; 
     display: inline-flex;
     align-items: center;
 }
-/* Remove right margin from the last inline item */
 .mh-width-inline:last-child {
     margin-right: 0;
 }
 
-/* --- Elements --- */
+/* --- 5. Individual Elements --- */
+.mh-post-element-image {
+    width: 100%;
+    margin-bottom: 15px;
+}
 .mh-post-element-image img {
     width: 100%;
-    height: auto;
+    height: 220px;
+    object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
 }
+.mh-post-card:hover .mh-post-element-image img {
+    transform: scale(1.05);
+}
+
 .mh-post-element-title {
     margin: 0 0 10px 0;
     font-size: 1.2em;
     line-height: 1.4;
 }
-.mh-post-element-title a { text-decoration: none; transition: color 0.3s ease; }
-.mh-post-element-excerpt { margin-bottom: 15px; color: #666; }
+.mh-post-element-title a { 
+    text-decoration: none; 
+    transition: color 0.3s ease; 
+    color: inherit;
+}
+
+.mh-post-element-excerpt { 
+    margin-bottom: 15px; 
+    color: #666; 
+    width: 100%;
+}
+
+/* Sticky Button Logic */
+.mh-post-button-wrapper {
+    margin-top: auto !important; /* Pushes button to bottom */
+    width: 100%;                 
+    padding-top: 15px;           
+    display: flex;
+    /* Justify content set by control */
+}
 
 .mh-post-button {
     display: inline-block;
@@ -434,21 +488,21 @@
     border-radius: 4px;
     transition: all 0.3s ease;
 }
-.mh-post-button:hover { background: #333; }
+.mh-post-button:hover { background: #333; color: #fff; }
 
 /* Meta & Terms */
 .mh-post-meta-item {
     font-size: 0.85em;
     margin-bottom: 10px;
     color: #888;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 5px;
 }
 .mh-post-meta-item a { color: inherit; text-decoration: none; }
 .mh-meta-icon { color: #004265; margin-right: 3px; }
 
-/* --- Slider & Grid (Same as before) --- */
+/* --- Slider Styles --- */
 .mh-post-carousel-wrapper { position: relative; padding: 0 20px; }
 .mh-post-carousel .slick-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
@@ -456,65 +510,20 @@
     border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 10; cursor: pointer; display: flex;
     align-items: center; justify-content: center; color: #333; font-size: 18px;
+    transition: all 0.3s ease;
 }
+.mh-post-carousel .slick-arrow:hover { background: #004265; color: #fff; }
 .mh-post-carousel .slick-prev { left: -10px; }
 .mh-post-carousel .slick-next { right: -10px; }
 
-.mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
-@media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
-@media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
-
-/* ==================================================
- * MH Post Carousel - Equal Height & Bottom Button Fix
- * ================================================== */
-
-/* 1. Force Slick Slider Tracks to Flex (Equal Height Slides) */
-.mh-post-carousel .slick-track {
-    display: flex !important;
+/* --- Grid Styles --- */
+.mh-post-grid { 
+    display: grid; 
+    grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr);
 }
-
-.mh-post-carousel .slick-slide {
-    height: auto !important;
-    display: flex !important;
-    flex-direction: column;
+@media (max-width: 1024px) { 
+    .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } 
 }
-
-/* 2. Ensure the Item Wrapper takes full height */
-.mh-post-carousel-item,
-.mh-post-grid-item {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-/* 3. Make the Card take full height */
-.mh-post-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-/* 4. Make the Content Area grow to fill space */
-.mh-post-content {
-    flex-grow: 1; /* expands to fill available vertical space */
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    height: 100%;
-}
-
-/* 5. Handle the Layout Builder Rows */
-/* This allows 'Inline' elements to sit side-by-side, while keeping the column flow */
-.mh-post-content {
-    display: flex;
-    flex-direction: row; /* Required for inline items */
-    flex-wrap: wrap;     /* Wrap items to next line */
-    align-content: flex-start; /* Keep content at top */
-}
-
-/* 6. Push the Button to the Bottom */
-.mh-post-button-wrapper {
-    margin-top: auto !important; /* Forces button to bottom */
-    width: 100%;                 /* Ensure full width */
-    padding-top: 15px;           /* Breathing room */
+@media (max-width: 767px) { 
+    .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } 
 }

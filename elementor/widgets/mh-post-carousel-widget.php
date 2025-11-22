@@ -1,6 +1,11 @@
 <?php
 /**
- * MH Post Carousel Widget (Final Complete Version)
+ * MH Post Carousel Widget (Final Version + Post Type Support)
+ * Features:
+ * - Custom Post Type Selection
+ * - Layout Builder
+ * - Slider/Grid Modes
+ * - Equal Height & Bottom Buttons
  */
 
 if (!defined('ABSPATH')) {
@@ -34,6 +39,26 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         return ['mh-plug-widgets'];
     }
 
+    /**
+     * Helper to get all public post types
+     */
+    protected function get_supported_post_types() {
+        $args = [
+            'public' => true,
+            'show_in_nav_menus' => true
+        ];
+        $post_types = get_post_types($args, 'objects');
+        $options = [];
+        
+        foreach ($post_types as $post_type) {
+            // Exclude attachments/media
+            if ($post_type->name !== 'attachment') {
+                $options[$post_type->name] = $post_type->label;
+            }
+        }
+        return $options;
+    }
+
     protected function register_controls() {
 
         // --- 1. QUERY SECTION ---
@@ -42,6 +67,17 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             [
                 'label' => esc_html__('Query', 'mh-plug'),
                 'tab' => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        // --- NEW: Post Type Select ---
+        $this->add_control(
+            'selected_post_type',
+            [
+                'label' => esc_html__('Post Type', 'mh-plug'),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'post',
+                'options' => $this->get_supported_post_types(),
             ]
         );
 
@@ -69,7 +105,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             'layout_note',
             [
                 'type' => Controls_Manager::RAW_HTML,
-                'raw' => '<small>' . __('Drag & Drop to reorder. Use "Inline" width to place items side-by-side. Open an item to style it.', 'mh-plug') . '</small>',
+                'raw' => '<small>' . __('Drag & Drop to reorder. Use "Inline" width for side-by-side items. Open an item to style it.', 'mh-plug') . '</small>',
                 'content_classes' => 'elementor-descriptor',
             ]
         );
@@ -274,7 +310,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->add_responsive_control( 'grid_gap', [ 'label' => 'Gap', 'type' => Controls_Manager::SLIDER, 'default' => [ 'size' => 20 ], 'selectors' => [ '{{WRAPPER}} .mh-post-grid' => 'gap: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-post-carousel-item' => 'padding: 0 calc({{SIZE}}{{UNIT}} / 2);', '{{WRAPPER}} .mh-post-carousel .slick-list' => 'margin: 0 calc(-{{SIZE}}{{UNIT}} / 2);' ] ] );
         $this->end_controls_section();
 
-        // --- STYLES: CARD ---
+        // --- STYLES: CARD BOX ---
         $this->start_controls_section( 'section_style_card', [ 'label' => 'Card Box', 'tab' => Controls_Manager::TAB_STYLE ] );
         $this->add_responsive_control( 'box_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'default' => [ 'top' => 0, 'right' => 20, 'bottom' => 20, 'left' => 20, 'unit' => 'px', 'isLinked' => false ], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};', '{{WRAPPER}} .mh-post-element-image' => 'margin-left: -{{LEFT}}{{UNIT}}; margin-right: -{{RIGHT}}{{UNIT}}; width: calc(100% + {{LEFT}}{{UNIT}} + {{RIGHT}}{{UNIT}}); max-width: none;', '{{WRAPPER}} .mh-post-element-image:first-child' => 'margin-top: -{{TOP}}{{UNIT}};', '{{WRAPPER}} .mh-post-element-image:last-child' => 'margin-bottom: -{{BOTTOM}}{{UNIT}};' ] ] );
         $this->add_responsive_control( 'box_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};', '{{WRAPPER}} .mh-post-element-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0;' ] ] );
@@ -318,8 +354,13 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $settings = $this->get_settings_for_display();
         $widget_id = $this->get_id();
         
-        $args = [ 'post_type' => 'post', 'posts_per_page' => $settings['posts_per_page'], 'post_status' => 'publish' ];
+        $args = [
+            'post_type'      => $settings['selected_post_type'], // --- USE SELECTED POST TYPE ---
+            'posts_per_page' => $settings['posts_per_page'],
+            'post_status'    => 'publish',
+        ];
         $query = new \WP_Query($args);
+
         if (!$query->have_posts()) return;
 
         if ( 'yes' === $settings['enable_slider'] ) {
@@ -471,5 +512,16 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         }
         echo '<span class="mh-meta-text">' . $content . '</span>';
         echo '</div>';
+    }
+
+    // --- NEW HELPER FOR POST TYPES ---
+    protected function get_supported_post_types() {
+        $args = [ 'public' => true, 'show_in_nav_menus' => true ];
+        $post_types = get_post_types($args, 'objects');
+        $options = [];
+        foreach ($post_types as $post_type) {
+            if ($post_type->name !== 'attachment') $options[$post_type->name] = $post_type->label;
+        }
+        return $options;
     }
 }

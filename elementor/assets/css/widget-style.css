@@ -509,6 +509,7 @@
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
 @media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
 
+
 /* =======================================
  * MH Synced Slider Widget
  * ======================================= */
@@ -516,114 +517,123 @@
 .mh-synced-slider-wrapper {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    overflow: hidden;
-    padding: 20px 0;
-    gap: 20px;
+    justify-content: space-between;
+    overflow: hidden; /* Hide off-screen slides */
+    gap: 40px;
+    padding: 40px 0;
 }
 
-/* --- Left Side: Text --- */
-.mh-text-slider-wrapper {
-    width: 40%; /* Default width */
-    box-sizing: border-box;
-    padding-right: 20px;
+/* --- Left: Text Slider --- */
+.mh-text-slider-container {
+    width: 35%; /* Adjustable */
+    position: relative;
+    z-index: 2;
 }
 
-.mh-text-slide-item {
+.mh-text-slide {
     outline: none;
 }
 
-.mh-text-content {
-    padding: 10px;
-}
-
 .mh-synced-subtitle {
-    font-size: 14px;
+    display: block;
+    font-weight: 600;
     letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #888;
     margin-bottom: 10px;
 }
 
 .mh-synced-title {
-    font-size: 50px;
     font-weight: 700;
     line-height: 1.1;
     margin-bottom: 20px;
-    color: #333;
 }
 
 .mh-synced-desc {
-    font-size: 16px;
     line-height: 1.6;
-    color: #666;
     margin-bottom: 30px;
 }
 
 .mh-synced-btn {
     display: inline-block;
-    padding: 12px 30px;
-    background-color: #004265;
-    color: #fff;
     text-decoration: none;
-    border-radius: 30px;
+    text-align: center;
     transition: all 0.3s ease;
-    font-weight: 600;
-}
-.mh-synced-btn:hover {
-    background-color: #333;
-    color: #fff;
 }
 
-/* --- Right Side: Image --- */
-.mh-image-slider-wrapper {
-    width: 60%; /* Default width */
-    box-sizing: border-box;
+
+/* --- Right: Image Slider --- */
+.mh-image-slider-container {
+    width: 65%; /* Adjustable */
+    position: relative;
 }
 
-.mh-image-slide-item {
-    padding: 20px 15px; /* Vertical Padding for scale effect */
+.mh-image-slider {
+    /* Ensure slick track is visible */
+}
+
+.mh-image-slide {
+    padding: 20px; /* Spacing between images */
     outline: none;
     transition: all 0.5s ease;
-    transform: scale(0.85); /* Inactive slide size */
-    opacity: 0.6; 
-    filter: blur(1px);
-}
-
-/* Active Center Item */
-.mh-image-slider .slick-center .mh-image-slide-item {
-    transform: scale(1); /* Full size */
-    opacity: 1;
-    filter: blur(0);
-    z-index: 10;
+    transform: scale(0.85); /* Inactive slides are smaller */
+    opacity: 0.5; /* Inactive slides are faded */
+    position: relative;
+    z-index: 1;
 }
 
 .mh-slider-img {
     width: 100%;
-    height: 450px; /* Default height, controlled by settings */
+    height: 450px; /* Default height, overridden by control */
     object-fit: cover;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     display: block;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Active Center Slide */
+.mh-image-slider .slick-center {
+    transform: scale(1);
+    opacity: 1;
+    z-index: 10;
+}
+
+/* --- Navigation Arrows --- */
+.mh-synced-arrows-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center; /* Or flex-start depending on design */
+}
+
+.mh-synced-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s ease;
 }
 
 /* --- Responsive --- */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .mh-synced-slider-wrapper {
-        flex-direction: column-reverse; /* Images on top for mobile */
+        flex-direction: column-reverse; /* Images on top on tablet/mobile */
         text-align: center;
     }
-    .mh-text-slider-wrapper, 
-    .mh-image-slider-wrapper {
-        width: 100% !important; /* Force full width */
-        padding: 0;
+    .mh-text-slider-container,
+    .mh-image-slider-container {
+        width: 100%;
     }
-    .mh-image-slide-item {
-        transform: scale(1);
-        opacity: 1;
-        padding: 0 5px;
+    .mh-text-slider-container {
+        margin-top: 30px;
+        padding: 0 20px;
     }
-    .mh-slider-img {
-        height: 300px !important; /* Smaller height for mobile */
+    .mh-synced-arrows-container {
+        justify-content: center;
     }
+    /* Reset scale on mobile if needed */
+    .mh-image-slide { transform: scale(1); opacity: 1; padding: 5px; }
 }

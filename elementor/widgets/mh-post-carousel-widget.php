@@ -1,10 +1,6 @@
 <?php
 /**
- * MH Post Carousel Widget (Ultimate Styling Edition)
- * Features:
- * - Layout Builder
- * - Per-Item Hover Effects & Transition Control
- * - Slider/Grid Modes
+ * MH Post Carousel Widget (Final Complete Version)
  */
 
 if (!defined('ABSPATH')) {
@@ -17,7 +13,6 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Image_Size;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Background;
 use Elementor\Icons_Manager;
 use Elementor\Repeater;
 
@@ -74,7 +69,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             'layout_note',
             [
                 'type' => Controls_Manager::RAW_HTML,
-                'raw' => '<small>' . __('Drag & Drop to reorder. Open an item to style it. Use "Inline" width for side-by-side items.', 'mh-plug') . '</small>',
+                'raw' => '<small>' . __('Drag & Drop to reorder. Use "Inline" width to place items side-by-side. Open an item to style it.', 'mh-plug') . '</small>',
                 'content_classes' => 'elementor-descriptor',
             ]
         );
@@ -130,7 +125,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // --- Content Specific Settings ---
+        // --- Specific Settings ---
         $repeater->add_group_control(
             Group_Control_Image_Size::get_type(),
             [
@@ -144,20 +139,18 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $repeater->add_control( 'button_text', [ 'label' => 'Text', 'type' => Controls_Manager::TEXT, 'default' => 'Read More', 'condition' => ['element_type' => 'button'] ] );
         $repeater->add_control( 'meta_icon', [ 'label' => 'Icon', 'type' => Controls_Manager::ICONS, 'condition' => ['element_type' => ['date', 'author', 'category', 'tags']] ] );
 
-
         // --- STYLING TAB (Inside Repeater) ---
         $repeater->add_control( 'style_heading', [ 'label' => 'Styling', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
 
         $repeater->start_controls_tabs( 'tabs_item_style' );
 
-        // --- NORMAL STATE ---
+        // Normal State
         $repeater->start_controls_tab( 'tab_item_normal', [ 'label' => 'Normal' ] );
-
-        // Text Color
+        
         $repeater->add_control(
             'item_text_color',
             [
-                'label' => esc_html__('Text Color', 'mh-plug'),
+                'label' => 'Text Color',
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}};',
@@ -168,41 +161,27 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // Button Background (Normal)
-        $repeater->add_control(
-            'btn_bg_color',
-            [
-                'label' => 'Button Background',
-                'type' => Controls_Manager::COLOR,
-                'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'background-color: {{VALUE}};' ],
-                'condition' => ['element_type' => 'button']
-            ]
-        );
+        $repeater->add_control( 'btn_bg_color', [ 'label' => 'Button Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'background-color: {{VALUE}};' ], 'condition' => ['element_type' => 'button'] ] );
         
-        // Image Border Radius (Normal)
         $repeater->add_responsive_control(
             'image_border_radius',
             [
-                'label' => esc_html__( 'Border Radius', 'mh-plug' ),
+                'label' => 'Border Radius',
                 'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
-                'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}} img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
+                'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
                 'condition' => ['element_type' => 'image'],
             ]
         );
-
         $repeater->end_controls_tab();
 
-        // --- HOVER STATE ---
+        // Hover State
         $repeater->start_controls_tab( 'tab_item_hover', [ 'label' => 'Hover' ] );
-
-        // Hover Text Color
+        
         $repeater->add_control(
             'item_text_color_hover',
             [
-                'label' => esc_html__('Text Color', 'mh-plug'),
+                'label' => 'Text Color',
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .mh-post-card:hover {{CURRENT_ITEM}}' => 'color: {{VALUE}};',
@@ -212,79 +191,40 @@ class MH_Post_Carousel_Widget extends Widget_Base {
                 'condition' => ['element_type!' => ['image']],
             ]
         );
-
-        // Button Background (Hover)
-        $repeater->add_control(
-            'btn_bg_color_hover',
-            [
-                'label' => 'Button Background',
-                'type' => Controls_Manager::COLOR,
-                'selectors' => [ '{{WRAPPER}} .mh-post-card:hover {{CURRENT_ITEM}} .mh-post-button' => 'background-color: {{VALUE}};' ],
-                'condition' => ['element_type' => 'button']
-            ]
-        );
         
-        // Image Scale (Hover)
+        $repeater->add_control( 'btn_bg_color_hover', [ 'label' => 'Button Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-post-card:hover {{CURRENT_ITEM}} .mh-post-button' => 'background-color: {{VALUE}};' ], 'condition' => ['element_type' => 'button'] ] );
+
         $repeater->add_control(
             'image_scale_hover',
             [
-                'label' => esc_html__( 'Scale', 'mh-plug' ),
+                'label' => 'Scale',
                 'type' => Controls_Manager::SLIDER,
                 'range' => [ 'px' => [ 'min' => 0.5, 'max' => 2, 'step' => 0.05 ] ],
                 'default' => [ 'unit' => 'px', 'size' => 1 ],
-                'selectors' => [
-                    '{{WRAPPER}} .mh-post-card:hover {{CURRENT_ITEM}} img' => 'transform: scale({{SIZE}});',
-                ],
+                'selectors' => [ '{{WRAPPER}} .mh-post-card:hover {{CURRENT_ITEM}} img' => 'transform: scale({{SIZE}});' ],
                 'condition' => ['element_type' => 'image'],
             ]
         );
-
         $repeater->end_controls_tab();
         $repeater->end_controls_tabs();
         
-        // --- Transition Duration ---
         $repeater->add_control(
             'item_transition',
             [
-                'label' => esc_html__( 'Transition Duration (s)', 'mh-plug' ),
+                'label' => 'Transition (s)',
                 'type' => Controls_Manager::SLIDER,
                 'range' => [ 'px' => [ 'min' => 0, 'max' => 3, 'step' => 0.1 ] ],
                 'default' => [ 'unit' => 'px', 'size' => 0.3 ],
-                'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}, {{WRAPPER}} {{CURRENT_ITEM}} a, {{WRAPPER}} {{CURRENT_ITEM}} i, {{WRAPPER}} {{CURRENT_ITEM}} img, {{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'transition: all {{SIZE}}s ease;',
-                ],
+                'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}, {{WRAPPER}} {{CURRENT_ITEM}} *' => 'transition: all {{SIZE}}s ease;' ],
                 'separator' => 'before',
             ]
         );
 
-        // Typography
-        $repeater->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name' => 'item_typography',
-                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}, {{WRAPPER}} {{CURRENT_ITEM}} a',
-                'condition' => ['element_type!' => ['image', 'button']],
-            ]
-        );
+        $repeater->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'item_typography', 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}, {{WRAPPER}} {{CURRENT_ITEM}} a', 'condition' => ['element_type!' => ['image', 'button']] ] );
 
-        // Button Padding & Radius
-        $repeater->add_responsive_control( 'btn_padding', [ 'label' => 'Button Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px'], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => ['element_type' => 'button'] ] );
-        $repeater->add_responsive_control( 'btn_radius', [ 'label' => 'Button Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px'], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => ['element_type' => 'button'] ] );
-
-        // Margins
-        $repeater->add_responsive_control(
-            'item_margin',
-            [
-                'label' => esc_html__( 'Margin', 'mh-plug' ),
-                'type' => Controls_Manager::DIMENSIONS,
-                'size_units' => [ 'px', 'em' ],
-                'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-                'default' => [ 'top' => 0, 'right' => 0, 'bottom' => 10, 'left' => 0, 'unit' => 'px', 'isLinked' => false ],
-                'separator' => 'before',
-            ]
-        );
+        $repeater->add_responsive_control( 'btn_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px'], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}} .mh-post-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => ['element_type' => 'button'] ] );
+        
+        $repeater->add_responsive_control( 'item_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px' ], 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'default' => [ 'top' => 0, 'right' => 0, 'bottom' => 10, 'left' => 0, 'unit' => 'px', 'isLinked' => false ], 'separator' => 'before' ] );
 
         $this->add_control(
             'card_elements',
@@ -334,7 +274,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $this->add_responsive_control( 'grid_gap', [ 'label' => 'Gap', 'type' => Controls_Manager::SLIDER, 'default' => [ 'size' => 20 ], 'selectors' => [ '{{WRAPPER}} .mh-post-grid' => 'gap: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .mh-post-carousel-item' => 'padding: 0 calc({{SIZE}}{{UNIT}} / 2);', '{{WRAPPER}} .mh-post-carousel .slick-list' => 'margin: 0 calc(-{{SIZE}}{{UNIT}} / 2);' ] ] );
         $this->end_controls_section();
 
-        // --- STYLES: CARD BOX ---
+        // --- STYLES: CARD ---
         $this->start_controls_section( 'section_style_card', [ 'label' => 'Card Box', 'tab' => Controls_Manager::TAB_STYLE ] );
         $this->add_responsive_control( 'box_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', 'em'], 'default' => [ 'top' => 0, 'right' => 20, 'bottom' => 20, 'left' => 20, 'unit' => 'px', 'isLinked' => false ], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};', '{{WRAPPER}} .mh-post-element-image' => 'margin-left: -{{LEFT}}{{UNIT}}; margin-right: -{{RIGHT}}{{UNIT}}; width: calc(100% + {{LEFT}}{{UNIT}} + {{RIGHT}}{{UNIT}}); max-width: none;', '{{WRAPPER}} .mh-post-element-image:first-child' => 'margin-top: -{{TOP}}{{UNIT}};', '{{WRAPPER}} .mh-post-element-image:last-child' => 'margin-bottom: -{{BOTTOM}}{{UNIT}};' ] ] );
         $this->add_responsive_control( 'box_radius', [ 'label' => 'Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .mh-post-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};', '{{WRAPPER}} .mh-post-element-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0;' ] ] );

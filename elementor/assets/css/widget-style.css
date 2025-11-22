@@ -368,6 +368,7 @@
 .mh-feature-card-button:hover {
     transform: translateY(-2px);
 }
+
 /* =======================================
  * MH Post Carousel & Grid (Final Version)
  * ======================================= */
@@ -397,7 +398,7 @@
     box-sizing: border-box;
 }
 
-/* --- 3. Inline Grouping & Separator --- */
+/* --- 3. Inline Grouping --- */
 .mh-inline-group {
     display: flex;
     flex-direction: row;
@@ -405,44 +406,35 @@
     width: 100%;
     align-items: center;
     margin-bottom: 10px;
-    /* Remove gap, we will use margins on the separator instead */
-    gap: 0; 
+    gap: 0; /* Handled by margin on separator */
 }
-
-/* Inline Items */
-.mh-width-inline {
-    width: auto;
-    display: inline-flex;
-    align-items: center;
-}
-
-/* Add the Pipe Separator '|' after every inline item */
-.mh-width-inline::after {
-    content: " | ";
-    display: inline-block;
-    margin: 0 10px; /* Adjust spacing around the pipe here */
-    opacity: 0.5;   /* Make it slightly transparent */
-    font-weight: 400;
-    color: inherit; /* Takes the text color */
-}
-
-/* HIDE the separator for the last item in the group */
-.mh-width-inline:last-child::after {
-    display: none;
-    content: none;
-}
-
-/* Reset margins inside group */
 .mh-inline-group .mh-post-meta-item,
 .mh-inline-group .mh-post-element-title,
 .mh-inline-group .mh-post-element-excerpt {
     margin-bottom: 0;
 }
 
+/* Inline Separator (|) */
+.mh-inline-group > div {
+    display: inline-flex;
+    align-items: center;
+}
+.mh-inline-group > div::after {
+    content: "|";
+    margin: 0 5px;
+    opacity: 0.5;
+    font-weight: 400;
+    color: inherit;
+}
+.mh-inline-group > div:last-child::after {
+    display: none;
+    content: none;
+}
+
 /* --- 4. Elements --- */
-.mh-post-element-image { width: 100%; margin-bottom: 15px; }
+.mh-post-element-image { width: 100%; margin-bottom: 15px; transition: all 0.3s ease; }
 .mh-post-element-image img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.3s ease; }
-.mh-post-card:hover .mh-post-element-image img { transform: scale(1.05); }
+/* Image Hover handled by Repeater control selector */
 
 .mh-post-element-title { margin: 0 0 10px 0; font-size: 1.2em; line-height: 1.4; }
 .mh-post-element-title a { text-decoration: none; transition: color 0.3s ease; color: inherit; }
@@ -462,6 +454,7 @@
 }
 .mh-post-button:hover { background: #333; color: #fff; }
 
+/* Meta */
 .mh-post-meta-item { font-size: 0.85em; margin-bottom: 8px; color: #888; display: flex; align-items: center; gap: 5px; }
 .mh-post-meta-item a { color: inherit; text-decoration: none; }
 .mh-meta-icon { color: #004265; margin-right: 3px; }
@@ -494,22 +487,23 @@
 }
 .mh-post-carousel .slick-dots li.slick-active button {
     background: #004265; border-color: #004265; transform: scale(1.1);
-    width: 30px !important;
-    border-radius: 10px;
 }
 
 /* --- 6. Alignment & Grid --- */
 .mh-align-left .mh-post-card { text-align: left; }
 .mh-align-left .mh-post-content { align-items: flex-start; }
 .mh-align-left .mh-inline-group { justify-content: flex-start; }
+.mh-align-left .mh-post-button-wrapper { justify-content: flex-start; }
 
 .mh-align-center .mh-post-card { text-align: center; }
 .mh-align-center .mh-post-content { align-items: center; }
 .mh-align-center .mh-inline-group { justify-content: center; }
+.mh-align-center .mh-post-button-wrapper { justify-content: center; }
 
 .mh-align-right .mh-post-card { text-align: right; }
 .mh-align-right .mh-post-content { align-items: flex-end; }
 .mh-align-right .mh-inline-group { justify-content: flex-end; }
+.mh-align-right .mh-post-button-wrapper { justify-content: flex-end; }
 
 .mh-post-grid { display: grid; grid-template-columns: repeat(var(--mh-grid-cols, 3), 1fr); }
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }

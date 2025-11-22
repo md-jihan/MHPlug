@@ -1,11 +1,13 @@
 <?php
 /**
- * MH Post Carousel Widget (Final Version + Post Type Support)
- * Features:
- * - Custom Post Type Selection
- * - Layout Builder
+ * MH Post Carousel Widget (Final Version - Fixed)
+ * * Fix: Removes duplicate method declaration.
+ * Includes:
+ * - Custom Post Types
+ * - Drag & Drop Layout Builder
  * - Slider/Grid Modes
  * - Equal Height & Bottom Buttons
+ * - All Styling Options
  */
 
 if (!defined('ABSPATH')) {
@@ -41,6 +43,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
 
     /**
      * Helper to get all public post types
+     * DEFINED ONLY ONCE HERE
      */
     protected function get_supported_post_types() {
         $args = [
@@ -51,7 +54,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $options = [];
         
         foreach ($post_types as $post_type) {
-            // Exclude attachments/media
+            // Exclude attachments
             if ($post_type->name !== 'attachment') {
                 $options[$post_type->name] = $post_type->label;
             }
@@ -70,14 +73,14 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // --- NEW: Post Type Select ---
+        // Post Type Select
         $this->add_control(
             'selected_post_type',
             [
                 'label' => esc_html__('Post Type', 'mh-plug'),
                 'type' => Controls_Manager::SELECT,
                 'default' => 'post',
-                'options' => $this->get_supported_post_types(),
+                'options' => $this->get_supported_post_types(), // Uses the helper method
             ]
         );
 
@@ -161,7 +164,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
             ]
         );
 
-        // --- Specific Settings ---
+        // --- Content Specific Settings ---
         $repeater->add_group_control(
             Group_Control_Image_Size::get_type(),
             [
@@ -186,7 +189,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $repeater->add_control(
             'item_text_color',
             [
-                'label' => 'Text Color',
+                'label' => esc_html__('Text Color', 'mh-plug'),
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}};',
@@ -355,7 +358,7 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         $widget_id = $this->get_id();
         
         $args = [
-            'post_type'      => $settings['selected_post_type'], // --- USE SELECTED POST TYPE ---
+            'post_type'      => $settings['selected_post_type'],
             'posts_per_page' => $settings['posts_per_page'],
             'post_status'    => 'publish',
         ];
@@ -512,16 +515,5 @@ class MH_Post_Carousel_Widget extends Widget_Base {
         }
         echo '<span class="mh-meta-text">' . $content . '</span>';
         echo '</div>';
-    }
-
-    // --- NEW HELPER FOR POST TYPES ---
-    protected function get_supported_post_types() {
-        $args = [ 'public' => true, 'show_in_nav_menus' => true ];
-        $post_types = get_post_types($args, 'objects');
-        $options = [];
-        foreach ($post_types as $post_type) {
-            if ($post_type->name !== 'attachment') $options[$post_type->name] = $post_type->label;
-        }
-        return $options;
     }
 }

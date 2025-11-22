@@ -357,8 +357,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 
         $this->end_controls_section();
 	}
-
-	protected function render() {
+protected function render() {
 		$settings = $this->get_settings_for_display();
 		$slides = $settings['slides'];
 
@@ -391,11 +390,9 @@ class MH_Synced_Slider_Widget extends Widget_Base {
             $next_icon_html = ob_get_clean();
             if(empty($next_icon_html)) $next_icon_html = '<i class="eicon-chevron-right"></i>';
 
-            // We attach arrows to the Image Slider
             $prev_arrow = '<button type="button" class="mh-synced-arrow mh-prev">' . $prev_icon_html . '</button>';
             $next_arrow = '<button type="button" class="mh-synced-arrow mh-next">' . $next_icon_html . '</button>';
         }
-
 		?>
 
 		<div class="mh-synced-slider-wrapper" 
@@ -434,9 +431,11 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 <div class="mh-image-slider" id="<?php echo esc_attr( $image_slider_id ); ?>">
                     <?php foreach ( $slides as $slide ) : ?>
                         <div class="mh-image-slide">
-                            <?php if ( ! empty( $slide['image']['id'] ) ) : ?>
-                                <?php echo wp_get_attachment_image( $slide['image']['id'], $settings['image_size_size'], false, [ 'class' => 'mh-slider-img' ] ); ?>
-                            <?php endif; ?>
+                            <div class="mh-image-box">
+                                <?php if ( ! empty( $slide['image']['id'] ) ) : ?>
+                                    <?php echo wp_get_attachment_image( $slide['image']['id'], $settings['image_size_size'], false, [ 'class' => 'mh-slider-img' ] ); ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -449,12 +448,12 @@ class MH_Synced_Slider_Widget extends Widget_Base {
             </div>
 		</div>
 
-        <script>
+		<script>
 		jQuery(document).ready(function($) {
             var $wrapper = $('.elementor-element-<?php echo esc_attr($id); ?> .mh-synced-slider-wrapper');
             var textId = '#' + $wrapper.data('text-id');
             var imageId = '#' + $wrapper.data('image-id');
-            var autoplay = $wrapper.data('autoplay') === true; // convert string 'true' if needed
+            var autoplay = $wrapper.data('autoplay') === true;
             var speed = $wrapper.data('speed');
             var infinite = $wrapper.data('infinite') === true;
 
@@ -468,19 +467,19 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 autoplay: autoplay,
                 autoplaySpeed: speed,
                 infinite: infinite,
-                draggable: false // Let image slider control drag
+                draggable: false
 			});
 
             // Right Image Slider (Center Mode)
 			$(imageId).slick({
-				slidesToShow: 3,
+				slidesToShow: 3, // Show 3 items
 				slidesToScroll: 1,
 				asNavFor: textId,
 				dots: false,
 				centerMode: true,
-                centerPadding: '0px',
+                centerPadding: '0px', // No extra padding from slick
 				focusOnSelect: true,
-                arrows: false, // We use custom buttons
+                arrows: false,
                 infinite: infinite,
                 autoplay: autoplay,
                 autoplaySpeed: speed,
@@ -495,7 +494,6 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 ]
 			});
 
-            // Custom Navigation
             $wrapper.find('.mh-prev').click(function(){
                 $(imageId).slick('slickPrev');
             });

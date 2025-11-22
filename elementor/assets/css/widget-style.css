@@ -509,75 +509,36 @@
 @media (max-width: 1024px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-tablet, 2), 1fr); } }
 @media (max-width: 767px) { .mh-post-grid { grid-template-columns: repeat(var(--mh-grid-cols-mobile, 1), 1fr); } }
 
-
-/* =======================================
- * MH Synced Slider Widget
- * ======================================= */
-
-.mh-synced-slider-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow: hidden; /* Hide off-screen slides */
-    gap: 40px;
-    padding: 40px 0;
-}
-
-/* --- Left: Text Slider --- */
-.mh-text-slider-container {
-    width: 35%; /* Adjustable */
-    position: relative;
-    z-index: 2;
-}
-
-.mh-text-slide {
-    outline: none;
-}
-
-.mh-synced-subtitle {
-    display: block;
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-}
-
-.mh-synced-title {
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 20px;
-}
-
-.mh-synced-desc {
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-
-.mh-synced-btn {
-    display: inline-block;
-    text-decoration: none;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-
 /* --- Right: Image Slider --- */
 .mh-image-slider-container {
-    width: 65%; /* Adjustable */
+    width: 65%;
     position: relative;
+    /* Ensure overflow allows us to see the effect if needed, but usually hidden */
+    overflow: hidden; 
 }
 
 .mh-image-slider {
-    /* Ensure slick track is visible */
+    /* Negative margin to counteract any default slick spacing if present */
+    margin: 0 -10px; 
 }
 
 .mh-image-slide {
-    padding: 20px; /* Spacing between images */
+    /* --- CHANGED: Reduced/Removed Padding --- */
+    padding: 10px 5px; /* Very small gap, or set to 0 for touching */
     outline: none;
-    transition: all 0.5s ease;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth ease */
     transform: scale(0.85); /* Inactive slides are smaller */
-    opacity: 0.5; /* Inactive slides are faded */
+    opacity: 0.6; /* Inactive slides are faded */
     position: relative;
     z-index: 1;
+}
+
+.mh-image-box {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    /* Ensure the image fills the box */
+    height: 100%; 
 }
 
 .mh-slider-img {
@@ -585,55 +546,21 @@
     height: 450px; /* Default height, overridden by control */
     object-fit: cover;
     display: block;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    /* Remove border-radius from img if parent has it */
+    border-radius: 0; 
 }
 
-/* Active Center Slide */
+/* --- Active Center Slide --- */
 .mh-image-slider .slick-center {
-    transform: scale(1);
+    /* --- CHANGED: Center slide is Full Scale --- */
+    transform: scale(1.05); /* Scale up slightly more than 1 to pop */
     opacity: 1;
     z-index: 10;
+    /* Add the "20px insider" effect visually via scale/shadow */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25); 
 }
 
-/* --- Navigation Arrows --- */
-.mh-synced-arrows-container {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-    justify-content: center; /* Or flex-start depending on design */
-}
-
-.mh-synced-arrow {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-    .mh-synced-slider-wrapper {
-        flex-direction: column-reverse; /* Images on top on tablet/mobile */
-        text-align: center;
-    }
-    .mh-text-slider-container,
-    .mh-image-slider-container {
-        width: 100%;
-    }
-    .mh-text-slider-container {
-        margin-top: 30px;
-        padding: 0 20px;
-    }
-    .mh-synced-arrows-container {
-        justify-content: center;
-    }
-    /* Reset scale on mobile if needed */
-    .mh-image-slide { transform: scale(1); opacity: 1; padding: 5px; }
+/* Center Slide Inner Box */
+.mh-image-slider .slick-center .mh-image-box {
+    /* You can add a specific border or effect here for the center item */
 }

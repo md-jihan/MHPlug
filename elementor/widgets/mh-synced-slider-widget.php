@@ -1,11 +1,10 @@
 <?php
 /**
- * MH Synced Slider Widget (Fixed & Enhanced)
+ * MH Synced Slider Widget (Design Update)
  * Features:
- * - Two-way Synced Sliders (Text & Image)
- * - Center Mode for Images
- * - Full Styling Controls (Typography, Colors, Button, Spacing)
- * - Slider Controls (Autoplay, Speed, Arrows, Dots)
+ * - Text on Left (with Background/Padding)
+ * - Images on Right (Center Mode)
+ * - Navigation Arrows on Left
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,9 +15,9 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Image_Size;
+use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Background;
 use Elementor\Repeater;
 use Elementor\Utils;
 use Elementor\Icons_Manager;
@@ -77,7 +76,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Subtitle', 'mh-plug' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'WELCOME TO', 'mh-plug' ),
+				'default' => esc_html__( 'ARCHITECTURE', 'mh-plug' ),
 			]
 		);
 
@@ -86,7 +85,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Title', 'mh-plug' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'default' => esc_html__( 'NATURE', 'mh-plug' ),
+				'default' => esc_html__( 'MODERN HOUSE', 'mh-plug' ),
 			]
 		);
 
@@ -95,7 +94,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Description', 'mh-plug' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'mh-plug' ),
+				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.', 'mh-plug' ),
 			]
 		);
 
@@ -104,7 +103,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Button Text', 'mh-plug' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'EXPLORE', 'mh-plug' ),
+				'default' => esc_html__( 'VIEW PROJECT', 'mh-plug' ),
 			]
 		);
 
@@ -128,22 +127,22 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'subtitle' => 'WELCOME TO',
-						'title' => 'NATURE',
+						'subtitle' => 'ARCHITECTURE',
+						'title' => 'MODERN HOUSE',
 						'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-						'button_text' => 'EXPLORE',
+						'button_text' => 'VIEW PROJECT',
 					],
 					[
-						'subtitle' => 'DISCOVER',
-						'title' => 'ADVENTURE',
+						'subtitle' => 'INTERIOR',
+						'title' => 'LUXURY VILLA',
 						'description' => 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-						'button_text' => 'VIEW MORE',
+						'button_text' => 'VIEW PROJECT',
 					],
 					[
-						'subtitle' => 'EXPERIENCE',
-						'title' => 'FREEDOM',
+						'subtitle' => 'DESIGN',
+						'title' => 'URBAN LOFT',
 						'description' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
-						'button_text' => 'START NOW',
+						'button_text' => 'VIEW PROJECT',
 					],
 				],
 				'title_field' => '{{{ title }}}',
@@ -170,87 +169,72 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			]
 		);
 
-        $this->add_control(
-			'autoplay',
-			[
-				'label' => esc_html__( 'Autoplay', 'mh-plug' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'no',
-			]
-		);
-
-        $this->add_control(
-			'autoplay_speed',
-			[
-				'label' => esc_html__( 'Autoplay Speed (ms)', 'mh-plug' ),
-				'type' => Controls_Manager::NUMBER,
-				'default' => 3000,
-                'condition' => [ 'autoplay' => 'yes' ],
-			]
-		);
-
-        $this->add_control(
-			'infinite',
-			[
-				'label' => esc_html__( 'Infinite Loop', 'mh-plug' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'yes',
-			]
-		);
-
-        $this->add_control(
-			'show_arrows',
-			[
-				'label' => esc_html__( 'Show Arrows', 'mh-plug' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'yes',
-			]
-		);
-
-        $this->add_control(
-			'arrow_prev_icon',
-			[
-				'label' => esc_html__( 'Previous Icon', 'mh-plug' ),
-				'type' => Controls_Manager::ICONS,
-				'default' => [ 'value' => 'eicon-chevron-left', 'library' => 'eicons' ],
-				'condition' => [ 'show_arrows' => 'yes' ],
-			]
-		);
-
-        $this->add_control(
-			'arrow_next_icon',
-			[
-				'label' => esc_html__( 'Next Icon', 'mh-plug' ),
-				'type' => Controls_Manager::ICONS,
-				'default' => [ 'value' => 'eicon-chevron-right', 'library' => 'eicons' ],
-				'condition' => [ 'show_arrows' => 'yes' ],
-			]
-		);
+        $this->add_control( 'autoplay', [ 'label' => 'Autoplay', 'type' => Controls_Manager::SWITCHER, 'default' => 'no' ] );
+        $this->add_control( 'autoplay_speed', [ 'label' => 'Speed (ms)', 'type' => Controls_Manager::NUMBER, 'default' => 3000, 'condition' => [ 'autoplay' => 'yes' ] ] );
+        $this->add_control( 'infinite', [ 'label' => 'Infinite Loop', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
+        $this->add_control( 'show_arrows', [ 'label' => 'Show Arrows', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
+        
+        $this->add_control( 'arrow_prev_icon', [ 'label' => 'Prev Icon', 'type' => Controls_Manager::ICONS, 'default' => [ 'value' => 'eicon-chevron-left', 'library' => 'eicons' ], 'condition' => [ 'show_arrows' => 'yes' ] ] );
+        $this->add_control( 'arrow_next_icon', [ 'label' => 'Next Icon', 'type' => Controls_Manager::ICONS, 'default' => [ 'value' => 'eicon-chevron-right', 'library' => 'eicons' ], 'condition' => [ 'show_arrows' => 'yes' ] ] );
 
 		$this->end_controls_section();
 
-		// --- STYLE: TEXT CONTENT ---
+		// --- STYLE: TEXT BOX ---
 		$this->start_controls_section(
-			'section_style_text',
+			'section_style_text_box',
 			[
-				'label' => esc_html__( 'Text Content (Left)', 'mh-plug' ),
+				'label' => esc_html__( 'Text Box (Left)', 'mh-plug' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 
-        $this->add_control( 'heading_subtitle', [ 'label' => 'Subtitle', 'type' => Controls_Manager::HEADING ] );
-		$this->add_control( 'subtitle_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'color: {{VALUE}};' ] ] );
+        // --- NEW CONTROLS FOR TEXT BOX ---
+        $this->add_control(
+			'text_box_bg_color',
+			[
+				'label' => esc_html__( 'Background Color', 'mh-plug' ),
+				'type' => Controls_Manager::COLOR,
+				'default' => '#1a1a1a',
+				'selectors' => [
+					'{{WRAPPER}} .mh-text-slider-container' => 'background-color: {{VALUE}};',
+				],
+			]
+		);
+
+        $this->add_responsive_control(
+			'text_box_padding',
+			[
+				'label' => esc_html__( 'Padding', 'mh-plug' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+                'default' => [
+                    'top' => 50,
+                    'right' => 50,
+                    'bottom' => 50,
+                    'left' => 50,
+                    'unit' => 'px',
+                    'isLinked' => true,
+                ],
+				'selectors' => [
+					'{{WRAPPER}} .mh-text-slider-container' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+        // --------------------------------
+
+        $this->add_control( 'heading_subtitle', [ 'label' => 'Subtitle', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$this->add_control( 'subtitle_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#888', 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'subtitle_typography', 'selector' => '{{WRAPPER}} .mh-synced-subtitle' ] );
         $this->add_responsive_control( 'subtitle_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
 
         $this->add_control( 'heading_title_main', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
-		$this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'title_typography', 'selector' => '{{WRAPPER}} .mh-synced-title' ] );
         $this->add_responsive_control( 'title_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
         $this->add_control( 'heading_desc', [ 'label' => 'Description', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
-		$this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#ccc', 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'desc_typography', 'selector' => '{{WRAPPER}} .mh-synced-desc' ] );
         $this->add_responsive_control( 'desc_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
@@ -259,18 +243,20 @@ class MH_Synced_Slider_Widget extends Widget_Base {
         
         $this->start_controls_tabs( 'tabs_button_style' );
         $this->start_controls_tab( 'tab_button_normal', [ 'label' => 'Normal' ] );
-        $this->add_control( 'btn_color', [ 'label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'color: {{VALUE}};' ] ] );
-        $this->add_control( 'btn_bg_color', [ 'label' => 'Background Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_color', [ 'label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_bg_color', [ 'label' => 'Background Color', 'type' => Controls_Manager::COLOR, 'default' => 'transparent', 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'btn_border', 'selector' => '{{WRAPPER}} .mh-synced-btn', 'fields_options' => [ 'border' => [ 'default' => 'solid' ], 'width' => [ 'default' => [ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1, 'unit' => 'px' ] ], 'color' => [ 'default' => '#fff' ] ] ] );
         $this->end_controls_tab();
 
         $this->start_controls_tab( 'tab_button_hover', [ 'label' => 'Hover' ] );
-        $this->add_control( 'btn_color_hover', [ 'label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn:hover' => 'color: {{VALUE}};' ] ] );
-        $this->add_control( 'btn_bg_color_hover', [ 'label' => 'Background Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn:hover' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_color_hover', [ 'label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'default' => '#000', 'selectors' => [ '{{WRAPPER}} .mh-synced-btn:hover' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_bg_color_hover', [ 'label' => 'Background Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-btn:hover' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_control( 'btn_border_color_hover', [ 'label' => 'Border Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-btn:hover' => 'border-color: {{VALUE}};' ] ] );
         $this->end_controls_tab();
         $this->end_controls_tabs();
 
         $this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'btn_typography', 'selector' => '{{WRAPPER}} .mh-synced-btn' ] );
-        $this->add_responsive_control( 'btn_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
+        $this->add_responsive_control( 'btn_padding', [ 'label' => 'Padding', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px' ], 'default' => [ 'top' => 12, 'right' => 30, 'bottom' => 12, 'left' => 30, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
         $this->add_responsive_control( 'btn_radius', [ 'label' => 'Border Radius', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', '%' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
 		$this->end_controls_section();
@@ -290,7 +276,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'label' => esc_html__( 'Image Height', 'mh-plug' ),
 				'type' => Controls_Manager::SLIDER,
 				'range' => [ 'px' => [ 'min' => 100, 'max' => 1000 ] ],
-				'default' => [ 'unit' => 'px', 'size' => 450 ],
+				'default' => [ 'unit' => 'px', 'size' => 400 ],
 				'selectors' => [ '{{WRAPPER}} .mh-slider-img' => 'height: {{SIZE}}{{UNIT}};' ],
 			]
 		);
@@ -336,12 +322,15 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 
         $this->start_controls_tabs( 'tabs_arrow_style' );
         $this->start_controls_tab( 'tab_arrow_normal', [ 'label' => 'Normal' ] );
-        $this->add_control( 'arrow_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow' => 'color: {{VALUE}};' ] ] );
-        $this->add_control( 'arrow_bg', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_bg', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'default' => 'transparent', 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'arrow_border', 'selector' => '{{WRAPPER}} .mh-synced-arrow', 'fields_options' => [ 'border' => [ 'default' => 'solid' ], 'width' => [ 'default' => [ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1, 'unit' => 'px' ] ], 'color' => [ 'default' => 'rgba(255,255,255,0.3)' ] ] ] );
         $this->end_controls_tab();
+        
         $this->start_controls_tab( 'tab_arrow_hover', [ 'label' => 'Hover' ] );
-        $this->add_control( 'arrow_color_hover', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'color: {{VALUE}};' ] ] );
-        $this->add_control( 'arrow_bg_hover', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'background-color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_color_hover', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_bg_hover', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'default' => '#004265', 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'background-color: {{VALUE}}; border-color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_border_hover', [ 'label' => 'Border Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'border-color: {{VALUE}};' ] ] );
         $this->end_controls_tab();
         $this->end_controls_tabs();
 
@@ -351,13 +340,26 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'label' => esc_html__( 'Padding', 'mh-plug' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px' ],
+                'default' => [ 'top' => 15, 'right' => 15, 'bottom' => 15, 'left' => 15, 'unit' => 'px', 'isLinked' => true ],
 				'selectors' => [ '{{WRAPPER}} .mh-synced-arrow' => 'width: auto; height: auto; padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+        
+        $this->add_responsive_control(
+			'arrow_radius',
+			[
+				'label' => esc_html__( 'Border Radius', 'mh-plug' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+                'default' => [ 'top' => 50, 'right' => 50, 'bottom' => 50, 'left' => 50, 'unit' => '%', 'isLinked' => true ],
+				'selectors' => [ '{{WRAPPER}} .mh-synced-arrow' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
 			]
 		);
 
         $this->end_controls_section();
 	}
-protected function render() {
+
+	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$slides = $settings['slides'];
 
@@ -390,6 +392,7 @@ protected function render() {
             $next_icon_html = ob_get_clean();
             if(empty($next_icon_html)) $next_icon_html = '<i class="eicon-chevron-right"></i>';
 
+            // Arrows now generated here but will be appended via JS or placed in layout
             $prev_arrow = '<button type="button" class="mh-synced-arrow mh-prev">' . $prev_icon_html . '</button>';
             $next_arrow = '<button type="button" class="mh-synced-arrow mh-next">' . $next_icon_html . '</button>';
         }
@@ -425,13 +428,19 @@ protected function render() {
                         </div>
                     <?php endforeach; ?>
                 </div>
+                
+                <?php if ( $show_arrows ) : ?>
+                    <div class="mh-synced-arrows-container">
+                        <?php echo $prev_arrow; ?>
+                        <?php echo $next_arrow; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="mh-image-slider-container">
                 <div class="mh-image-slider" id="<?php echo esc_attr( $image_slider_id ); ?>">
                     <?php foreach ( $slides as $slide ) : ?>
-                        <div class="mh-image-slide">
-                            <div class="mh-image-box">
+                        <div class="mh-image-slide-item"> <div class="mh-image-box">
                                 <?php if ( ! empty( $slide['image']['id'] ) ) : ?>
                                     <?php echo wp_get_attachment_image( $slide['image']['id'], $settings['image_size_size'], false, [ 'class' => 'mh-slider-img' ] ); ?>
                                 <?php endif; ?>
@@ -439,12 +448,6 @@ protected function render() {
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <?php if ( $show_arrows ) : ?>
-                    <div class="mh-synced-arrows-container">
-                        <?php echo $prev_arrow; ?>
-                        <?php echo $next_arrow; ?>
-                    </div>
-                <?php endif; ?>
             </div>
 		</div>
 
@@ -472,12 +475,12 @@ protected function render() {
 
             // Right Image Slider (Center Mode)
 			$(imageId).slick({
-				slidesToShow: 3, // Show 3 items
+				slidesToShow: 3,
 				slidesToScroll: 1,
 				asNavFor: textId,
 				dots: false,
 				centerMode: true,
-                centerPadding: '0px', // No extra padding from slick
+                centerPadding: '0px',
 				focusOnSelect: true,
                 arrows: false,
                 infinite: infinite,

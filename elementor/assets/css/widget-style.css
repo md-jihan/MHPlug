@@ -536,7 +536,6 @@
     }
     .mh-slider-img { height: 250px; }
 }
-
 /* =========================================
    MH Button Widget Styles
    ========================================= */
@@ -545,8 +544,8 @@
 .mh-button {
     display: inline-block;
     line-height: 1;
-    background-color: #0073e6; /* Fallback Color */
-    color: white; /* Fallback Color */
+    background-color: #0073e6; /* Fallback */
+    color: white; /* Fallback */
     text-align: center;
     transition: all 0.3s ease-in-out;
     border: none;
@@ -562,14 +561,15 @@
     align-items: center;
 }
 
-/* Icon Container */
+/* Icon Styles */
 .mh-button-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    /* Smooth Transition for Slide Effect */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* SVG & Icon Sizing */
 .mh-button-icon svg {
     width: 1em;
     height: 1em;
@@ -581,7 +581,7 @@
     color: currentColor;
 }
 
-/* Default Spacing for Icons (Overridden by Widget Settings) */
+/* Default Icon Spacing */
 .mh-button-icon-right {
     margin-left: 8px;
 }
@@ -597,9 +597,22 @@
 .mh-button-size-lg { font-size: 18px; padding: 16px 32px; }
 .mh-button-size-xl { font-size: 22px; padding: 20px 40px; }
 
-/* Responsive Alignment Helper Classes */
+/* Responsive Alignment Support */
 .elementor-align-left .mh-button-wrapper { text-align: left; }
 .elementor-align-center .mh-button-wrapper { text-align: center; }
 .elementor-align-right .mh-button-wrapper { text-align: right; }
 .elementor-align-justify .mh-button-wrapper { text-align: justify; }
 .elementor-align-justify .mh-button { width: 100%; }
+
+/* =========================================
+   Icon Slide Animation
+   ========================================= */
+
+/* Only animate if the 'mh-icon-slide' class is present */
+.mh-icon-slide:hover .mh-button-icon-right {
+    transform: translateX(6px);
+}
+
+.mh-icon-slide:hover .mh-button-icon-left {
+    transform: translateX(-6px);
+}

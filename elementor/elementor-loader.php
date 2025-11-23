@@ -130,6 +130,7 @@ final class MH_Elementor_Loader {
             'mh_post_carousel' => ['file' => 'mh-post-carousel-widget.php', 'class' => 'MH_Post_Carousel_Widget'],
             'mh_synced_slider' => ['file'  => 'mh-synced-slider-widget.php','class' => 'MH_Synced_Slider_Widget'],
             'mh_button' => ['file'  => 'mh-button-widget.php','class' => 'MH_Button_Widget'],
+            'mh_stacked_carousel' => [ 'file' => 'mh-stacked-carousel-widget.php', 'class' => 'MH_Stacked_Carousel_Widget' ],
         ];
 
         // Command: Loop through each widget in our map.

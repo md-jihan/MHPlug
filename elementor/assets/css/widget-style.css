@@ -482,25 +482,13 @@
     margin: 0 10px; /* Base margin */
     position: relative;
     transition: all 0.4s ease; /* Smooth animation */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    
     cursor: pointer;
     overflow: hidden;
     /* Default State (Outer/Hidden) */
     transform: scale(0.7);
     opacity: 0.5;
     z-index: 1;
-}
-
-/* Overlay for Dimming */
-.mh-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6); /* Dark dimming */
-    transition: background 0.4s ease;
-    z-index: 2;
 }
 
 /* ============================
@@ -514,9 +502,7 @@
     opacity: 1;
 }
 
-.mh-stacked-slider .slick-center .mh-overlay {
-    background: rgba(0,0,0,0); /* Remove dimming */
-}
+
 
 /* IMMEDIATE NEIGHBORS (Active - Next/Prev to Center) */
 /* Next to center: Scale 0.8, Translate 0 (Slick variableWidth handles position, we just scale) */
@@ -524,28 +510,24 @@
    To achieve the 'Overlap/Stack' look, we use negative margins or transforms. */
 
 .mh-stacked-slider .slick-slide.next {
-    transform: scale(0.8) translateX(-100px); /* Pull closer to center */
+    transform: scale(0.8) translateX(-350px); /* Pull closer to center */
     z-index: 20;
-    opacity: 0.8;
 }
 
 .mh-stacked-slider .slick-slide.prev {
-    transform: scale(0.8) translateX(100px); /* Pull closer to center */
+    transform: scale(0.8) translateX(350px); /* Pull closer to center */
     z-index: 20;
-    opacity: 0.8;
 }
 
 /* OUTER SLIDES (Further away) */
 .mh-stacked-slider .slick-slide.next-2 {
     transform: scale(0.7) translateX(-200px);
     z-index: 10;
-    opacity: 0.6;
 }
 
 .mh-stacked-slider .slick-slide.prev-2 {
     transform: scale(0.7) translateX(200px);
     z-index: 10;
-    opacity: 0.6;
 }
 
 /* Hide Generic Cloned Slides to prevent mess at edges if loop isn't full */

@@ -180,7 +180,7 @@ class MH_Stacked_Carousel_Widget extends Widget_Base {
 				centerPadding: '0px',
 				variableWidth: true,
 				slidesToShow: 3,
-				arrows: false,
+				arrows: true,
 				dots: false,
 				focusOnSelect: true,
 				infinite: true,

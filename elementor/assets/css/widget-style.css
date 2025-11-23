@@ -521,16 +521,16 @@
 
 /* OUTER SLIDES (Further away) */
 .mh-stacked-slider .slick-slide.next-2 {
-    transform: scale(0.7) translateX(-200px);
+    transform: scale(0.7) translateX(-150px);
     z-index: 10;
 }
 
 .mh-stacked-slider .slick-slide.prev-2 {
-    transform: scale(0.7) translateX(200px);
+    transform: scale(0.7) translateX(150px);
     z-index: 10;
 }
 
 /* Hide Generic Cloned Slides to prevent mess at edges if loop isn't full */
 .mh-stacked-slider .slick-cloned {
-    /* transform: scale(0.5); */
+    transform: scale(0.5);
 }

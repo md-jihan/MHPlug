@@ -369,173 +369,6 @@
     transform: translateY(-2px);
 }
 
-/* =======================================
- * MH Synced Slider Widget (Final)
- * ======================================= */
-
-.mh-synced-slider-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow: hidden;
-    gap: 0; /* Gap managed by container padding/width */
-    padding: 40px 0;
-    position: relative;
-}
-
-/* --- Left: Text Slider --- */
-.mh-text-slider-container {
-    width: 35%; 
-    position: relative;
-    z-index: 5; /* High z-index to sit on top if needed */
-    padding: 50px; /* Default padding, overridden by control */
-    background-color: #1a1a1a; /* Default, overridden */
-    /* You might want a negative margin-right if you want overlap */
-    /* margin-right: -50px; */ 
-}
-
-.mh-text-slide {
-    outline: none;
-}
-
-.mh-synced-subtitle {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 15px;
-    color: #888; 
-}
-
-.mh-synced-title {
-    font-size: 48px;
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 25px;
-    color: #fff; 
-}
-
-.mh-synced-desc {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #ccc; 
-    margin-bottom: 35px;
-}
-
-.mh-synced-btn {
-    display: inline-block;
-    padding: 15px 35px;
-    text-decoration: none;
-    text-align: center;
-    font-weight: 600;
-    border: 1px solid #fff; /* Default Style from image */
-    border-radius: 30px;
-    transition: all 0.3s ease;
-    color: #fff;
-    background: transparent;
-}
-
-.mh-synced-btn:hover {
-    background-color: #fff;
-    color: #000;
-}
-
-/* --- Navigation Arrows (Inside Left Column) --- */
-.mh-synced-arrows-container {
-    display: flex;
-    gap: 15px;
-    margin-top: 40px; /* Space below button */
-    justify-content: flex-start; 
-}
-
-.mh-synced-arrow {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.3); /* Subtle border */
-    background: transparent;
-    cursor: pointer;
-    font-size: 20px;
-    color: #fff;
-    transition: all 0.3s ease;
-}
-
-.mh-synced-arrow:hover {
-    background-color: #004265;
-    border-color: #004265;
-    color: #fff;
-}
-
-
-/* --- Right: Image Slider --- */
-.mh-image-slider-container {
-    width: 65%; 
-    position: relative;
-}
-
-.mh-image-slider { margin: 0; }
-
-.mh-image-slide-item {
-    padding: 0; 
-    outline: none;
-    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
-    transform: scale(0.9); /* Inactive slides are smaller */
-    opacity: 0.5; 
-    position: relative;
-    z-index: 1;
-}
-
-.mh-image-box {
-    border-radius: 0; /* Sharp corners typically, or set by control */
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    height: 100%;
-    width: 100%;
-}
-
-.mh-slider-img {
-    width: 100%;
-    height: 400px; /* Landscape height */
-    object-fit: cover;
-    display: block;
-}
-
-/* Active Center Slide */
-.mh-image-slider .slick-center .mh-image-slide-item {
-    transform: scale(1); /* Full size */
-    opacity: 1;
-    z-index: 10; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-}
-
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-    .mh-synced-slider-wrapper {
-        flex-direction: column-reverse; 
-        padding: 30px 0;
-    }
-    .mh-text-slider-container,
-    .mh-image-slider-container {
-        width: 100%;
-    }
-    .mh-text-slider-container {
-        padding: 40px 20px;
-        text-align: center;
-    }
-    .mh-synced-arrows-container {
-        justify-content: center;
-    }
-    .mh-image-slide-item {
-        transform: scale(1); 
-        opacity: 1;
-        padding: 0 5px;
-    }
-    .mh-slider-img { height: 250px; }
-}
 /* =========================================
    MH Button Widget Styles
    ========================================= */
@@ -615,4 +448,107 @@
 
 .mh-icon-slide:hover .mh-button-icon-left {
     transform: translateX(-6px);
+}
+
+
+
+/* =========================================
+   MH Stacked Carousel Styles
+   ========================================= */
+
+.mh-stacked-wrap {
+    width: 100%;
+    position: relative;
+    padding: 50px 0;
+    overflow: hidden; /* Ensure content stays within bounds */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Optional: If you want the background instruction from prompt on the container */
+    /* background: rgba(0,0,0,0.8); */
+}
+
+.mh-stacked-slider {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.mh-stacked-item {
+    /* Fixed size set by Controls, fallback defaults here */
+    width: 400px;
+    height: 400px;
+    border-radius: 15px;
+    margin: 0 10px; /* Base margin */
+    position: relative;
+    transition: all 0.4s ease; /* Smooth animation */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    cursor: pointer;
+    overflow: hidden;
+    /* Default State (Outer/Hidden) */
+    transform: scale(0.7);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+/* Overlay for Dimming */
+.mh-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6); /* Dark dimming */
+    transition: background 0.4s ease;
+    z-index: 2;
+}
+
+/* ============================
+   3D Stacking Logic
+   ============================ */
+
+/* CENTER SLIDE (Active) */
+.mh-stacked-slider .slick-center {
+    transform: scale(1);
+    z-index: 30;
+    opacity: 1;
+}
+
+.mh-stacked-slider .slick-center .mh-overlay {
+    background: rgba(0,0,0,0); /* Remove dimming */
+}
+
+/* IMMEDIATE NEIGHBORS (Active - Next/Prev to Center) */
+/* Next to center: Scale 0.8, Translate 0 (Slick variableWidth handles position, we just scale) */
+/* Note: The prompt asked for translate(250px). In 'variableWidth' mode, Slick positions elements side-by-side. 
+   To achieve the 'Overlap/Stack' look, we use negative margins or transforms. */
+
+.mh-stacked-slider .slick-slide.next {
+    transform: scale(0.8) translateX(-100px); /* Pull closer to center */
+    z-index: 20;
+    opacity: 0.8;
+}
+
+.mh-stacked-slider .slick-slide.prev {
+    transform: scale(0.8) translateX(100px); /* Pull closer to center */
+    z-index: 20;
+    opacity: 0.8;
+}
+
+/* OUTER SLIDES (Further away) */
+.mh-stacked-slider .slick-slide.next-2 {
+    transform: scale(0.7) translateX(-200px);
+    z-index: 10;
+    opacity: 0.6;
+}
+
+.mh-stacked-slider .slick-slide.prev-2 {
+    transform: scale(0.7) translateX(200px);
+    z-index: 10;
+    opacity: 0.6;
+}
+
+/* Hide Generic Cloned Slides to prevent mess at edges if loop isn't full */
+.mh-stacked-slider .slick-cloned {
+    /* transform: scale(0.5); */
 }

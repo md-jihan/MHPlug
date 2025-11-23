@@ -30,6 +30,7 @@ class MH_Admin_Menu {
         'mh_feature_card'   => 'Feature Card',
         'mh_post_carousel'  => 'Post',
         'mh_synced_slider' => 'Synced Slider',
+        'mh_button' => 'Button',
     ];
 
     public function __construct() {

@@ -536,3 +536,70 @@
     }
     .mh-slider-img { height: 250px; }
 }
+
+/* =========================================
+   MH Button Widget Styles
+   ========================================= */
+
+/* Core Button Base */
+.mh-button {
+    display: inline-block;
+    line-height: 1;
+    background-color: #0073e6; /* Fallback Color */
+    color: white; /* Fallback Color */
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    vertical-align: middle;
+}
+
+/* Flexbox Layout for Icon Alignment */
+.mh-button-content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Icon Container */
+.mh-button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* SVG & Icon Sizing */
+.mh-button-icon svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
+
+.mh-button-icon i {
+    font-size: 1em;
+    color: currentColor;
+}
+
+/* Default Spacing for Icons (Overridden by Widget Settings) */
+.mh-button-icon-right {
+    margin-left: 8px;
+}
+
+.mh-button-icon-left {
+    margin-right: 8px;
+}
+
+/* Size Presets */
+.mh-button-size-xs { font-size: 12px; padding: 8px 16px; }
+.mh-button-size-sm { font-size: 14px; padding: 10px 20px; }
+.mh-button-size-md { font-size: 16px; padding: 12px 24px; }
+.mh-button-size-lg { font-size: 18px; padding: 16px 32px; }
+.mh-button-size-xl { font-size: 22px; padding: 20px 40px; }
+
+/* Responsive Alignment Helper Classes */
+.elementor-align-left .mh-button-wrapper { text-align: left; }
+.elementor-align-center .mh-button-wrapper { text-align: center; }
+.elementor-align-right .mh-button-wrapper { text-align: right; }
+.elementor-align-justify .mh-button-wrapper { text-align: justify; }
+.elementor-align-justify .mh-button { width: 100%; }

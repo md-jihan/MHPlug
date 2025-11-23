@@ -1,10 +1,11 @@
 <?php
 /**
- * MH Synced Slider Widget (Center Mode Fixed)
+ * MH Synced Slider Widget (Final Version)
  * Features:
- * - Text on Left (with Background/Padding)
- * - Images on Right (Center Mode)
- * - Navigation Arrows on Left
+ * - Two-way Synced Sliders (Text & Image)
+ * - Center Mode for Images
+ * - Full Styling Controls (Typography, Colors, Button, Spacing)
+ * - Slider Controls (Autoplay, Speed, Arrows, Dots)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,9 +16,9 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Image_Size;
-use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
+use Elementor\Group_Control_Background;
 use Elementor\Repeater;
 use Elementor\Utils;
 use Elementor\Icons_Manager;
@@ -76,7 +77,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Subtitle', 'mh-plug' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'ARCHITECTURE', 'mh-plug' ),
+				'default' => esc_html__( 'WELCOME TO', 'mh-plug' ),
 			]
 		);
 
@@ -85,7 +86,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Title', 'mh-plug' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'default' => esc_html__( 'MODERN HOUSE', 'mh-plug' ),
+				'default' => esc_html__( 'NATURE', 'mh-plug' ),
 			]
 		);
 
@@ -94,7 +95,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Description', 'mh-plug' ),
 				'type' => Controls_Manager::TEXTAREA,
-				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.', 'mh-plug' ),
+				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'mh-plug' ),
 			]
 		);
 
@@ -103,7 +104,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			[
 				'label' => esc_html__( 'Button Text', 'mh-plug' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => esc_html__( 'VIEW PROJECT', 'mh-plug' ),
+				'default' => esc_html__( 'EXPLORE', 'mh-plug' ),
 			]
 		);
 
@@ -127,22 +128,22 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'subtitle' => 'ARCHITECTURE',
-						'title' => 'MODERN HOUSE',
+						'subtitle' => 'WELCOME TO',
+						'title' => 'NATURE',
 						'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-						'button_text' => 'VIEW PROJECT',
+						'button_text' => 'EXPLORE',
 					],
 					[
-						'subtitle' => 'INTERIOR',
-						'title' => 'LUXURY VILLA',
+						'subtitle' => 'DISCOVER',
+						'title' => 'ADVENTURE',
 						'description' => 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-						'button_text' => 'VIEW PROJECT',
+						'button_text' => 'VIEW MORE',
 					],
 					[
-						'subtitle' => 'DESIGN',
-						'title' => 'URBAN LOFT',
+						'subtitle' => 'EXPERIENCE',
+						'title' => 'FREEDOM',
 						'description' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
-						'button_text' => 'VIEW PROJECT',
+						'button_text' => 'START NOW',
 					],
 				],
 				'title_field' => '{{{ title }}}',
@@ -169,72 +170,87 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			]
 		);
 
-        $this->add_control( 'autoplay', [ 'label' => 'Autoplay', 'type' => Controls_Manager::SWITCHER, 'default' => 'no' ] );
-        $this->add_control( 'autoplay_speed', [ 'label' => 'Speed (ms)', 'type' => Controls_Manager::NUMBER, 'default' => 3000, 'condition' => [ 'autoplay' => 'yes' ] ] );
-        $this->add_control( 'infinite', [ 'label' => 'Infinite Loop', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
-        $this->add_control( 'show_arrows', [ 'label' => 'Show Arrows', 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ] );
-        
-        $this->add_control( 'arrow_prev_icon', [ 'label' => 'Prev Icon', 'type' => Controls_Manager::ICONS, 'default' => [ 'value' => 'eicon-chevron-left', 'library' => 'eicons' ], 'condition' => [ 'show_arrows' => 'yes' ] ] );
-        $this->add_control( 'arrow_next_icon', [ 'label' => 'Next Icon', 'type' => Controls_Manager::ICONS, 'default' => [ 'value' => 'eicon-chevron-right', 'library' => 'eicons' ], 'condition' => [ 'show_arrows' => 'yes' ] ] );
+        $this->add_control(
+			'autoplay',
+			[
+				'label' => esc_html__( 'Autoplay', 'mh-plug' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'no',
+			]
+		);
+
+        $this->add_control(
+			'autoplay_speed',
+			[
+				'label' => esc_html__( 'Autoplay Speed (ms)', 'mh-plug' ),
+				'type' => Controls_Manager::NUMBER,
+				'default' => 3000,
+                'condition' => [ 'autoplay' => 'yes' ],
+			]
+		);
+
+        $this->add_control(
+			'infinite',
+			[
+				'label' => esc_html__( 'Infinite Loop', 'mh-plug' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+			]
+		);
+
+        $this->add_control(
+			'show_arrows',
+			[
+				'label' => esc_html__( 'Show Arrows', 'mh-plug' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+			]
+		);
+
+        $this->add_control(
+			'arrow_prev_icon',
+			[
+				'label' => esc_html__( 'Previous Icon', 'mh-plug' ),
+				'type' => Controls_Manager::ICONS,
+				'default' => [ 'value' => 'eicon-chevron-left', 'library' => 'eicons' ],
+				'condition' => [ 'show_arrows' => 'yes' ],
+			]
+		);
+
+        $this->add_control(
+			'arrow_next_icon',
+			[
+				'label' => esc_html__( 'Next Icon', 'mh-plug' ),
+				'type' => Controls_Manager::ICONS,
+				'default' => [ 'value' => 'eicon-chevron-right', 'library' => 'eicons' ],
+				'condition' => [ 'show_arrows' => 'yes' ],
+			]
+		);
 
 		$this->end_controls_section();
 
-		// --- STYLE: TEXT BOX ---
+		// --- STYLE: TEXT CONTENT ---
 		$this->start_controls_section(
-			'section_style_text_box',
+			'section_style_text',
 			[
-				'label' => esc_html__( 'Text Box (Left)', 'mh-plug' ),
+				'label' => esc_html__( 'Text Content (Left)', 'mh-plug' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 
-        // --- NEW CONTROLS FOR TEXT BOX ---
-        $this->add_control(
-			'text_box_bg_color',
-			[
-				'label' => esc_html__( 'Background Color', 'mh-plug' ),
-				'type' => Controls_Manager::COLOR,
-				'default' => '#1a1a1a',
-				'selectors' => [
-					'{{WRAPPER}} .mh-text-slider-container' => 'background-color: {{VALUE}};',
-				],
-			]
-		);
-
-        $this->add_responsive_control(
-			'text_box_padding',
-			[
-				'label' => esc_html__( 'Padding', 'mh-plug' ),
-				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
-                'default' => [
-                    'top' => 50,
-                    'right' => 50,
-                    'bottom' => 50,
-                    'left' => 50,
-                    'unit' => 'px',
-                    'isLinked' => true,
-                ],
-				'selectors' => [
-					'{{WRAPPER}} .mh-text-slider-container' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-				],
-			]
-		);
-        // --------------------------------
-
-        $this->add_control( 'heading_subtitle', [ 'label' => 'Subtitle', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
-		$this->add_control( 'subtitle_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#888', 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'color: {{VALUE}};' ] ] );
+        $this->add_control( 'heading_subtitle', [ 'label' => 'Subtitle', 'type' => Controls_Manager::HEADING ] );
+		$this->add_control( 'subtitle_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'subtitle_typography', 'selector' => '{{WRAPPER}} .mh-synced-subtitle' ] );
         $this->add_responsive_control( 'subtitle_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
 
         $this->add_control( 'heading_title_main', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
-		$this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'title_typography', 'selector' => '{{WRAPPER}} .mh-synced-title' ] );
         $this->add_responsive_control( 'title_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
         $this->add_control( 'heading_desc', [ 'label' => 'Description', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
-		$this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#ccc', 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'desc_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'desc_typography', 'selector' => '{{WRAPPER}} .mh-synced-desc' ] );
         $this->add_responsive_control( 'desc_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-desc' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
@@ -392,7 +408,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
             $next_icon_html = ob_get_clean();
             if(empty($next_icon_html)) $next_icon_html = '<i class="eicon-chevron-right"></i>';
 
-            // We attach arrows to the Image Slider
+            // Arrows now generated here but will be appended via JS or placed in layout
             $prev_arrow = '<button type="button" class="mh-synced-arrow mh-prev">' . $prev_icon_html . '</button>';
             $next_arrow = '<button type="button" class="mh-synced-arrow mh-next">' . $next_icon_html . '</button>';
         }
@@ -406,7 +422,8 @@ class MH_Synced_Slider_Widget extends Widget_Base {
              data-text-id="<?php echo esc_attr($text_slider_id); ?>"
              data-image-id="<?php echo esc_attr($image_slider_id); ?>">
             
-            <div class="mh-text-slider-container">
+            <!-- Left Side: Text Slider + Arrows -->
+			<div class="mh-text-slider-container">
                 <div class="mh-text-slider" id="<?php echo esc_attr( $text_slider_id ); ?>">
                     <?php foreach ( $slides as $slide ) : ?>
                         <div class="mh-text-slide">
@@ -429,6 +446,8 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                         </div>
                     <?php endforeach; ?>
                 </div>
+                
+                <!-- MOVED ARROWS HERE: Inside the Text Container -->
                 <?php if ( $show_arrows ) : ?>
                     <div class="mh-synced-arrows-container">
                         <?php echo $prev_arrow; ?>
@@ -437,10 +456,12 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 <?php endif; ?>
             </div>
 
-            <div class="mh-image-slider-container">
+            <!-- Right Side: Image Slider -->
+			<div class="mh-image-slider-container">
                 <div class="mh-image-slider" id="<?php echo esc_attr( $image_slider_id ); ?>">
                     <?php foreach ( $slides as $slide ) : ?>
-                        <div class="mh-image-slide-item"> <div class="mh-image-box">
+                        <div class="mh-image-slide-item"> <!-- Changed class for CSS targeting -->
+                            <div class="mh-image-box">
                                 <?php if ( ! empty( $slide['image']['id'] ) ) : ?>
                                     <?php echo wp_get_attachment_image( $slide['image']['id'], $settings['image_size_size'], false, [ 'class' => 'mh-slider-img' ] ); ?>
                                 <?php endif; ?>
@@ -451,12 +472,13 @@ class MH_Synced_Slider_Widget extends Widget_Base {
             </div>
 		</div>
 
-        <script>
+        <!-- Inline Script to Init Sliders -->
+		<script>
 		jQuery(document).ready(function($) {
             var $wrapper = $('.elementor-element-<?php echo esc_attr($id); ?> .mh-synced-slider-wrapper');
             var textId = '#' + $wrapper.data('text-id');
             var imageId = '#' + $wrapper.data('image-id');
-            var autoplay = $wrapper.data('autoplay') === true; // convert string 'true' if needed
+            var autoplay = $wrapper.data('autoplay') === true;
             var speed = $wrapper.data('speed');
             var infinite = $wrapper.data('infinite') === true;
 

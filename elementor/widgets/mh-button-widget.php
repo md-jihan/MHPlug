@@ -5,125 +5,334 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
-use Elementor\Group_Control_Image_Size;
-use Elementor\Utils;
+use Elementor\Group_Control_Typography;
+use Elementor\Group_Control_Box_Shadow;
+use Elementor\Group_Control_Border;
+use Elementor\Group_Control_Background;
+use Elementor\Group_Control_Text_Shadow;
+use Elementor\Icons_Manager;
 
-class mh_synced_slider extends Widget_Base {
+class MH_Button_Widget extends Widget_Base {
 
 	public function get_name() {
-		return 'mh_stacked_carousel';
+		return 'mh_button';
 	}
 
 	public function get_title() {
-		return __( 'MH Stacked Carousel', 'mhds-plug' );
+		return __( 'MH Button', 'mhds-plug' );
 	}
 
 	public function get_icon() {
-		return 'eicon-post-slider';
+		return 'eicon-button';
 	}
 
 	public function get_categories() {
-		return [ 'mh-plug-widgets' ];
-	}
-
-	/**
-	 * Load Styles & Scripts
-	 * Note: Slick is already loaded globally by mh-plug.php
-	 */
-	public function get_script_depends() {
-		return [ 'mh-slick-js' ]; // Ensure Slick is available
+		return [ 'mh-plug-widgets' ]; // Updated Category ID
 	}
 
 	protected function register_controls() {
+		// =========================================
+		// Content Tab
+		// =========================================
 		$this->start_controls_section(
 			'content_section',
 			[
-				'label' => __( 'Carousel Items', 'mhds-plug' ),
+				'label' => __( 'Content', 'mhds-plug' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
 			]
 		);
 
-		$repeater = new \Elementor\Repeater();
-
-		$repeater->add_control(
-			'image',
+		$this->add_control(
+			'button_text',
 			[
-				'label'   => __( 'Image', 'mhds-plug' ),
-				'type'    => Controls_Manager::MEDIA,
-				'default' => [
-					'url' => Utils::get_placeholder_image_src(),
+				'label'       => __( 'Text', 'mhds-plug' ),
+				'type'        => Controls_Manager::TEXT,
+				'default'     => __( 'Click Here', 'mhds-plug' ),
+				'placeholder' => __( 'Click Here', 'mhds-plug' ),
+				'dynamic'     => [
+					'active' => true,
 				],
 			]
 		);
 
 		$this->add_control(
-			'slides',
+			'button_url',
 			[
-				'label'       => __( 'Slides', 'mhds-plug' ),
-				'type'        => Controls_Manager::REPEATER,
-				'fields'      => $repeater->get_controls(),
+				'label'       => __( 'Link', 'mhds-plug' ),
+				'type'        => Controls_Manager::URL,
+				'placeholder' => __( 'https://your-link.com', 'mhds-plug' ),
 				'default'     => [
-					[ 'image' => [ 'url' => Utils::get_placeholder_image_src() ] ],
-					[ 'image' => [ 'url' => Utils::get_placeholder_image_src() ] ],
-					[ 'image' => [ 'url' => Utils::get_placeholder_image_src() ] ],
-					[ 'image' => [ 'url' => Utils::get_placeholder_image_src() ] ],
-					[ 'image' => [ 'url' => Utils::get_placeholder_image_src() ] ],
+					'url' => '#',
 				],
-				'title_field' => 'Slide',
+				'dynamic'     => [
+					'active' => true,
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'align',
+			[
+				'label'        => __( 'Alignment', 'mhds-plug' ),
+				'type'         => Controls_Manager::CHOOSE,
+				'options'      => [
+					'left'    => [
+						'title' => __( 'Left', 'mhds-plug' ),
+						'icon'  => 'eicon-text-align-left',
+					],
+					'center'  => [
+						'title' => __( 'Center', 'mhds-plug' ),
+						'icon'  => 'eicon-text-align-center',
+					],
+					'right'   => [
+						'title' => __( 'Right', 'mhds-plug' ),
+						'icon'  => 'eicon-text-align-right',
+					],
+					'justify' => [
+						'title' => __( 'Justified', 'mhds-plug' ),
+						'icon'  => 'eicon-text-align-justify',
+					],
+				],
+				'prefix_class' => 'elementor%s-align-',
+				'default'      => '',
+			]
+		);
+
+		$this->add_control(
+			'size',
+			[
+				'label'   => __( 'Size', 'mhds-plug' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'sm',
+				'options' => [
+					'xs' => __( 'Extra Small', 'mhds-plug' ),
+					'sm' => __( 'Small', 'mhds-plug' ),
+					'md' => __( 'Medium', 'mhds-plug' ),
+					'lg' => __( 'Large', 'mhds-plug' ),
+					'xl' => __( 'Extra Large', 'mhds-plug' ),
+				],
+			]
+		);
+
+		$this->add_control(
+			'icon',
+			[
+				'label'   => __( 'Icon', 'mhds-plug' ),
+				'type'    => Controls_Manager::ICONS,
+				'default' => [
+					'value'   => 'fas fa-arrow-right',
+					'library' => 'fa-solid',
+				],
+			]
+		);
+
+		$this->add_control(
+			'icon_align',
+			[
+				'label'     => __( 'Icon Position', 'mhds-plug' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'right',
+				'options'   => [
+					'left'  => __( 'Before', 'mhds-plug' ),
+					'right' => __( 'After', 'mhds-plug' ),
+				],
+				'condition' => [
+					'icon[value]!' => '',
+				],
+			]
+		);
+
+		$this->add_control(
+			'icon_indent',
+			[
+				'label'     => __( 'Icon Spacing', 'mhds-plug' ),
+				'type'      => Controls_Manager::SLIDER,
+				'range'     => [
+					'px' => [
+						'max' => 50,
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .mh-button-icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .mh-button-icon-left'  => 'margin-right: {{SIZE}}{{UNIT}};',
+				],
+				'condition' => [
+					'icon[value]!' => '',
+				],
 			]
 		);
 
 		$this->end_controls_section();
 
+		// =========================================
+		// Style Tab
+		// =========================================
 		$this->start_controls_section(
 			'style_section',
 			[
-				'label' => __( 'Carousel Settings', 'mhds-plug' ),
+				'label' => __( 'Button Style', 'mhds-plug' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
 
-		$this->add_control(
-			'slide_height',
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
 			[
-				'label'      => __( 'Card Height', 'mhds-plug' ),
-				'type'       => Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [
-					'px' => [
-						'min' => 200,
-						'max' => 600,
-					],
-				],
-				'default'    => [
-					'unit' => 'px',
-					'size' => 400,
-				],
-				'selectors'  => [
-					'{{WRAPPER}} .mh-stacked-item' => 'height: {{SIZE}}{{UNIT}};',
-				],
+				'name'     => 'typography',
+				'selector' => '{{WRAPPER}} .mh-button',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Text_Shadow::get_type(),
+			[
+				'name'     => 'text_shadow',
+				'selector' => '{{WRAPPER}} .mh-button',
+			]
+		);
+
+		$this->start_controls_tabs( 'tabs_button_style' );
+
+		// Normal State
+		$this->start_controls_tab(
+			'tab_button_normal',
+			[
+				'label' => __( 'Normal', 'mhds-plug' ),
 			]
 		);
 
 		$this->add_control(
-			'slide_width',
+			'button_text_color',
 			[
-				'label'      => __( 'Card Width', 'mhds-plug' ),
-				'type'       => Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [
-					'px' => [
-						'min' => 200,
-						'max' => 600,
-					],
+				'label'     => __( 'Text Color', 'mhds-plug' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#ffffff',
+				'selectors' => [
+					'{{WRAPPER}} .mh-button'     => 'color: {{VALUE}};',
+					'{{WRAPPER}} .mh-button svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .mh-button i'   => 'color: {{VALUE}};',
 				],
-				'default'    => [
-					'unit' => 'px',
-					'size' => 400,
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name'     => 'background',
+				'label'    => __( 'Background', 'mhds-plug' ),
+				'types'    => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .mh-button',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			[
+				'name'     => 'button_box_shadow',
+				'selector' => '{{WRAPPER}} .mh-button',
+			]
+		);
+
+		$this->end_controls_tab();
+
+		// Hover State
+		$this->start_controls_tab(
+			'tab_button_hover',
+			[
+				'label' => __( 'Hover', 'mhds-plug' ),
+			]
+		);
+
+		$this->add_control(
+			'hover_color',
+			[
+				'label'     => __( 'Text Color', 'mhds-plug' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .mh-button:hover, {{WRAPPER}} .mh-button:focus' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .mh-button:hover svg, {{WRAPPER}} .mh-button:focus svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .mh-button:hover i, {{WRAPPER}} .mh-button:focus i' => 'color: {{VALUE}};',
 				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name'     => 'button_background_hover',
+				'label'    => __( 'Background', 'mhds-plug' ),
+				'types'    => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .mh-button:hover, {{WRAPPER}} .mh-button:focus',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			[
+				'name'     => 'button_hover_box_shadow',
+				'selector' => '{{WRAPPER}} .mh-button:hover',
+			]
+		);
+
+		$this->add_control(
+			'hover_animation',
+			[
+				'label' => __( 'Hover Animation', 'mhds-plug' ),
+				'type'  => Controls_Manager::HOVER_ANIMATION,
+			]
+		);
+
+		// Icon Slide Effect Toggle
+		$this->add_control(
+			'icon_hover_animation',
+			[
+				'label'        => __( 'Icon Slide Effect', 'mhds-plug' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => __( 'Yes', 'mhds-plug' ),
+				'label_off'    => __( 'No', 'mhds-plug' ),
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'separator'    => 'before',
+				'condition'    => [
+					'icon[value]!' => '',
+				],
+			]
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name'      => 'border',
+				'selector'  => '{{WRAPPER}} .mh-button',
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_control(
+			'border_radius',
+			[
+				'label'      => __( 'Border Radius', 'mhds-plug' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
 				'selectors'  => [
-					'{{WRAPPER}} .mh-stacked-item' => 'width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .mh-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'text_padding',
+			[
+				'label'      => __( 'Padding', 'mhds-plug' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', '%' ],
+				'selectors'  => [
+					'{{WRAPPER}} .mh-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'separator'  => 'before',
 			]
 		);
 
@@ -133,85 +342,65 @@ class mh_synced_slider extends Widget_Base {
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 
-		if ( empty( $settings['slides'] ) ) {
-			return;
+		$this->add_render_attribute( 'wrapper', 'class', 'mh-button-wrapper' );
+		$this->add_render_attribute( 'button', 'class', 'mh-button' );
+
+		// Size Class
+		if ( ! empty( $settings['size'] ) ) {
+			$this->add_render_attribute( 'button', 'class', 'mh-button-size-' . $settings['size'] );
 		}
 
-		// Unique ID for this widget instance to avoid conflicts
-		$id = 'mh-stacked-slider-' . $this->get_id();
+		// Link
+		if ( ! empty( $settings['button_url']['url'] ) ) {
+			$this->add_link_attributes( 'button', $settings['button_url'] );
+		}
+
+		// Hover Animation Class
+		if ( $settings['hover_animation'] ) {
+			$this->add_render_attribute( 'button', 'class', 'elementor-animation-' . $settings['hover_animation'] );
+		}
+
+		// Icon Slide Class
+		if ( 'yes' === $settings['icon_hover_animation'] ) {
+			$this->add_render_attribute( 'button', 'class', 'mh-icon-slide' );
+		}
 		?>
-
-		<div class="mh-stacked-wrap">
-			<div class="mh-stacked-slider" id="<?php echo esc_attr( $id ); ?>">
-				<?php foreach ( $settings['slides'] as $slide ) : ?>
-					<div class="mh-stacked-item item">
-						<?php 
-						$image_url = ! empty( $slide['image']['url'] ) ? $slide['image']['url'] : '';
-						if ( $image_url ) : ?>
-							<img src="<?php echo esc_url( $image_url ); ?>" alt="Slide Image" />
-							<div class="mh-overlay"></div>
-						<?php endif; ?>
-					</div>
-				<?php endforeach; ?>
-			</div>
+		<div <?php echo $this->get_render_attribute_string( 'wrapper' ); ?>>
+			<a <?php echo $this->get_render_attribute_string( 'button' ); ?>>
+				<?php $this->render_button_content( $settings ); ?>
+			</a>
 		</div>
-
-		<script>
-		jQuery(document).ready(function($) {
-			var $slider = $('#<?php echo esc_attr( $id ); ?>');
-
-			// 1. Image Conversion Function (as requested)
-			$slider.find('.mh-stacked-item').each(function() {
-				var $img = $(this).find('img');
-				var src = $img.attr('src');
-				if(src) {
-					$(this).css({
-						'background-image': 'url(' + src + ')',
-						'background-size': 'cover',
-						'background-position': 'center'
-					});
-					$img.hide();
-				}
-			});
-
-			// 2. Initialize Slick Slider
-			$slider.slick({
-				centerMode: true,
-				centerPadding: '0px',
-				variableWidth: true,
-				slidesToShow: 3,
-				arrows: false,
-				dots: false,
-				focusOnSelect: true,
-				infinite: true,
-				speed: 400,
-				cssEase: 'ease'
-			});
-
-			// 3. Custom Class Handling for 3D Depth
-			// Slick sets .slick-center. We need to identify Next/Prev for specific transforms.
-			// This logic runs on init and after change to ensure classes are correct.
-			function updateClasses() {
-				$slider.find('.slick-slide').removeClass('prev next next-2 prev-2');
-				var $center = $slider.find('.slick-center');
-				
-				// Identify immediate siblings
-				$center.prev('.slick-slide').addClass('prev');
-				$center.next('.slick-slide').addClass('next');
-				
-				// Identify outer slides (2 steps away)
-				$center.prev().prev('.slick-slide').addClass('prev-2');
-				$center.next().next('.slick-slide').addClass('next-2');
-			}
-
-			$slider.on('init afterChange', function(event, slick, currentSlide){
-				updateClasses();
-			});
-			
-			// Initial call (Slick sometimes needs a moment)
-			setTimeout(updateClasses, 50);
-		});
-		</script>
 		<?php
+	}
+
+	protected function render_button_content( $settings ) {
+		$this->add_render_attribute( 'content-wrapper', 'class', 'mh-button-content-wrapper' );
+
+		$icon_align = $settings['icon_align'];
+		$this->add_render_attribute( 'icon-align', 'class', [
+			'mh-button-icon',
+			'mh-button-icon-' . $icon_align,
+		] );
+
+		echo '<span ' . $this->get_render_attribute_string( 'content-wrapper' ) . '>';
+
+		// Render Icon (Left)
+		if ( ! empty( $settings['icon']['value'] ) && 'left' === $icon_align ) : ?>
+			<span <?php echo $this->get_render_attribute_string( 'icon-align' ); ?>>
+				<?php Icons_Manager::render_icon( $settings['icon'], [ 'aria-hidden' => 'true' ] ); ?>
+			</span>
+		<?php endif; ?>
+
+		<span class="mh-button-text"><?php echo esc_html( $settings['button_text'] ); ?></span>
+
+		<?php
+		// Render Icon (Right)
+		if ( ! empty( $settings['icon']['value'] ) && 'right' === $icon_align ) : ?>
+			<span <?php echo $this->get_render_attribute_string( 'icon-align' ); ?>>
+				<?php Icons_Manager::render_icon( $settings['icon'], [ 'aria-hidden' => 'true' ] ); ?>
+			</span>
+		<?php endif; ?>
+
+		<?php echo '</span>';
 	}
 }

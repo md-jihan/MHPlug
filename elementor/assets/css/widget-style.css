@@ -369,9 +369,8 @@
     transform: translateY(-2px);
 }
 
-
 /* =======================================
- * MH Synced Slider Widget
+ * MH Synced Slider Widget (Final)
  * ======================================= */
 
 .mh-synced-slider-wrapper {
@@ -379,7 +378,7 @@
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
-    gap: 0; 
+    gap: 0; /* Gap managed by container padding/width */
     padding: 40px 0;
     position: relative;
 }
@@ -388,54 +387,152 @@
 .mh-text-slider-container {
     width: 35%; 
     position: relative;
-    z-index: 5;
-    padding: 50px;
-    background-color: #1a1a1a; /* Default color */
+    z-index: 5; /* High z-index to sit on top if needed */
+    padding: 50px; /* Default padding, overridden by control */
+    background-color: #1a1a1a; /* Default, overridden */
+    /* You might want a negative margin-right if you want overlap */
+    /* margin-right: -50px; */ 
 }
 
-.mh-text-slide { outline: none; }
-.mh-synced-subtitle { display: block; font-size: 14px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; color: #888; }
-.mh-synced-title { font-size: 48px; font-weight: 700; line-height: 1.1; margin-bottom: 25px; color: #fff; }
-.mh-synced-desc { font-size: 16px; line-height: 1.6; color: #ccc; margin-bottom: 35px; }
-
-.mh-synced-btn { 
-    display: inline-block; padding: 15px 35px; text-decoration: none; text-align: center; 
-    font-weight: 600; border: 1px solid #fff; border-radius: 30px; transition: all 0.3s ease; 
-    color: #fff; background: transparent; 
+.mh-text-slide {
+    outline: none;
 }
-.mh-synced-btn:hover { background-color: #fff; color: #000; }
+
+.mh-synced-subtitle {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    color: #888; 
+}
+
+.mh-synced-title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 25px;
+    color: #fff; 
+}
+
+.mh-synced-desc {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ccc; 
+    margin-bottom: 35px;
+}
+
+.mh-synced-btn {
+    display: inline-block;
+    padding: 15px 35px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #fff; /* Default Style from image */
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    color: #fff;
+    background: transparent;
+}
+
+.mh-synced-btn:hover {
+    background-color: #fff;
+    color: #000;
+}
 
 /* --- Navigation Arrows (Inside Left Column) --- */
-.mh-synced-arrows-container { 
-    display: flex; gap: 15px; margin-top: 40px; justify-content: flex-start; 
+.mh-synced-arrows-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px; /* Space below button */
+    justify-content: flex-start; 
 }
-.mh-synced-arrow { 
-    display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; 
-    border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: transparent; 
-    cursor: pointer; font-size: 20px; color: #fff; transition: all 0.3s ease; 
+
+.mh-synced-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3); /* Subtle border */
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+    transition: all 0.3s ease;
 }
-.mh-synced-arrow:hover { background-color: #004265; border-color: #004265; color: #fff; }
+
+.mh-synced-arrow:hover {
+    background-color: #004265;
+    border-color: #004265;
+    color: #fff;
+}
+
 
 /* --- Right: Image Slider --- */
-.mh-image-slider-container { width: 65%; position: relative; }
-.mh-image-slider { margin: 0; }
-.mh-image-slide-item { 
-    padding: 0; outline: none; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
-    transform: scale(0.8); opacity: 0.5; position: relative; z-index: 1; margin: 0 -30px; 
+.mh-image-slider-container {
+    width: 65%; 
+    position: relative;
 }
 
-.mh-image-box { border-radius: 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 100%; }
-.mh-slider-img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.mh-image-slider { margin: 0; }
+
+.mh-image-slide-item {
+    padding: 0; 
+    outline: none;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    transform: scale(0.9); /* Inactive slides are smaller */
+    opacity: 0.5; 
+    position: relative;
+    z-index: 1;
+}
+
+.mh-image-box {
+    border-radius: 0; /* Sharp corners typically, or set by control */
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    height: 100%;
+    width: 100%;
+}
+
+.mh-slider-img {
+    width: 100%;
+    height: 400px; /* Landscape height */
+    object-fit: cover;
+    display: block;
+}
 
 /* Active Center Slide */
-.mh-image-slider .slick-center .mh-image-slide-item { transform: scale(1.1); opacity: 1; z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+.mh-image-slider .slick-center .mh-image-slide-item {
+    transform: scale(1); /* Full size */
+    opacity: 1;
+    z-index: 10; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
 
-/* Responsive */
+/* --- Responsive --- */
 @media (max-width: 1024px) {
-    .mh-synced-slider-wrapper { flex-direction: column-reverse; padding: 30px 0; }
-    .mh-text-slider-container, .mh-image-slider-container { width: 100%; }
-    .mh-text-slider-container { padding: 40px 20px; text-align: center; }
-    .mh-synced-arrows-container { justify-content: center; }
-    .mh-image-slide-item { transform: scale(1); opacity: 1; margin: 0; padding: 0 10px; }
-    .mh-image-slider .slick-center .mh-image-slide-item { transform: scale(1); }
+    .mh-synced-slider-wrapper {
+        flex-direction: column-reverse; 
+        padding: 30px 0;
+    }
+    .mh-text-slider-container,
+    .mh-image-slider-container {
+        width: 100%;
+    }
+    .mh-text-slider-container {
+        padding: 40px 20px;
+        text-align: center;
+    }
+    .mh-synced-arrows-container {
+        justify-content: center;
+    }
+    .mh-image-slide-item {
+        transform: scale(1); 
+        opacity: 1;
+        padding: 0 5px;
+    }
+    .mh-slider-img { height: 250px; }
 }

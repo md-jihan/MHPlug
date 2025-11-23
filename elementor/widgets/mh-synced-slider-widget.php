@@ -1,7 +1,10 @@
 <?php
 /**
- * MH Synced Slider Widget
- * Layout: Left Text Slider (Synced) + Right Image Slider (Center Mode)
+ * MH Synced Slider Widget (Architecture Style)
+ * Features:
+ * - Left: Text Slider with Background & Padding
+ * - Right: Image Slider (Center Mode)
+ * - Custom Navigation Arrows (Left Aligned)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -185,6 +188,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			]
 		);
 
+        // --- NEW CONTROLS FOR TEXT BOX ---
         $this->add_control(
 			'text_box_bg_color',
 			[
@@ -216,11 +220,13 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				],
 			]
 		);
+        // --------------------------------
 
         $this->add_control( 'heading_subtitle', [ 'label' => 'Subtitle', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
 		$this->add_control( 'subtitle_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#888', 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'color: {{VALUE}};' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'subtitle_typography', 'selector' => '{{WRAPPER}} .mh-synced-subtitle' ] );
         $this->add_responsive_control( 'subtitle_margin', [ 'label' => 'Margin', 'type' => Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .mh-synced-subtitle' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
+
 
         $this->add_control( 'heading_title_main', [ 'label' => 'Title', 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
 		$this->add_control( 'title_color', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-title' => 'color: {{VALUE}};' ] ] );
@@ -324,7 +330,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
         $this->start_controls_tab( 'tab_arrow_hover', [ 'label' => 'Hover' ] );
         $this->add_control( 'arrow_color_hover', [ 'label' => 'Color', 'type' => Controls_Manager::COLOR, 'default' => '#fff', 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'color: {{VALUE}};' ] ] );
         $this->add_control( 'arrow_bg_hover', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'default' => '#004265', 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'background-color: {{VALUE}}; border-color: {{VALUE}};' ] ] );
-        $this->add_control( 'arrow_border_hover', [ 'label' => 'Border', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'border-color: {{VALUE}};' ] ] );
+        $this->add_control( 'arrow_border_hover', [ 'label' => 'Border Color', 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .mh-synced-arrow:hover' => 'border-color: {{VALUE}};' ] ] );
         $this->end_controls_tab();
         $this->end_controls_tabs();
 
@@ -468,7 +474,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
                 autoplay: autoplay,
                 autoplaySpeed: speed,
                 infinite: infinite,
-                draggable: false 
+                draggable: false
 			});
 
             // Right Image Slider (Center Mode)

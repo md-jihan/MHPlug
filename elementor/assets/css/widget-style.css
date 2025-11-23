@@ -370,162 +370,72 @@
 }
 
 
-
 /* =======================================
- * MH Modern Slider Widget
+ * MH Synced Slider Widget
  * ======================================= */
 
-.mh-modern-slider-wrapper {
-    position: relative;
+.mh-synced-slider-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     overflow: hidden;
-}
-
-/* The main flex container for each slide */
-.mh-modern-flex-container {
-    display: flex;
-    align-items: center;
-    min-height: 500px; /* Adjust base height */
-}
-
-/* Left Column: Text */
-.mh-modern-text-col {
-    width: 40%;
+    gap: 0; 
+    padding: 40px 0;
     position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
 }
 
-/* The text box itself */
-.mh-modern-text-content {
-    background-color: #1a1a1a; /* Default dark */
-    padding: 60px;
-    width: 100%;
-    box-sizing: border-box;
-    /* Pull it to the right to overlap image? No, standard layout puts text left. */
+/* --- Left: Text Slider --- */
+.mh-text-slider-container {
+    width: 35%; 
+    position: relative;
+    z-index: 5;
+    padding: 50px;
+    background-color: #1a1a1a; /* Default color */
 }
 
-.mh-modern-subtitle {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #888;
-    margin-bottom: 15px;
+.mh-text-slide { outline: none; }
+.mh-synced-subtitle { display: block; font-size: 14px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; color: #888; }
+.mh-synced-title { font-size: 48px; font-weight: 700; line-height: 1.1; margin-bottom: 25px; color: #fff; }
+.mh-synced-desc { font-size: 16px; line-height: 1.6; color: #ccc; margin-bottom: 35px; }
+
+.mh-synced-btn { 
+    display: inline-block; padding: 15px 35px; text-decoration: none; text-align: center; 
+    font-weight: 600; border: 1px solid #fff; border-radius: 30px; transition: all 0.3s ease; 
+    color: #fff; background: transparent; 
+}
+.mh-synced-btn:hover { background-color: #fff; color: #000; }
+
+/* --- Navigation Arrows (Inside Left Column) --- */
+.mh-synced-arrows-container { 
+    display: flex; gap: 15px; margin-top: 40px; justify-content: flex-start; 
+}
+.mh-synced-arrow { 
+    display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; 
+    border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: transparent; 
+    cursor: pointer; font-size: 20px; color: #fff; transition: all 0.3s ease; 
+}
+.mh-synced-arrow:hover { background-color: #004265; border-color: #004265; color: #fff; }
+
+/* --- Right: Image Slider --- */
+.mh-image-slider-container { width: 65%; position: relative; }
+.mh-image-slider { margin: 0; }
+.mh-image-slide-item { 
+    padding: 0; outline: none; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    transform: scale(0.8); opacity: 0.5; position: relative; z-index: 1; margin: 0 -30px; 
 }
 
-.mh-modern-title {
-    font-size: 50px;
-    font-weight: 700;
-    line-height: 1.1;
-    color: #fff;
-    margin-bottom: 25px;
-}
+.mh-image-box { border-radius: 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 100%; }
+.mh-slider-img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
 
-.mh-modern-desc {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #ccc;
-    margin-bottom: 35px;
-}
-
-.mh-modern-btn {
-    display: inline-block;
-    padding: 15px 35px;
-    border: 1px solid #fff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-.mh-modern-btn:hover {
-    background-color: #fff;
-    color: #000;
-}
-
-/* Navigation Arrows */
-.mh-modern-nav-wrapper {
-    margin-top: 40px;
-    display: flex;
-    gap: 15px;
-}
-
-.mh-modern-nav-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 18px;
-}
-.mh-modern-nav-btn:hover {
-    background-color: #004265;
-    border-color: #004265;
-}
-
-/* Right Column: Image */
-.mh-modern-image-col {
-    width: 60%;
-    height: 100%;
-    position: absolute; /* Break out of flow to fill right side */
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-}
-
-.mh-modern-image-bg {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* Animation for slide content */
-.slick-active .mh-modern-text-content {
-    animation: mhFadeInLeft 0.8s ease forwards;
-}
-.slick-active .mh-modern-image-bg {
-    animation: mhZoomIn 6s linear forwards; /* Subtle zoom effect */
-}
-
-@keyframes mhFadeInLeft {
-    from { opacity: 0; transform: translateX(-50px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-@keyframes mhZoomIn {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
-}
+/* Active Center Slide */
+.mh-image-slider .slick-center .mh-image-slide-item { transform: scale(1.1); opacity: 1; z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .mh-modern-flex-container {
-        flex-direction: column-reverse;
-        min-height: auto;
-    }
-    .mh-modern-text-col {
-        width: 100%;
-        padding: 0;
-    }
-    .mh-modern-image-col {
-        position: relative;
-        width: 100%;
-        height: 300px; /* Fixed height for mobile image */
-    }
-    .mh-modern-text-content {
-        padding: 40px 20px;
-        text-align: center;
-    }
-    .mh-modern-nav-wrapper {
-        justify-content: center;
-    }
+    .mh-synced-slider-wrapper { flex-direction: column-reverse; padding: 30px 0; }
+    .mh-text-slider-container, .mh-image-slider-container { width: 100%; }
+    .mh-text-slider-container { padding: 40px 20px; text-align: center; }
+    .mh-synced-arrows-container { justify-content: center; }
+    .mh-image-slide-item { transform: scale(1); opacity: 1; margin: 0; padding: 0 10px; }
+    .mh-image-slider .slick-center .mh-image-slide-item { transform: scale(1); }
 }

@@ -7,8 +7,6 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
 use Elementor\Utils;
 
 class MH_Synced_Slider_Widget extends Widget_Base {
@@ -18,7 +16,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 	}
 
 	public function get_title() {
-		return __( 'MH Synced Slider', 'mhds-plug' );
+		return __( 'MH Hero Slider', 'mhds-plug' );
 	}
 
 	public function get_icon() {
@@ -117,42 +115,12 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'type'        => Controls_Manager::REPEATER,
 				'fields'      => $repeater->get_controls(),
 				'default'     => [
+					[ 'heading' => 'Babies Soft Toys', 'subtitle' => 'SEASONAL SALE - UP TO 60% OFF', 'price' => 'Rs.554' ],
+					[ 'heading' => 'Plush Animals', 'subtitle' => 'SEASONAL SALE - UP TO 30% OFF', 'price' => 'Rs.855' ],
+					[ 'heading' => 'Teething Toys', 'subtitle' => 'SEASONAL SALE - UP TO 40% OFF', 'price' => 'Rs.750' ],
 					[ 'heading' => 'Blankie Buddies', 'subtitle' => 'SEASONAL SALE - UP TO 60% OFF', 'price' => 'Rs.954' ],
-					[ 'heading' => 'Plush Animals', 'subtitle' => 'NEW ARRIVALS', 'price' => 'Rs.1200' ],
-					[ 'heading' => 'Teething Toys', 'subtitle' => 'BEST SELLERS', 'price' => 'Rs.500' ],
 				],
 				'title_field' => '{{{ heading }}}',
-			]
-		);
-
-		$this->end_controls_section();
-
-		// Style Tab - Container
-		$this->start_controls_section(
-			'container_style',
-			[
-				'label' => __( 'Container', 'mhds-plug' ),
-				'tab'   => Controls_Manager::TAB_STYLE,
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Background::get_type(),
-			[
-				'name'     => 'wrapper_bg',
-				'selector' => '{{WRAPPER}} .mh-synced-wrapper',
-			]
-		);
-
-		$this->add_responsive_control(
-			'container_padding',
-			[
-				'label'      => __( 'Padding', 'mhds-plug' ),
-				'type'       => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
-				'selectors'  => [
-					'{{WRAPPER}} .mh-synced-wrapper' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-				],
 			]
 		);
 
@@ -253,36 +221,28 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
 			var imageId = '#mh-image-<?php echo esc_attr( $id ); ?>';
 
-			// 1. Content Slider (Fade, Control)
+			// 1. Content Slider
 			$(contentId).slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
-				arrows: true,
-				fade: true,
+				arrows: false,
+				fade: true, // Fade effect as seen in video
 				asNavFor: imageId,
+				autoplay: true,
+				autoplaySpeed: 3000,
 				cssEase: 'linear'
 			});
 
-			// 2. Image Slider (Center Mode, Follow)
+			// 2. Image Slider (Synced)
 			$(imageId).slick({
-				slidesToShow: 3, // Focus on 1 main image, neighbors visible via overflowing CSS
-				slidesToScroll: 3,
+				slidesToShow: 1,
+				slidesToScroll: 1,
 				asNavFor: contentId,
 				dots: false,
 				arrows: false,
-				centerMode: true,
-				variableWidth: false, 
-				focusOnSelect: true,
-				speed: 600,
-				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
-				responsive: [
-					{
-						breakpoint: 768,
-						settings: {
-							centerMode: true
-						}
-					}
-				]
+				fade: true, // Syncs perfectly with text fade
+				speed: 500,
+				cssEase: 'ease'
 			});
 		});
 		</script>

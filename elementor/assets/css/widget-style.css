@@ -449,17 +449,19 @@
 .mh-icon-slide:hover .mh-button-icon-left {
     transform: translateX(-6px);
 }
+
+
+
+
 /* =========================================
    MH Synced Slider Styles
    ========================================= */
 
-/* Main Wrapper */
+/* Main Wrapper - Beige Background */
 .mh-synced-wrapper {
     width: 100%;
-    /* Default background color from your image */
-    background-color: #EDE8E1; 
-    padding: 60px 20px;
-    border-radius: 0px;
+    background-color: #F9F5F0; /* Soft beige from video */
+    padding: 80px 20px;
     overflow: hidden;
 }
 
@@ -469,13 +471,14 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
 }
 
 /* --- Left Column: Content --- */
 .mh-synced-content-slider {
-    width: 40%;
-    padding-right: 40px;
-    z-index: 2; /* Keep text above images if they overlap */
+    width: 45%;
+    padding-right: 20px;
+    z-index: 10;
 }
 
 .mh-content-inner {
@@ -483,28 +486,31 @@
     padding: 20px 0;
 }
 
+/* Subtitle: "SEASONAL SALE..." */
 .mh-sync-subtitle {
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
+    font-family: 'Poppins', sans-serif; /* Assumed font */
+    font-size: 11px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #333;
-    margin-bottom: 15px;
+    color: #666;
+    margin-bottom: 12px;
     font-weight: 500;
 }
 
+/* Heading: "Babies Soft Toys" */
 .mh-sync-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 48px;
+    font-size: 42px;
     font-weight: 600;
     line-height: 1.2;
-    color: #000;
+    color: #111;
     margin: 0 0 15px 0;
 }
 
+/* Price Section */
 .mh-sync-price-box {
     font-family: 'Arial', sans-serif;
-    font-size: 16px;
+    font-size: 15px;
     color: #444;
     margin-bottom: 30px;
 }
@@ -515,64 +521,56 @@
     margin-left: 5px;
 }
 
-/* Button Style (Pink from image) */
+/* Button: Pink Pill Style */
 .mh-sync-btn {
     display: inline-block;
-    background-color: #FA868E; /* Specific pink from reference */
+    background-color: #F08080; /* Soft Pink/Red */
     color: #fff;
-    padding: 12px 30px;
-    border-radius: 8px;
+    padding: 12px 32px;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: 500;
     font-size: 14px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(250, 134, 142, 0.4);
+    border: none;
+    box-shadow: 0 4px 10px rgba(240, 128, 128, 0.3);
 }
 
 .mh-sync-btn:hover {
-    background-color: #E0757C;
+    background-color: #D66A6A;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(250, 134, 142, 0.6);
     color: #fff;
 }
 
 /* --- Right Column: Images --- */
 .mh-synced-image-slider {
-    width: 60%;
+    width: 55%;
     position: relative;
-    /* Allow slick items to be visible outside strict bounds */
 }
 
 .mh-image-slide {
-    padding: 20px;
-    transition: all 0.5s ease;
-    opacity: 0.5; /* Dim inactive slides */
-    transform: scale(0.8); /* Shrink inactive slides */
+    padding: 10px;
     outline: none;
 }
 
-.mh-image-slide img {
-    width: 100%;
-    height: auto;
-    max-height: 500px;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-    /* Drop shadow for the plush toy */
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+.mh-image-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Active Slide Effect */
-.mh-synced-image-slider .slick-center .mh-image-slide {
-    opacity: 1;
-    transform: scale(1.1); /* Pop out the active image */
-    z-index: 10;
+.mh-image-inner img {
+    width: 100%;
+    max-width: 600px; /* Prevent over-scaling */
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1)); /* Add depth */
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .mh-synced-container {
-        flex-direction: column-reverse; /* Image on top on mobile */
+        flex-direction: column-reverse; /* Image on top for mobile */
     }
     .mh-synced-content-slider, 
     .mh-synced-image-slider {
@@ -581,11 +579,12 @@
         text-align: center;
     }
     .mh-content-inner {
-        text-align: center;
-        padding-top: 40px;
+        padding-top: 30px;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
     }
-    .mh-image-slide {
-        transform: scale(1); /* Reset scale on mobile */
-        opacity: 1;
+    .mh-sync-title {
+        font-size: 32px;
     }
 }

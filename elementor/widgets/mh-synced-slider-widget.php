@@ -28,7 +28,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 	}
 
 	public function get_script_depends() {
-		return [ 'mh-slick-js' ];
+		return [ 'slick-js' ];
 	}
 
 	protected function register_controls() {

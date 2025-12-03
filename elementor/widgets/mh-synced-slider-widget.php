@@ -236,7 +236,6 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			// 2. Image Slider (Synced)
 			$(imageId).slick({
 				asNavFor: contentId,
-				slidesToScroll: 3,
 				dots: false,
 				arrows: false,
 				centerMode: true,

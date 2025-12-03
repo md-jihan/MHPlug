@@ -176,14 +176,8 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 									<?php endif; ?>
 								</div>
 
-								<?php if ( $slide['button_text'] ) : 
-									$link_attrs = '';
-									if ( ! empty( $slide['button_link']['url'] ) ) {
-										$this->add_link_attributes( 'button_' . $slide['_id'], $slide['button_link'] );
-										$link_attrs = $this->get_render_attribute_string( 'button_' . $slide['_id'] );
-									}
-								?>
-									<a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-sync-btn" <?php echo $link_attrs; ?>>
+								<?php if ( $slide['button_text'] ) : ?>
+									<a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-sync-btn">
 										<?php echo esc_html( $slide['button_text'] ); ?>
 									</a>
 								<?php endif; ?>
@@ -212,7 +206,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
 			var imageId = '#mh-image-<?php echo esc_attr( $id ); ?>';
 
-			// 1. Content Slider (Left)
+			// 1. Content Slider
 			$(contentId).slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
@@ -221,19 +215,36 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				asNavFor: imageId,
 				cssEase: 'linear'
 			});
-// Inside the JS block in render():
-$(imageId).slick({
-    slidesToShow: 3,        /* Must be 3 to render Left/Center/Right */
-    slidesToScroll: 1,
-    asNavFor: contentId,
-    dots: false,
-    arrows: false,
-    centerMode: true,       /* Required for .slick-center class */
-    centerPadding: '0px',
-    focusOnSelect: true,
-    speed: 600,             /* Fast snappy shuffle */
-    cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
-});
+
+			// 2. Image Slider (Center Mode)
+			var $imageSlider = $(imageId).slick({
+				slidesToShow: 3,        /* Must see neighbors */
+				slidesToScroll: 1,
+				asNavFor: contentId,
+				dots: false,
+				arrows: false,
+				centerMode: true,
+				centerPadding: '0px',
+				variableWidth: false,
+				focusOnSelect: true,
+				speed: 800,
+				autoplay: true,
+				autoplaySpeed: 3000,
+				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
+			});
+
+			// Update classes to identify neighbors for overlapping
+			function updateClasses() {
+				$(imageId).find('.slick-slide').removeClass('prev next');
+				var $center = $(imageId).find('.slick-center');
+				$center.prev().addClass('prev');
+				$center.next().addClass('next');
+			}
+
+			$imageSlider.on('init afterChange', function() {
+				updateClasses();
+			});
+			updateClasses(); // Initial run
 		});
 		</script>
 		<?php

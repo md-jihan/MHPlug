@@ -453,15 +453,15 @@
 
 
 
-
 /* =========================================
-   MH Synced Slider Styles (True Overlap)
+   MH Synced Slider Styles (Tight Overlap)
    ========================================= */
 
+/* Main Wrapper */
 .mh-synced-wrapper {
     width: 100%;
-    background-color: #F3EEE8; /* Beige */
-    padding: 80px 20px;
+    background-color: #F0EBE5; 
+    padding: 80px 0;
     overflow: hidden;
 }
 
@@ -471,13 +471,14 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* --- Left Column --- */
+/* --- Left: Content --- */
 .mh-synced-content-slider {
     width: 40%;
     padding-right: 20px;
-    z-index: 20; /* Keep text above everything */
+    z-index: 100; /* Ensure text is above everything */
 }
 
 .mh-content-inner {
@@ -485,7 +486,6 @@
     padding: 20px 0;
 }
 
-/* Typography matches reference */
 .mh-sync-subtitle {
     font-family: 'Poppins', sans-serif;
     font-size: 11px;
@@ -520,7 +520,7 @@
 
 .mh-sync-btn {
     display: inline-block;
-    background-color: #FA868E; /* Pink */
+    background-color: #FA868E;
     color: #fff;
     padding: 14px 40px;
     border-radius: 8px;
@@ -535,84 +535,83 @@
     background-color: #E0757C;
     transform: translateY(-2px);
 }
-/* --- Right: Images (The "Cluster" Effect) --- */
+
+/* --- Right: Images (Exact Reference Logic) --- */
 .mh-synced-image-slider {
-    width: 55%;
+    width: 60%;
     position: relative;
-    /* Ensure the slider track allows overlap */
-    z-index: 1; 
+    /* Must allow visible overflow for the side items */
 }
 
-/* Allow images to overflow the slick-list so they don't get cut off */
 .mh-synced-image-slider .slick-list {
-    overflow: visible;
-    padding: 20px 0; /* Add breathing room for scale effects */
+    overflow: visible; 
+    padding: 20px 0; /* Breathing room for shadow */
 }
 
-/* Base Slide State */
+/* Slide Base */
 .mh-image-slide {
     padding: 0;
     outline: none;
-    /* Smooth movement for shuffle effect */
-    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: scale(0.7); /* Default small size */
+    opacity: 0.6;
+    z-index: 1;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end; /* Align at bottom like they are sitting */
 }
 
 .mh-image-inner img {
     width: 100%;
-    max-width: 450px; /* Adjust based on your preferred image size */
+    max-width: 600px;
     height: auto;
     display: block;
     margin: 0 auto;
-    /* Realistic shadow grounding them */
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); 
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.15));
 }
 
-/* --- The 3D Cluster Logic --- */
+/* --- The Aggressive Overlap Magic --- */
 
-/* 1. CENTER SLIDE (Fox) */
+/* CENTER SLIDE */
 .mh-synced-image-slider .slick-center .mh-image-slide {
-    transform: scale(1.15) translateY(10px) translateX(0); /* Largest & Front */
-    z-index: 30; /* Top Priority */
+    transform: scale(1.1) translateX(0); /* Big and Front */
     opacity: 1;
+    z-index: 20; /* Highest Priority */
 }
 
-/* 2. PREVIOUS SLIDE (Bear - Left) */
-/* Pull it drastically to the RIGHT to tuck behind the center */
+/* PREVIOUS SLIDE (Left) */
+/* TranslateX 50% moves it halfway into the center slide */
 .mh-synced-image-slider .slick-slide.prev .mh-image-slide {
-    transform: scale(0.85) translateX(180px); /* Move Inward */
-    z-index: 10; /* Behind Center */
-    opacity: 1; /* Fully Visible */
-    filter: brightness(0.95); /* Slight dim for depth */
+    transform: scale(0.85) translateX(55%); 
+    opacity: 0.8;
+    z-index: 10;
 }
 
-/* 3. NEXT SLIDE (Penguin - Right) */
-/* Pull it drastically to the LEFT to tuck behind the center */
+/* NEXT SLIDE (Right) */
+/* TranslateX -50% moves it halfway into the center slide */
 .mh-synced-image-slider .slick-slide.next .mh-image-slide {
-    transform: scale(0.85) translateX(-180px); /* Move Inward */
-    z-index: 10; /* Behind Center */
-    opacity: 1; /* Fully Visible */
-    filter: brightness(0.95); /* Slight dim for depth */
+    transform: scale(0.85) translateX(-55%);
+    opacity: 0.8;
+    z-index: 10;
 }
 
-/* 4. Hide other slides to prevent clutter */
+/* Hide other slides to clean up the edges */
 .mh-synced-image-slider .slick-slide:not(.slick-center):not(.prev):not(.next) {
     opacity: 0;
-    transform: scale(0);
+    pointer-events: none;
 }
 
-/* Responsive Tweaks */
+/* Responsive */
 @media (max-width: 768px) {
-    .mh-synced-image-slider .slick-list {
-        overflow: hidden; /* Contain it on mobile */
+    .mh-synced-container {
+        flex-direction: column-reverse;
     }
-    .mh-synced-image-slider .slick-slide.prev .mh-image-slide {
-        transform: scale(0.8) translateX(50px); /* Less overlap on mobile */
+    .mh-synced-content-slider, 
+    .mh-synced-image-slider {
+        width: 100%;
+        text-align: center;
     }
+    /* Reset overlap on mobile for cleaner view */
+    .mh-synced-image-slider .slick-slide.prev .mh-image-slide,
     .mh-synced-image-slider .slick-slide.next .mh-image-slide {
-        transform: scale(0.8) translateX(-50px);
+        transform: scale(0.8) translateX(0); 
     }
 }

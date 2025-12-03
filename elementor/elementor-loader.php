@@ -190,6 +190,8 @@ function mh_plug_enqueue_editor_icons() {
         MH_PLUG_VERSION,
         true // In footer
     );
+    
+    wp_enqueue_script('slick-js', MH_PLUG_URL . 'assets/slick/slick.min.js', ['jquery'], MH_PLUG_VERSION, true);
     // --- END NEW BLOCK ---
 }
 add_action( 'elementor/editor/before_enqueue_scripts', 'mh_plug_enqueue_editor_icons' );

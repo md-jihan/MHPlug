@@ -28,7 +28,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 	}
 
 	public function get_script_depends() {
-		return [ 'slick-js' ];
+		return [ 'mh-slick-js' ];
 	}
 
 	protected function register_controls() {
@@ -216,34 +216,40 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				cssEase: 'linear'
 			});
 
-			// 2. Image Slider (Center Mode + Variable Width)
+			// 2. Image Slider (Cluster Mode)
 			var $imageSlider = $(imageId).slick({
-				slidesToShow: 1,        /* We let CSS control visibility */
+				slidesToShow: 3,        /* We need 3 items to create the stack */
 				slidesToScroll: 1,
 				asNavFor: contentId,
 				dots: false,
 				arrows: false,
-				centerMode: true,
-				variableWidth: true,    /* KEY: Keeps slides tight */
+				centerMode: true,       /* Enables the .slick-center class */
+				centerPadding: '0px',
+				variableWidth: false,   /* Fixed width is easier to overlap */
 				focusOnSelect: true,
 				speed: 800,
 				autoplay: true,
-				autoplaySpeed: 3500,
+				autoplaySpeed: 3000,
 				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
 			});
 
-			// Custom Class Logic
+			// 3. Class Updater for 3D Depth
+			// Slick only gives us .slick-center. We need .prev and .next to target the neighbors.
 			function updateClasses() {
-				$(imageId).find('.slick-slide').removeClass('prev next');
-				var $center = $(imageId).find('.slick-center');
+				var $slick = $(imageId);
+				$slick.find('.slick-slide').removeClass('prev next');
+				
+				var $center = $slick.find('.slick-center');
 				$center.prev().addClass('prev');
 				$center.next().addClass('next');
 			}
 
-			$imageSlider.on('init afterChange', function() {
+			// Bind to all relevant events
+			$imageSlider.on('init afterChange setPosition', function() {
 				updateClasses();
 			});
-			updateClasses(); // Initial run
+			// Initial run
+			updateClasses();
 		});
 		</script>
 		<?php

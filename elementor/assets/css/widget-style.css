@@ -453,10 +453,8 @@
 
 
 
-
-
 /* =========================================
-   MH Synced Slider Styles (Cluster Edition)
+   MH Synced Slider Styles (Fox Cluster)
    ========================================= */
 
 /* Main Wrapper */
@@ -464,7 +462,7 @@
     width: 100%;
     background-color: #F0EBE5; 
     padding: 80px 0;
-    overflow: hidden;
+    overflow: hidden; /* Page overflow */
 }
 
 .mh-synced-container {
@@ -480,7 +478,7 @@
 .mh-synced-content-slider {
     width: 40%;
     padding-right: 20px;
-    z-index: 100;
+    z-index: 200;
 }
 
 .mh-content-inner {
@@ -538,71 +536,72 @@
     transform: translateY(-2px);
 }
 
-/* --- Right: Images (Tight Cluster) --- */
+/* --- Right: Images (The Cluster) --- */
 .mh-synced-image-slider {
     width: 60%;
     position: relative;
     height: 500px;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the track */
+    justify-content: center;
 }
 
+/* IMPORTANT: Allow images to bleed out of their boxes */
 .mh-synced-image-slider .slick-list {
-    overflow: visible; 
-    padding: 40px 0;
-    width: auto; /* Let it fit contents */
+    overflow: visible !important;
+    padding: 50px 0;
 }
 
-/* Base Slide: Fixed Width for Tightness */
+/* Base Slide */
 .mh-image-slide {
-    width: 300px; /* FIXED WIDTH is key */
     padding: 0;
     outline: none;
     transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    transform: scale(0.75); /* Default small */
-    opacity: 0.7;
-    z-index: 1;
+    transform: scale(0.6); /* Inactive State */
+    opacity: 0;           /* Hidden by default */
+    z-index: 0;
     position: relative;
-    margin: 0 10px; /* Small gap between logical positions */
+    margin: 0 10px;
 }
 
 .mh-image-inner img {
     width: 100%;
+    max-width: 500px; /* Base image size */
     height: auto;
     display: block;
     margin: 0 auto;
     filter: drop-shadow(0 15px 35px rgba(0,0,0,0.2));
 }
 
-/* --- Cluster Logic --- */
+/* --- Cluster Overlap Logic --- */
 
-/* CENTER: Big, Front, No Translate */
+/* 1. CENTER SLIDE (The Fox) */
+/* Huge, Front, Centered */
 .mh-synced-image-slider .slick-center .mh-image-slide {
-    transform: scale(1.3) translateY(20px); /* Scale way up to pop */
+    transform: scale(1.3) translateY(10px); 
     opacity: 1;
-    z-index: 50;
-    margin: 0 10px;
+    z-index: 100; /* Must be highest */
 }
 
-/* PREV: Push Right into Center */
+/* 2. PREVIOUS SLIDE (The Bear) */
+/* Move RIGHT (+150px) to tuck behind Fox's Left Shoulder */
 .mh-synced-image-slider .slick-slide.prev .mh-image-slide {
-    transform: scale(0.9) translateX(100px); /* 100px Overlap */
-    opacity: 0.8;
+    transform: scale(0.9) translateX(150px); 
+    opacity: 1;
     z-index: 10;
 }
 
-/* NEXT: Push Left into Center */
+/* 3. NEXT SLIDE (The Penguin) */
+/* Move LEFT (-150px) to tuck behind Fox's Right Shoulder */
 .mh-synced-image-slider .slick-slide.next .mh-image-slide {
-    transform: scale(0.9) translateX(-100px); /* -100px Overlap */
-    opacity: 0.8;
+    transform: scale(0.9) translateX(-150px);
+    opacity: 1;
     z-index: 10;
 }
 
 /* Hide distant slides */
 .mh-synced-image-slider .slick-slide:not(.slick-center):not(.prev):not(.next) {
     opacity: 0;
-    transform: scale(0.5);
     pointer-events: none;
 }
 
@@ -618,15 +617,13 @@
     }
     .mh-synced-image-slider {
         height: 350px;
+        margin-bottom: 20px;
     }
-    .mh-image-slide {
-        width: 200px; /* Smaller fixed width on mobile */
-    }
-    /* Reduce overlaps on mobile */
+    /* Separate them on mobile for clarity */
     .mh-synced-image-slider .slick-slide.prev .mh-image-slide {
-        transform: scale(0.85) translateX(60px);
+        transform: scale(0.8) translateX(60px);
     }
     .mh-synced-image-slider .slick-slide.next .mh-image-slide {
-        transform: scale(0.85) translateX(-60px);
+        transform: scale(0.8) translateX(-60px);
     }
 }

@@ -135,18 +135,9 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			]
 		);
 
-		$this->add_control( 'heading_style_heading', [ 'label' => __( 'Heading', 'mhds-plug' ), 'type' => Controls_Manager::HEADING ] );
-		
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[ 'name' => 'heading_typo', 'selector' => '{{WRAPPER}} .mh-sync-title' ]
-		);
-
-		$this->add_control( 'subtitle_style_heading', [ 'label' => __( 'Subtitle', 'mhds-plug' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
-		
-		$this->add_group_control(
-			Group_Control_Typography::get_type(),
-			[ 'name' => 'subtitle_typo', 'selector' => '{{WRAPPER}} .mh-sync-subtitle' ]
 		);
 
 		$this->end_controls_section();
@@ -185,14 +176,8 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 									<?php endif; ?>
 								</div>
 
-								<?php if ( $slide['button_text'] ) : 
-									$link_attrs = '';
-									if ( ! empty( $slide['button_link']['url'] ) ) {
-										$this->add_link_attributes( 'button_' . $slide['_id'], $slide['button_link'] );
-										$link_attrs = $this->get_render_attribute_string( 'button_' . $slide['_id'] );
-									}
-								?>
-									<a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-sync-btn" <?php echo $link_attrs; ?>>
+								<?php if ( $slide['button_text'] ) : ?>
+									<a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-sync-btn">
 										<?php echo esc_html( $slide['button_text'] ); ?>
 									</a>
 								<?php endif; ?>
@@ -221,26 +206,28 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
 			var imageId = '#mh-image-<?php echo esc_attr( $id ); ?>';
 
-			// 1. Content Slider
+			// 1. Content Slider (Control)
 			$(contentId).slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
 				arrows: false,
-				fade: true, // Fade effect as seen in video
+				fade: true,
 				asNavFor: imageId,
 				autoplay: true,
-				autoplaySpeed: 3000,
+				autoplaySpeed: 3500, // Slightly slower than transition
 				cssEase: 'linear'
 			});
 
-			// 2. Image Slider (Synced)
+			// 2. Image Slider (Follow)
 			$(imageId).slick({
+				slidesToShow: 1,
+				slidesToScroll: 1,
 				asNavFor: contentId,
 				dots: false,
 				arrows: false,
-				centerMode: true,
-				speed: 500,
-				cssEase: 'ease'
+				fade: true, // Use Fade to allow stacking
+				speed: 1000, // 1s Transition time
+				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)' // Smooth ease
 			});
 		});
 		</script>

@@ -235,12 +235,11 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 
 			// 2. Image Slider (Synced)
 			$(imageId).slick({
-				slidesToShow: 1,
-				slidesToScroll: 1,
 				asNavFor: contentId,
+				slidesToScroll: 3,
 				dots: false,
 				arrows: false,
-				fade: true, // Syncs perfectly with text fade
+				centerMode: true,
 				speed: 500,
 				cssEase: 'ease'
 			});

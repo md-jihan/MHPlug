@@ -206,7 +206,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
 			var imageId = '#mh-image-<?php echo esc_attr( $id ); ?>';
 
-			// 1. Content Slider (Control)
+			// 1. Content Slider
 			$(contentId).slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
@@ -214,21 +214,38 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				fade: true,
 				asNavFor: imageId,
 				autoplay: true,
-				autoplaySpeed: 3500, // Slightly slower than transition
+				autoplaySpeed: 3000,
 				cssEase: 'linear'
 			});
 
-			// 2. Image Slider (Follow)
-			$(imageId).slick({
-				slidesToShow: 1,
+			// 2. Image Slider (Center Mode)
+			var $imageSlider = $(imageId).slick({
+				slidesToShow: 3,
 				slidesToScroll: 1,
 				asNavFor: contentId,
 				dots: false,
 				arrows: false,
-				fade: true, // Use Fade to allow stacking
-				speed: 1000, // 1s Transition time
-				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)' // Smooth ease
+				centerMode: true,
+				centerPadding: '0px',
+				focusOnSelect: true,
+				speed: 800,
+				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
 			});
+
+			// Custom Class Logic for Overlap Effect
+			function updateClasses() {
+				$(imageId).find('.slick-slide').removeClass('prev next');
+				var $center = $(imageId).find('.slick-center');
+				$center.prev().addClass('prev');
+				$center.next().addClass('next');
+			}
+
+			// Run on Init and Change
+			$imageSlider.on('init afterChange', function() {
+				updateClasses();
+			});
+			// Initial call
+			updateClasses();
 		});
 		</script>
 		<?php

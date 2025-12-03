@@ -452,14 +452,18 @@
 
 
 
+
+
+
 /* =========================================
-   MH Synced Slider Styles (Zoom Effect)
+   MH Synced Slider Styles (Overlap Edition)
    ========================================= */
 
+/* Main Wrapper */
 .mh-synced-wrapper {
     width: 100%;
-    background-color: #F3EEE8; /* Exact match to video beige */
-    padding: 80px 20px;
+    background-color: #F0EBE5; /* Matches the beige in the image */
+    padding: 80px 0;
     overflow: hidden;
 }
 
@@ -469,12 +473,12 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    position: relative;
+    padding: 0 20px;
 }
 
 /* --- Left: Content --- */
 .mh-synced-content-slider {
-    width: 45%;
+    width: 40%;
     padding-right: 20px;
     z-index: 10;
 }
@@ -489,7 +493,7 @@
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #555;
+    color: #666;
     margin-bottom: 15px;
     font-weight: 600;
 }
@@ -497,9 +501,9 @@
 .mh-sync-title {
     font-family: 'Poppins', sans-serif;
     font-size: 48px;
-    font-weight: 600;
-    line-height: 1.2;
-    color: #111;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #1a1a1a;
     margin: 0 0 15px 0;
 }
 
@@ -511,75 +515,85 @@
 }
 
 .mh-sync-price {
-    font-weight: bold;
+    font-weight: 700;
     color: #000;
     margin-left: 5px;
 }
 
 .mh-sync-btn {
     display: inline-block;
-    background-color: #FF8F96; /* Pink */
+    background-color: #FA868E; /* Exact pink from image */
     color: #fff;
-    padding: 14px 36px;
-    border-radius: 6px;
+    padding: 14px 40px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(255, 143, 150, 0.4);
+    box-shadow: 0 10px 20px rgba(250, 134, 142, 0.3);
 }
 
 .mh-sync-btn:hover {
-    background-color: #E6757C;
+    background-color: #E0757C;
     transform: translateY(-2px);
-    color: #fff;
 }
 
-/* --- Right: Images (The "Exact" Video Effect) --- */
+/* --- Right: Images (Overlap Logic) --- */
 .mh-synced-image-slider {
-    width: 55%;
+    width: 60%;
     position: relative;
     height: 500px; /* Fixed height container */
-    display: flex;
+    display: flex; /* Helps center the track */
     align-items: center;
-    justify-content: center;
 }
 
-/* Base Slide State */
+.mh-synced-image-slider .slick-list {
+    overflow: visible; /* Important: Let images bleed out */
+}
+
+/* Slide Base */
 .mh-image-slide {
-    width: 100%;
-    height: 100%;
-    display: flex !important; /* Force flex for slick items */
-    align-items: center;
-    justify-content: center;
+    padding: 0;
     outline: none;
-}
-
-/* Inner Image Container - Handles the Transform */
-.mh-image-inner {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    
-    /* DEFAULT STATE: Scaled Down & Transparent (Hidden) */
-    transform: scale(0.7);
-    opacity: 0;
-    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); /* 1000ms Transition */
-}
-
-/* ACTIVE STATE: Scaled Up & Fully Visible */
-/* Slick adds .slick-active to the current slide wrapper */
-.slick-active .mh-image-inner {
-    transform: scale(1);
-    opacity: 1;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: scale(0.6); /* Start small */
+    opacity: 0.5;
+    z-index: 1;
+    position: relative;
 }
 
 .mh-image-inner img {
     width: 100%;
-    max-width: 650px;
+    max-width: 600px;
     height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15));
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.15)); /* Soft shadow */
+}
+
+/* --- The Overlap Magic --- */
+
+/* CENTER SLIDE (Active) */
+.mh-synced-image-slider .slick-center .mh-image-slide {
+    transform: scale(1.1) translateX(0); /* Big and Front */
+    opacity: 1;
+    z-index: 20; /* Highest Priority */
+}
+
+/* PREVIOUS SLIDE (Left) */
+/* Pull it 100px to the RIGHT to tuck behind center */
+.mh-synced-image-slider .slick-slide.prev .mh-image-slide {
+    transform: scale(0.75) translateX(120px); 
+    opacity: 0.7;
+    z-index: 10;
+}
+
+/* NEXT SLIDE (Right) */
+/* Pull it 100px to the LEFT to tuck behind center */
+.mh-synced-image-slider .slick-slide.next .mh-image-slide {
+    transform: scale(0.75) translateX(-120px);
+    opacity: 0.7;
+    z-index: 10;
 }
 
 /* Responsive */
@@ -592,14 +606,9 @@
         width: 100%;
         text-align: center;
     }
-    .mh-synced-image-slider {
-        height: 350px;
-        margin-bottom: 20px;
-    }
-    .mh-content-inner {
-        padding-top: 0;
-        align-items: center;
-        display: flex;
-        flex-direction: column;
+    /* Disable overlap on mobile for clarity */
+    .mh-synced-image-slider .slick-slide.prev .mh-image-slide,
+    .mh-synced-image-slider .slick-slide.next .mh-image-slide {
+        transform: scale(0.8) translateX(0); 
     }
 }

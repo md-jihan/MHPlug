@@ -216,24 +216,23 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				cssEase: 'linear'
 			});
 
-			// 2. Image Slider (Center Mode)
+			// 2. Image Slider (Center Mode + Variable Width)
 			var $imageSlider = $(imageId).slick({
-				slidesToShow: 3,        /* Must see neighbors */
+				slidesToShow: 1,        /* We let CSS control visibility */
 				slidesToScroll: 1,
 				asNavFor: contentId,
 				dots: false,
 				arrows: false,
 				centerMode: true,
-				centerPadding: '0px',
-				variableWidth: false,
+				variableWidth: true,    /* KEY: Keeps slides tight */
 				focusOnSelect: true,
 				speed: 800,
 				autoplay: true,
-				autoplaySpeed: 3000,
+				autoplaySpeed: 3500,
 				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
 			});
 
-			// Update classes to identify neighbors for overlapping
+			// Custom Class Logic
 			function updateClasses() {
 				$(imageId).find('.slick-slide').removeClass('prev next');
 				var $center = $(imageId).find('.slick-center');

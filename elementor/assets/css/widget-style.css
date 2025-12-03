@@ -449,97 +449,143 @@
 .mh-icon-slide:hover .mh-button-icon-left {
     transform: translateX(-6px);
 }
-
 /* =========================================
-   MH Stacked Carousel (Fixed Position Style)
+   MH Synced Slider Styles
    ========================================= */
 
-.mh-stacked-wrap {
+/* Main Wrapper */
+.mh-synced-wrapper {
     width: 100%;
-    position: relative;
-    padding: 60px 0;
+    /* Default background color from your image */
+    background-color: #EDE8E1; 
+    padding: 60px 20px;
+    border-radius: 0px;
     overflow: hidden;
+}
+
+.mh-synced-container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.mh-stacked-slider {
-    width: 100%;
-    height: 100%;
-    /* Allow neighbors to be seen even if container is tight */
-    overflow: visible; 
+/* --- Left Column: Content --- */
+.mh-synced-content-slider {
+    width: 40%;
+    padding-right: 40px;
+    z-index: 2; /* Keep text above images if they overlap */
 }
 
-/* Base Card Style */
-.mh-stacked-item {
-    width: 400px;
-    height: 400px;
-    border-radius: 20px;
-    margin: 0 10px;
+.mh-content-inner {
+    text-align: left;
+    padding: 20px 0;
+}
+
+.mh-sync-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.mh-sync-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #000;
+    margin: 0 0 15px 0;
+}
+
+.mh-sync-price-box {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 30px;
+}
+
+.mh-sync-price {
+    font-weight: bold;
+    color: #000;
+    margin-left: 5px;
+}
+
+/* Button Style (Pink from image) */
+.mh-sync-btn {
+    display: inline-block;
+    background-color: #FA868E; /* Specific pink from reference */
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(250, 134, 142, 0.4);
+}
+
+.mh-sync-btn:hover {
+    background-color: #E0757C;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(250, 134, 142, 0.6);
+    color: #fff;
+}
+
+/* --- Right Column: Images --- */
+.mh-synced-image-slider {
+    width: 60%;
     position: relative;
-    
-    /* 1.0s Smooth Transition to match JS Speed */
-    transition: all 1.0s cubic-bezier(0.25, 1, 0.5, 1);
-    
-    cursor: pointer;
-    overflow: hidden;
-    
-    /* Default: Hidden behind */
-    transform: scale(0.8) translateX(0);
-    opacity: 0;
-    z-index: 0;
-    pointer-events: none;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    /* Allow slick items to be visible outside strict bounds */
 }
 
-/* Dimming Overlay */
-.mh-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+.mh-image-slide {
+    padding: 20px;
+    transition: all 0.5s ease;
+    opacity: 0.5; /* Dim inactive slides */
+    transform: scale(0.8); /* Shrink inactive slides */
+    outline: none;
+}
+
+.mh-image-slide img {
     width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    transition: background 1.0s ease;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    /* Drop shadow for the plush toy */
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
 }
 
-/* ============================
-   3D "Fixed" Positions
-   ============================ */
-
-/* 1. CENTER (Active Card) */
-.mh-stacked-slider .slick-center {
-    transform: scale(1.0);
-    z-index: 50;
+/* Active Slide Effect */
+.mh-synced-image-slider .slick-center .mh-image-slide {
     opacity: 1;
-    pointer-events: auto;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.3); /* Pop effect */
-}
-.mh-stacked-slider .slick-center .mh-overlay {
-    background: transparent;
+    transform: scale(1.1); /* Pop out the active image */
+    z-index: 10;
 }
 
-/* 2. PREVIOUS (Left Wing) */
-.mh-stacked-slider .slick-slide.prev {
-    /* TranslateX pushes it slightly inward/outward to visually lock position */
-    transform: scale(0.9) translateX(50px); 
-    z-index: 40;
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* 3. NEXT (Right Wing) */
-.mh-stacked-slider .slick-slide.next {
-    transform: scale(0.9) translateX(-50px);
-    z-index: 40;
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* 4. HIDE OTHERS */
-.mh-stacked-slider .slick-slide:not(.slick-center):not(.prev):not(.next) {
-    transform: scale(0.5);
-    opacity: 0;
-    visibility: hidden;
+/* Responsive */
+@media (max-width: 768px) {
+    .mh-synced-container {
+        flex-direction: column-reverse; /* Image on top on mobile */
+    }
+    .mh-synced-content-slider, 
+    .mh-synced-image-slider {
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+    .mh-content-inner {
+        text-align: center;
+        padding-top: 40px;
+    }
+    .mh-image-slide {
+        transform: scale(1); /* Reset scale on mobile */
+        opacity: 1;
+    }
 }

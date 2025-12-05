@@ -28,11 +28,11 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 	}
 
 	public function get_script_depends() {
-		return [ 'slick-js' ];
+		return [ 'mh-slick-js' ];
 	}
 
 	protected function register_controls() {
-		// Content Tab
+		// --- Content Tab ---
 		$this->start_controls_section(
 			'content_section',
 			[
@@ -126,7 +126,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 
 		$this->end_controls_section();
 
-		// Style Tab - Typography
+		// --- Style Tab ---
 		$this->start_controls_section(
 			'typo_style',
 			[
@@ -202,52 +202,49 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		</div>
 
 		<script>
-		jQuery(window).on('elementor/frontend/init', function() {
-			elementorFrontend.hooks.addAction('frontend/element_ready/mh_synced_slider.default', function($scope, $) {
+		jQuery(document).ready(function($) {
+			var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
+			var imageId = '#mh-image-<?php echo esc_attr( $id ); ?>';
+
+			// 1. Content Slider (Fade)
+			$(contentId).slick({
+				slidesToShow: 1,
+				slidesToScroll: 1,
+				arrows: false,
+				fade: true,
+				asNavFor: imageId,
+				cssEase: 'linear'
+			});
+
+			// 2. Image Slider (Center Mode)
+			var $imageSlider = $(imageId).slick({
+				slidesToShow: 3,        /* Must show 3 for cluster */
+				slidesToScroll: 1,
+				asNavFor: contentId,
+				dots: false,
+				arrows: false,
+				centerMode: true,
+				centerPadding: '0px',
+				variableWidth: false,
+				focusOnSelect: true,
+				speed: 800,
+				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
+			});
+
+			// 3. Class Updater for 3D Depth
+			function updateClasses() {
+				var $slick = $(imageId);
+				$slick.find('.slick-slide').removeClass('prev next');
 				
-				var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
-				var imageId   = '#mh-image-<?php echo esc_attr( $id ); ?>';
-				var $content  = $scope.find(contentId);
-				var $images   = $scope.find(imageId);
+				var $center = $slick.find('.slick-center');
+				$center.prev().addClass('prev');
+				$center.next().addClass('next');
+			}
 
-				// 1. Content Slider
-				$content.not('.slick-initialized').slick({
-					slidesToShow: 1,
-					slidesToScroll: 1,
-					arrows: false,
-					fade: true,
-					asNavFor: imageId,
-					cssEase: 'linear'
-				});
-
-				// 2. Image Slider
-				$images.not('.slick-initialized').slick({
-					slidesToShow: 3,
-					slidesToScroll: 1,
-					asNavFor: contentId,
-					dots: false,
-					arrows: false,
-					centerMode: true,
-					centerPadding: '0px',
-					variableWidth: false,
-					focusOnSelect: true,
-					speed: 800,
-					autoplay: true,
-					autoplaySpeed: 3000,
-					cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
-				});
-
-				// Overlap Classes Logic
-				function updateClasses() {
-					$images.find('.slick-slide').removeClass('prev next');
-					var $center = $images.find('.slick-center');
-					$center.prev().addClass('prev');
-					$center.next().addClass('next');
-				}
-
-				$images.on('init afterChange setPosition', updateClasses);
+			$imageSlider.on('init afterChange setPosition', function() {
 				updateClasses();
 			});
+			updateClasses(); // Initial run
 		});
 		</script>
 		<?php

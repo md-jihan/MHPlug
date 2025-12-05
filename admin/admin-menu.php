@@ -31,7 +31,7 @@ class MH_Admin_Menu {
         'mh_post_carousel'  => 'Post',
         'mh_synced_slider' => 'Synced Slider',
         'mh_button' => 'Button',
-        'mh_stacked_carousel' =>'Stacked Carousel'
+        'mh_stacked_carousel' =>'Stacked Carousel',
     ];
 
     public function __construct() {

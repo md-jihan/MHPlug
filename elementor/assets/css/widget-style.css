@@ -453,16 +453,21 @@
 
 
 
+
+
+
+
+
+
 /* =========================================
-   MH Synced Slider Styles (Fox Cluster)
+   MH Synced Slider (Final Fixed & Visible)
    ========================================= */
 
-/* Main Wrapper */
 .mh-synced-wrapper {
     width: 100%;
     background-color: #F0EBE5; 
     padding: 80px 0;
-    overflow: hidden; /* Page overflow */
+    overflow: hidden; 
 }
 
 .mh-synced-container {
@@ -474,7 +479,7 @@
     padding: 0 20px;
 }
 
-/* --- Left: Content --- */
+/* Left Content */
 .mh-synced-content-slider {
     width: 40%;
     padding-right: 20px;
@@ -486,6 +491,7 @@
     padding: 20px 0;
 }
 
+/* Typography */
 .mh-sync-subtitle {
     font-family: 'Poppins', sans-serif;
     font-size: 11px;
@@ -535,8 +541,7 @@
     background-color: #E0757C;
     transform: translateY(-2px);
 }
-
-/* --- Right: Images (The Cluster) --- */
+/* --- Right: Images (Fixed Selectors) --- */
 .mh-synced-image-slider {
     width: 60%;
     position: relative;
@@ -546,84 +551,84 @@
     justify-content: center;
 }
 
-/* IMPORTANT: Allow images to bleed out of their boxes */
 .mh-synced-image-slider .slick-list {
     overflow: visible !important;
     padding: 50px 0;
 }
 
-/* Base Slide */
+/* Base Slide Style */
+/* Note: This element IS the .slick-slide */
 .mh-image-slide {
     padding: 0;
     outline: none;
     transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    transform: scale(0.6); /* Inactive State */
-    opacity: 0;           /* Hidden by default */
+    
+    /* Default: Hidden state */
+    transform: scale(0.6); 
+    opacity: 0; 
     z-index: 0;
     position: relative;
-    margin: 0 10px;
 }
 
 .mh-image-inner img {
     width: 100%;
-    max-width: 500px; /* Base image size */
+    max-width: 500px;
     height: auto;
     display: block;
     margin: 0 auto;
     filter: drop-shadow(0 15px 35px rgba(0,0,0,0.2));
 }
 
-/* --- Cluster Overlap Logic --- */
+/* --- CLUSTER LOGIC (Corrected Selectors) --- */
 
-/* 1. CENTER SLIDE (The Fox) */
-/* Huge, Front, Centered */
-.mh-synced-image-slider .slick-center .mh-image-slide {
-    transform: scale(1.3) translateY(10px); 
+/* 1. CENTER SLIDE */
+/* Target the element that has BOTH classes */
+.mh-image-slide.slick-center {
+    transform: scale(1.3) translateY(20px); 
     opacity: 1;
-    z-index: 100; /* Must be highest */
+    z-index: 100;
 }
 
-/* 2. PREVIOUS SLIDE (The Bear) */
-/* Move RIGHT (+150px) to tuck behind Fox's Left Shoulder */
-.mh-synced-image-slider .slick-slide.prev .mh-image-slide {
-    transform: scale(0.9) translateX(150px); 
+/* 2. PREVIOUS SLIDE (Left) */
+/* The JS adds 'prev' to the slide itself */
+.mh-image-slide.prev {
+    transform: scale(0.9) translateX(180px); 
+    opacity: 1; 
+    z-index: 10;
+}
+
+/* 3. NEXT SLIDE (Right) */
+/* The JS adds 'next' to the slide itself */
+.mh-image-slide.next {
+    transform: scale(0.9) translateX(-180px);
     opacity: 1;
     z-index: 10;
 }
 
-/* 3. NEXT SLIDE (The Penguin) */
-/* Move LEFT (-150px) to tuck behind Fox's Right Shoulder */
-.mh-synced-image-slider .slick-slide.next .mh-image-slide {
-    transform: scale(0.9) translateX(-150px);
-    opacity: 1;
-    z-index: 10;
-}
-
-/* Hide distant slides */
-.mh-synced-image-slider .slick-slide:not(.slick-center):not(.prev):not(.next) {
+/* 4. Hide all others */
+/* Any slide that lacks these specific classes stays hidden */
+.mh-image-slide:not(.slick-center):not(.prev):not(.next) {
     opacity: 0;
     pointer-events: none;
+    transform: scale(0.5);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .mh-synced-container {
-        flex-direction: column-reverse;
-    }
-    .mh-synced-content-slider, 
-    .mh-synced-image-slider {
-        width: 100%;
-        text-align: center;
-    }
-    .mh-synced-image-slider {
-        height: 350px;
-        margin-bottom: 20px;
-    }
-    /* Separate them on mobile for clarity */
-    .mh-synced-image-slider .slick-slide.prev .mh-image-slide {
+    /* Reset overlaps on mobile */
+    .mh-image-slide.prev {
         transform: scale(0.8) translateX(60px);
     }
-    .mh-synced-image-slider .slick-slide.next .mh-image-slide {
+    .mh-image-slide.next {
         transform: scale(0.8) translateX(-60px);
     }
+}
+
+/* === FAIL SAFE FOR INVISIBLE IMAGES === */
+/* If Slick hasn't loaded yet, show everything flat so it's not empty */
+.mh-synced-image-slider:not(.slick-initialized) .mh-image-slide {
+    opacity: 1 !important;
+    transform: none !important;
+    display: inline-block;
+    width: 33%;
 }

@@ -5,8 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
-use Elementor\Group_Control_Typography;
-use Elementor\Group_Control_Background;
 use Elementor\Utils;
 
 class MH_Synced_Slider_Widget extends Widget_Base {
@@ -16,7 +14,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 	}
 
 	public function get_title() {
-		return __( 'MH Hero Slider', 'mhds-plug' );
+		return __( 'MH Synced Slider', 'mhds-plug' );
 	}
 
 	public function get_icon() {
@@ -32,7 +30,6 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 	}
 
 	protected function register_controls() {
-		// --- Content Tab ---
 		$this->start_controls_section(
 			'content_section',
 			[
@@ -46,7 +43,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		$repeater->add_control(
 			'image',
 			[
-				'label'   => __( 'Product Image', 'mhds-plug' ),
+				'label'   => __( 'Image', 'mhds-plug' ),
 				'type'    => Controls_Manager::MEDIA,
 				'default' => [
 					'url' => Utils::get_placeholder_image_src(),
@@ -55,11 +52,11 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		);
 
 		$repeater->add_control(
-			'subtitle',
+			'meta',
 			[
-				'label'   => __( 'Subtitle', 'mhds-plug' ),
+				'label'   => __( 'Top Label', 'mhds-plug' ),
 				'type'    => Controls_Manager::TEXT,
-				'default' => __( 'SEASONAL SALE - UP TO 60% OFF', 'mhds-plug' ),
+				'default' => __( 'SEASONAL SALE', 'mhds-plug' ),
 			]
 		);
 
@@ -67,26 +64,17 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 			'heading',
 			[
 				'label'   => __( 'Heading', 'mhds-plug' ),
-				'type'    => Controls_Manager::TEXT,
-				'default' => __( 'Product Name', 'mhds-plug' ),
-			]
-		);
-
-		$repeater->add_control(
-			'price_label',
-			[
-				'label'   => __( 'Price Label', 'mhds-plug' ),
-				'type'    => Controls_Manager::TEXT,
-				'default' => __( 'Price from :', 'mhds-plug' ),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => __( 'Digital<br>Dreams', 'mhds-plug' ),
 			]
 		);
 
 		$repeater->add_control(
 			'price',
 			[
-				'label'   => __( 'Price Value', 'mhds-plug' ),
+				'label'   => __( 'Price', 'mhds-plug' ),
 				'type'    => Controls_Manager::TEXT,
-				'default' => __( 'Rs.954', 'mhds-plug' ),
+				'default' => __( 'Price from : $850', 'mhds-plug' ),
 			]
 		);
 
@@ -102,7 +90,7 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		$repeater->add_control(
 			'button_link',
 			[
-				'label'       => __( 'Button Link', 'mhds-plug' ),
+				'label'       => __( 'Link', 'mhds-plug' ),
 				'type'        => Controls_Manager::URL,
 				'placeholder' => __( 'https://your-link.com', 'mhds-plug' ),
 			]
@@ -115,29 +103,13 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 				'type'        => Controls_Manager::REPEATER,
 				'fields'      => $repeater->get_controls(),
 				'default'     => [
-					[ 'heading' => 'Babies Soft Toys', 'subtitle' => 'SEASONAL SALE - UP TO 60% OFF', 'price' => 'Rs.554' ],
-					[ 'heading' => 'Plush Animals', 'subtitle' => 'SEASONAL SALE - UP TO 30% OFF', 'price' => 'Rs.855' ],
-					[ 'heading' => 'Teething Toys', 'subtitle' => 'SEASONAL SALE - UP TO 40% OFF', 'price' => 'Rs.750' ],
-					[ 'heading' => 'Blankie Buddies', 'subtitle' => 'SEASONAL SALE - UP TO 60% OFF', 'price' => 'Rs.954' ],
+					[ 'heading' => 'Digital<br>Dreams', 'meta' => 'SEASONAL SALE', 'price' => 'Price from : $850' ],
+					[ 'heading' => 'Bold<br>Impact', 'meta' => 'NEW ARRIVAL', 'price' => 'Price from : $420' ],
+					[ 'heading' => 'Clear<br>Vision', 'meta' => 'LIMITED EDITION', 'price' => 'Price from : $999' ],
+					[ 'heading' => 'Warm<br>Horizons', 'meta' => 'BEST SELLER', 'price' => 'Price from : $600' ],
 				],
 				'title_field' => '{{{ heading }}}',
 			]
-		);
-
-		$this->end_controls_section();
-
-		// --- Style Tab ---
-		$this->start_controls_section(
-			'typo_style',
-			[
-				'label' => __( 'Typography', 'mhds-plug' ),
-				'tab'   => Controls_Manager::TAB_STYLE,
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Typography::get_type(),
-			[ 'name' => 'heading_typo', 'selector' => '{{WRAPPER}} .mh-sync-title' ]
 		);
 
 		$this->end_controls_section();
@@ -152,32 +124,252 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 		}
 		?>
 
-		<div class="mh-synced-wrapper">
-			<div class="mh-synced-container">
+		<style>
+			/* Layout Grid */
+			.mh-synced-container {
+				display: flex;
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px;
+				align-items: center;
+				gap: 60px;
+				background-color: #1a202c; 
+				overflow: hidden;
+			}
+
+			.mh-left-col {
+				width: 35%;
+				padding: 20px;
+				cursor: grab;
+			}
+			.mh-left-col:active {
+				cursor: grabbing;
+			}
+
+			.mh-right-col {
+				width: 65%;
+				position: relative;
+			}
+
+			/* --- LEFT SLIDER (CONTENT) --- */
+			@keyframes slideUpFade {
+				from { opacity: 0; transform: translateY(20px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+
+			.mh-text-slider .slick-slide {
+				display: block; 
+				min-height: 200px;
+				outline: none;
+				padding: 10px; 
+			}
+
+			.mh-text-content {
+				background-color: transparent; 
+				color: white;                  
+				padding: 20px 0;               
+				border-radius: 0;       
+				box-shadow: none;              
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: flex-start;
+				min-height: 350px;
+			}
+			
+			.mh-text-content h2, 
+			.mh-text-content p, 
+			.mh-text-content .mh-meta,
+			.mh-text-content .mh-price,
+			.mh-text-content .mh-shop-btn {
+				opacity: 0; 
+			}
+
+			.slick-active .mh-text-content .mh-meta { animation: slideUpFade 0.5s ease forwards 0.1s; }
+			.slick-active .mh-text-content h2 { animation: slideUpFade 0.5s ease forwards 0.2s; }
+			.slick-active .mh-text-content .mh-price { animation: slideUpFade 0.5s ease forwards 0.3s; }
+			.slick-active .mh-text-content .mh-shop-btn { animation: slideUpFade 0.5s ease forwards 0.4s; }
+			
+			.mh-text-content .mh-meta {
+				display: block;
+				margin-bottom: 0.5rem;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+				font-size: 0.85rem;
+				color: #94a3b8; 
+				font-weight: 600;
+			}
+
+			.mh-text-content h2 {
+				font-size: 3.5rem; 
+				font-weight: 800;
+				margin: 0 0 1rem 0;
+				line-height: 1.1;
+				color: #ffffff; 
+			}
+
+			.mh-text-content .mh-price {
+				font-size: 1.25rem;
+				color: #e2e8f0; 
+				margin-bottom: 30px;
+				font-weight: 500;
+			}
+
+			.mh-shop-btn {
+				background-color: #ff8787; 
+				color: white;
+				border: none;
+				padding: 14px 35px;
+				border-radius: 50px; 
+				font-size: 1rem;
+				font-weight: 700;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				display: inline-block;
+				box-shadow: 0 4px 15px rgba(255, 135, 135, 0.4); 
+				text-decoration: none;
+			}
+			
+			.mh-shop-btn:hover {
+				background-color: #ff6b6b;
+				transform: translateY(-3px);
+				box-shadow: 0 6px 20px rgba(255, 135, 135, 0.6);
+				color: white;
+			}
+
+			/* --- RIGHT SLIDER (IMAGE) --- */
+			.mh-image-slider .slick-slide {
+				z-index: 0;
+				position: relative;
+				transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+			}
+
+			.mh-image-slider .slick-center { z-index: 20 !important; }
+
+			.mh-image-card {
+				border-radius: 15px;
+				width: 150%; 
+				margin-left: -25%; 
+				height: 400px;
+				overflow: hidden; 
+				display: flex !important;
+				justify-content: center;
+				align-items: center;
+				transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+				opacity: 0; 
+				pointer-events: none;
+				transform: scale(0.7) translateX(-50px);
+			}
+			
+			/* OVERLAP LOGIC via JS Classes */
+			
+			/* Left Neighbor: Push RIGHT (60%) */
+			.mh-image-slider .slick-slide.slide-prev .mh-image-card {
+				opacity: 0.6;
+				pointer-events: auto;
+				transform: translateX(40%) scale(0.85);
+				z-index: 10;
+			}
+
+			/* Right Neighbor: Push LEFT (-60%) */
+			.mh-image-slider .slick-slide.slide-next .mh-image-card {
+				opacity: 0.6;
+				pointer-events: auto;
+				transform: translateX(-40%) scale(0.85);
+				z-index: 10;
+			}
+
+			/* Center Slide */
+			.mh-image-slider .slick-center .mh-image-card {
+				opacity: 1;
+				transform: scale(1.1);
+				z-index: 20;
+			}
+
+			.mh-image-card img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover; 
+				display: block;
+			}
+
+			/* Arrows */
+			.mh-image-slider .slick-arrow {
+				position: absolute;
+				bottom: -60px;
+				top: auto;
+				transform: none;
+				width: 50px;
+				height: 50px;
+				border: 2px solid rgba(255,255,255,0.2);
+				border-radius: 50%;
+				transition: all 0.2s;
+				z-index: 100;
+				cursor: pointer;
+				background: transparent;
+			}
+			.mh-image-slider .slick-arrow:hover {
+				background: rgba(255,255,255,0.1);
+				border-color: white;
+			}
+			.mh-image-slider .slick-arrow:before { 
+				color: white; 
+				font-size: 24px;
+				opacity: 1;
+			}
+
+			.mh-image-slider .slick-prev { left: calc(50% - 60px); }
+			.mh-image-slider .slick-next { right: calc(50% - 60px); }
+
+			/* Responsive */
+			@media (max-width: 900px) {
+				.mh-synced-container {
+					flex-direction: column-reverse;
+					padding: 10px;
+					gap: 20px;
+				}
+				.mh-left-col, .mh-right-col { width: 100%; }
+				.mh-text-slider { text-align: center; }
+				.mh-text-content { align-items: center; text-align: center; } 
+				.mh-text-content h2 { font-size: 2.5rem; }
+				.mh-image-card { height: 250px; width: 120%; margin-left: -10%;}
+				.mh-image-slider .slick-center .mh-image-card { transform: scale(1.05); }
+				.mh-image-slider .slick-arrow { bottom: -40px; width: 40px; height: 40px; }
 				
-				<div class="mh-synced-content-slider" id="mh-content-<?php echo esc_attr( $id ); ?>">
+				/* Reduce overlap on mobile */
+				.mh-image-slider .slick-slide.slide-prev .mh-image-card { transform: translateX(10%) scale(0.9); }
+				.mh-image-slider .slick-slide.slide-next .mh-image-card { transform: translateX(-10%) scale(0.9); }
+			}
+		</style>
+
+		<div class="mh-synced-container">
+			
+			<div class="mh-left-col">
+				<div class="mh-text-slider" id="text-<?php echo esc_attr( $id ); ?>">
 					<?php foreach ( $settings['slides'] as $slide ) : ?>
-						<div class="mh-content-slide">
-							<div class="mh-content-inner">
-								<?php if ( $slide['subtitle'] ) : ?>
-									<h4 class="mh-sync-subtitle"><?php echo esc_html( $slide['subtitle'] ); ?></h4>
+						<div>
+							<div class="mh-text-content">
+								<?php if ( $slide['meta'] ) : ?>
+									<span class="mh-meta"><?php echo esc_html( $slide['meta'] ); ?></span>
 								<?php endif; ?>
 								
 								<?php if ( $slide['heading'] ) : ?>
-									<h2 class="mh-sync-title"><?php echo esc_html( $slide['heading'] ); ?></h2>
+									<h2 class="mh-heading"><?php echo $slide['heading']; // Allow <br> ?></h2>
 								<?php endif; ?>
 								
-								<div class="mh-sync-price-box">
-									<?php if ( $slide['price_label'] ) : ?>
-										<span class="mh-sync-label"><?php echo esc_html( $slide['price_label'] ); ?></span>
-									<?php endif; ?>
-									<?php if ( $slide['price'] ) : ?>
-										<span class="mh-sync-price"><?php echo esc_html( $slide['price'] ); ?></span>
-									<?php endif; ?>
-								</div>
+								<?php if ( $slide['price'] ) : ?>
+									<div class="mh-price"><?php echo esc_html( $slide['price'] ); ?></div>
+								<?php endif; ?>
 
-								<?php if ( $slide['button_text'] ) : ?>
-									<a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-sync-btn">
+								<?php if ( $slide['button_text'] ) : 
+									$link_attrs = '';
+									if ( ! empty( $slide['button_link']['url'] ) ) {
+										$this->add_link_attributes( 'btn_' . $slide['_id'], $slide['button_link'] );
+										$link_attrs = $this->get_render_attribute_string( 'btn_' . $slide['_id'] );
+									}
+								?>
+									<a href="<?php echo esc_url( $slide['button_link']['url'] ); ?>" class="mh-shop-btn" <?php echo $link_attrs; ?>>
 										<?php echo esc_html( $slide['button_text'] ); ?>
 									</a>
 								<?php endif; ?>
@@ -185,66 +377,91 @@ class MH_Synced_Slider_Widget extends Widget_Base {
 						</div>
 					<?php endforeach; ?>
 				</div>
+			</div>
 
-				<div class="mh-synced-image-slider" id="mh-image-<?php echo esc_attr( $id ); ?>">
+			<div class="mh-right-col">
+				<div class="mh-image-slider" id="image-<?php echo esc_attr( $id ); ?>">
 					<?php foreach ( $settings['slides'] as $slide ) : ?>
-						<div class="mh-image-slide">
-							<div class="mh-image-inner">
+						<div>
+							<div class="mh-image-card">
 								<?php if ( ! empty( $slide['image']['url'] ) ) : ?>
-									<img src="<?php echo esc_url( $slide['image']['url'] ); ?>" alt="<?php echo esc_attr( $slide['heading'] ); ?>">
+									<img src="<?php echo esc_url( $slide['image']['url'] ); ?>" alt="Product Image">
 								<?php endif; ?>
 							</div>
 						</div>
 					<?php endforeach; ?>
 				</div>
-
 			</div>
+
 		</div>
 
 		<script>
 		jQuery(document).ready(function($) {
-			var contentId = '#mh-content-<?php echo esc_attr( $id ); ?>';
-			var imageId = '#mh-image-<?php echo esc_attr( $id ); ?>';
+			var textSlider = '#text-<?php echo esc_attr( $id ); ?>';
+			var imageSlider = '#image-<?php echo esc_attr( $id ); ?>';
 
-			// 1. Content Slider (Fade)
-			$(contentId).slick({
+			// 1. Initialize Left Slider (Content)
+			$(textSlider).slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
 				arrows: false,
-				fade: true,
-				asNavFor: imageId,
-				cssEase: 'linear'
+				fade: false,
+				asNavFor: imageSlider,
+				draggable: true, 
+				swipe: true,
+				speed: 500,           
+				touchThreshold: 10
 			});
 
-			// 2. Image Slider (Center Mode)
-			var $imageSlider = $(imageId).slick({
-				slidesToShow: 3,        /* Must show 3 for cluster */
-				slidesToScroll: 1,
-				asNavFor: contentId,
-				dots: false,
-				arrows: false,
+			// 2. Initialize Right Slider (Images)
+			var $imgSlider = $(imageSlider).slick({
 				centerMode: true,
 				centerPadding: '0px',
-				variableWidth: false,
+				slidesToShow: 3,
+				infinite: true,
+				autoplay: true,
+				autoplaySpeed: 3000,
+				speed: 500,        
+				arrows: false,
+				asNavFor: textSlider,
 				focusOnSelect: true,
-				speed: 800,
-				cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
+				responsive: [
+					{
+						breakpoint: 900,
+						settings: {
+							slidesToShow: 3,
+							centerPadding: '20px'
+						}
+					},
+					{
+						breakpoint: 600,
+						settings: {
+							slidesToShow: 3, 
+							centerPadding: '10px'
+						}
+					}
+				]
 			});
 
-			// 3. Class Updater for 3D Depth
-			function updateClasses() {
-				var $slick = $(imageId);
-				$slick.find('.slick-slide').removeClass('prev next');
+			// 3. JS Logic for Overlap Classes (The "Magic" Part)
+			function updateOverlapClasses() {
+				// Remove old classes
+				$(imageSlider).find('.slick-slide').removeClass('slide-prev slide-next');
 				
-				var $center = $slick.find('.slick-center');
-				$center.prev().addClass('prev');
-				$center.next().addClass('next');
+				// Find center
+				var $center = $(imageSlider).find('.slick-center');
+				
+				// Add classes to immediate neighbors
+				$center.prev().addClass('slide-prev');
+				$center.next().addClass('slide-next');
 			}
 
-			$imageSlider.on('init afterChange setPosition', function() {
-				updateClasses();
+			// Bind to events
+			$imgSlider.on('init afterChange setPosition', function() {
+				updateOverlapClasses();
 			});
-			updateClasses(); // Initial run
+			// Initial run
+			updateOverlapClasses();
 		});
 		</script>
 		<?php
